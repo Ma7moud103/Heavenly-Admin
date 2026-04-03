@@ -1,0 +1,35 @@
+flowchart TD
+  A[Start: room] --> B[Normalize search term]
+  B --> C{Search term empty?}
+  C -->|Yes| D[matchesSearch = true]
+  C -->|No| E[Match title OR type OR description]
+  E --> D
+
+  D --> F[Build statusLabel]
+  F --> G{statusFilter == "all"?}
+  G -->|Yes| H[matchesStatus = true]
+  G -->|No| I[statusLabel == statusFilter]
+  I --> H
+
+  H --> J{typeFilter == "all"?}
+  J -->|Yes| K[matchesType = true]
+  J -->|No| L[room_type.name == typeFilter]
+  L --> K
+
+  K --> M[Parse min/max price]
+  M --> N[matchesMinPrice & matchesMaxPrice]
+
+  N --> O[Parse min capacity]
+  O --> P[matchesCapacity]
+
+  P --> Q{hasImage?}
+  Q -->|No| R[matchesImage = true]
+  Q -->|Yes| S[room.image_url exists]
+  S --> R
+
+  R --> T{hasDescription?}
+  T -->|No| U[matchesDescription = true]
+  T -->|Yes| V[room.description exists]
+  V --> U
+
+  U --> W[Result = all matches true]
