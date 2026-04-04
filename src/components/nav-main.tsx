@@ -14,20 +14,24 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { ChevronRightIcon } from "lucide-react"
+import { NavLink } from "react-router-dom";
+
+interface IProps {
+  title: string;
+  url: string;
+  icon?: React.ReactNode;
+  isActive?: boolean;
+  items?: {
+    title: string;
+    url: string;
+  }[];
+}
+
 
 export function NavMain({
   items,
 }: {
-  items: {
-    title: string
-    url: string
-    icon?: React.ReactNode
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+  items: IProps[];
 }) {
   return (
     <SidebarGroup>
@@ -53,9 +57,10 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                      
+                        <NavLink to={subItem.url} end={subItem.url === "/"}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </NavLink>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
@@ -66,5 +71,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Search, Filter, Plus, MoreHorizontal, CalendarDays, User } from "lucide-react"
-import { StatCard } from "@/components/dashboard/StatCard"
-import { DataTable } from "@/components/dashboard/DataTable"
-import { Badge } from "@/components/dashboard/Badge"
+import { StatCard } from "@/features/dashboard/components/StatCard"
+import { DataTable } from "@/features/dashboard/components/DataTable"
+import { Badge } from "@/features/dashboard/components/Badge"
 import UseRoomBookings from "@/hooks/UseRoomBookings"
 import type { IRoomBooking } from "@/interfaces/IRoomBookings"
 
@@ -69,7 +69,7 @@ export default function Bookings() {
           <div>
             <div className="font-medium">{row.guest?.full_name || "Unknown"}</div>
             <div className="text-xs text-[--color-text-muted]">
-              {row.room?.title || "—"} • {row.room?.room_type?.name || "—"}
+              {row.room?.title || "â€”"} â€¢ {row.room?.room_type?.name || "â€”"}
             </div>
           </div>
         </div>

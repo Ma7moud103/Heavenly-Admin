@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Search, Filter, Plus, MoreHorizontal, User, Mail, Phone, Globe, Star } from "lucide-react"
-import { StatCard } from "@/components/dashboard/StatCard"
-import { DataTable } from "@/components/dashboard/DataTable"
-import { Badge } from "@/components/dashboard/Badge"
+import { StatCard } from "@/features/dashboard/components/StatCard"
+import { DataTable } from "@/features/dashboard/components/DataTable"
+import { Badge } from "@/features/dashboard/components/Badge"
 import { guests } from "@/data/hotelData"
 
 function formatCurrency(amount: number) {

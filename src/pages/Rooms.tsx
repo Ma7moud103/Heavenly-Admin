@@ -1,8 +1,8 @@
 import { useReducer } from "react"
 import { Search, Filter, Plus, MoreHorizontal, BedDouble, Layers } from "lucide-react"
-import { StatCard } from "@/components/dashboard/StatCard"
-import { DataTable } from "@/components/dashboard/DataTable"
-import { Badge } from "@/components/dashboard/Badge"
+import { StatCard } from "@/features/dashboard/components/StatCard"
+import { DataTable } from "@/features/dashboard/components/DataTable"
+import { Badge } from "@/features/dashboard/components/Badge"
 import { useHotelStats } from "@/hooks/getHotelStats"
 import UseRooms from "@/hooks/UseRooms"
 import type { IRoom } from "@/interfaces/IRooms"
@@ -220,7 +220,7 @@ export default function Rooms() {
       key: "type",
       header: "Type",
       cell: (row: IRoom) => (
-        <span className="font-medium">{row.room_type?.name || row.title || "—"}</span>
+        <span className="font-medium">{row.room_type?.name || row.title || "â€”"}</span>
       ),
     },
     {

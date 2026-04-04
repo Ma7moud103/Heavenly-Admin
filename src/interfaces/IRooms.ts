@@ -27,3 +27,11 @@ export interface IRoom {
   status?: RoomStatus | null;
 }
 
+
+
+export interface IRoomsTypes {
+  id: string;
+  name: string;
+  price: number;
+  count: number;
+}

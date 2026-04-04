@@ -29,12 +29,14 @@ const data = {
     email: "admin@heavenlyhotel.com",
     avatar: "/avatars/admin.jpg",
   },
+
   teams: [
     {
       name: "Heavenly Hotel",
       logo: <Building2 className="w-5 h-5" />,
       plan: "Luxury",
     },
+
   ],
   navMain: [
     {
@@ -47,10 +49,7 @@ const data = {
           title: "Dashboard",
           url: "/",
         },
-        {
-          title: "Analytics",
-          url: "/analytics",
-        },
+       
       ],
     },
     {
@@ -184,6 +183,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
+      
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
