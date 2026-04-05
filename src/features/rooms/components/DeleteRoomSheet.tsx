@@ -1,5 +1,12 @@
 ﻿import { toast } from "react-toastify"
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import UseDeleteRoom from "@/hooks/UseDeleteRoom"
 import type { IRoom } from "@/interfaces/IRooms"
 
@@ -34,26 +41,22 @@ export function DeleteRoomSheet({ open, room, onOpenChange }: IProps) {
   }
 
   return (
-    <Sheet open={open} onOpenChange={handleClose}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle>Delete Room</SheetTitle>
-          <SheetDescription>
-            This will permanently delete {room?.title || "this room"}. This action cannot be undone.
-          </SheetDescription>
-        </SheetHeader>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-w-md p-0">
+        <DialogHeader className=" space-y-4">
+          <DialogTitle className="text-xl text-center">Delete this room?</DialogTitle>
+          <DialogDescription className="text-center">
+            {room?.title
+              ? `Are you sure you want to delete ${room.title}? This action cannot be undone.`
+              : "Are you sure you want to delete this room? This action cannot be undone."}
+          </DialogDescription>
+        </DialogHeader>
 
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="rounded-2xl border border-[--color-error]/20 bg-[--color-error-bg] p-4 text-sm text-[--color-text]">
-            Room ID: <span className="font-medium">{room?.id || "-"}</span>
-          </div>
+        {deleteRoomMutation.isError ? (
+          <p className="px-4 text-sm text-[--color-error]">{deleteRoomMutation.error.message}</p>
+        ) : null}
 
-          {deleteRoomMutation.isError ? (
-            <p className="text-sm text-[--color-error]">{deleteRoomMutation.error.message}</p>
-          ) : null}
-        </div>
-
-        <SheetFooter className="border-t border-[--color-border] sm:flex-row sm:justify-end">
+        <DialogFooter className="border-t border-[--color-border]">
           <button type="button" className="btn btn-ghost" onClick={() => handleClose(false)}>
             Cancel
           </button>
@@ -65,8 +68,8 @@ export function DeleteRoomSheet({ open, room, onOpenChange }: IProps) {
           >
             {deleteRoomMutation.isPending ? "Deleting..." : "Delete Room"}
           </button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

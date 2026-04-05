@@ -20,15 +20,15 @@ export function RoomActionsMenu({ onDelete, onEdit }: IProps) {
           className="rounded-lg p-2 transition-colors hover:bg-[--color-bg-subtle] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Room actions"
         >
-          <MoreHorizontal className="h-4 w-4 text-[--color-text-muted]" />
+          <MoreHorizontal className="h-4 w-4 text-[--color-text-muted] cursor-pointer" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-40 sm:min-w-36">
-        <DropdownMenuItem onClick={onEdit}>
+        <DropdownMenuItem  className="cursor-pointer" onClick={onEdit}>
           <Edit3 className="h-4 w-4" />
           Edit room
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={onDelete} variant="destructive">
+        <DropdownMenuItem className="cursor-pointer" onClick={onDelete} variant="destructive">
           <Trash2 className="h-4 w-4" />
           Delete room
         </DropdownMenuItem>

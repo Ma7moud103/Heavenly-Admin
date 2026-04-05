@@ -1,12 +1,16 @@
-﻿import type { RoomStatus, IRoomsTypes } from "@/interfaces/IRooms"
+﻿import { SharedInput } from "@/components/shared/SharedInput"
 import type { ICreateRoomFormState } from "@/features/rooms/createRoomForm"
+import type { RoomStatus, IRoomsTypes } from "@/interfaces/IRooms"
 
 interface CreateRoomFormFieldsProps {
   errors: Partial<Record<keyof ICreateRoomFormState, string>>
   form: ICreateRoomFormState
   roomStatuses: RoomStatus[]
   roomTypes: IRoomsTypes[]
-  onChange: <K extends keyof ICreateRoomFormState>(field: K, value: ICreateRoomFormState[K]) => void
+  onChange: <K extends keyof ICreateRoomFormState>(
+    field: K,
+    value: ICreateRoomFormState[K]
+  ) => void
 }
 
 function FieldError({ message }: { message?: string }) {
@@ -24,46 +28,37 @@ export function CreateRoomFormFields({
 }: CreateRoomFormFieldsProps) {
   return (
     <div className="grid gap-4 p-4">
-      <label className="grid gap-1.5 text-sm">
-        <span className="text-[--color-text-sub]">Room Title</span>
-        <input
-          type="text"
-          value={form.title}
-          onChange={(e) => onChange("title", e.target.value)}
-          className="input"
-          placeholder="Deluxe King 101"
-        />
-        <FieldError message={errors.title} />
-      </label>
+      <SharedInput
+        label="Room Title"
+        type="text"
+        value={form.title}
+        onChange={(e) => onChange("title", e.target.value)}
+        placeholder="Deluxe King 101"
+        error={errors.title}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="grid gap-1.5 text-sm">
-          <span className="text-[--color-text-sub]">Base Price</span>
-          <input
-            type="number"
-            min={0}
-            inputMode="decimal"
-            value={form.base_price}
-            onChange={(e) => onChange("base_price", e.target.value)}
-            className="input"
-            placeholder="250"
-          />
-          <FieldError message={errors.base_price} />
-        </label>
+        <SharedInput
+          label="Base Price"
+          type="number"
+          min={0}
+          inputMode="decimal"
+          value={form.base_price}
+          onChange={(e) => onChange("base_price", e.target.value)}
+          placeholder="250"
+          error={errors.base_price}
+        />
 
-        <label className="grid gap-1.5 text-sm">
-          <span className="text-[--color-text-sub]">Capacity</span>
-          <input
-            type="number"
-            min={1}
-            inputMode="numeric"
-            value={form.capacity}
-            onChange={(e) => onChange("capacity", e.target.value)}
-            className="input"
-            placeholder="2"
-          />
-          <FieldError message={errors.capacity} />
-        </label>
+        <SharedInput
+          label="Capacity"
+          type="number"
+          min={1}
+          inputMode="numeric"
+          value={form.capacity}
+          onChange={(e) => onChange("capacity", e.target.value)}
+          placeholder="2"
+          error={errors.capacity}
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -102,16 +97,13 @@ export function CreateRoomFormFields({
         </label>
       </div>
 
-      <label className="grid gap-1.5 text-sm">
-        <span className="text-[--color-text-sub]">Image URL</span>
-        <input
-          type="url"
-          value={form.image_url}
-          onChange={(e) => onChange("image_url", e.target.value)}
-          className="input"
-          placeholder="https://example.com/room.jpg"
-        />
-      </label>
+      <SharedInput
+        label="Image URL"
+        type="url"
+        value={form.image_url}
+        onChange={(e) => onChange("image_url", e.target.value)}
+        placeholder="https://example.com/room.jpg"
+      />
 
       <label className="grid gap-1.5 text-sm">
         <span className="text-[--color-text-sub]">Description</span>
