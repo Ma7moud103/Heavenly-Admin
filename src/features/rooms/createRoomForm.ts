@@ -1,5 +1,5 @@
 ﻿import type { ICreateRoomPayload } from "@/data/createRoom"
-import type { RoomStatus, IRoomsTypes } from "@/interfaces/IRooms"
+import type { IRoom, RoomStatus, IRoomsTypes } from "@/interfaces/IRooms"
 
 export interface ICreateRoomFormState {
   title: string
@@ -32,6 +32,18 @@ export function buildCreateRoomPayload(
     image_url: form.image_url.trim() || null,
     room_type_id: form.room_type_id,
     status_id: form.status_id,
+  }
+}
+
+export function buildRoomFormState(room: IRoom): ICreateRoomFormState {
+  return {
+    title: room.title || "",
+    base_price: String(room.base_price || ""),
+    capacity: String(room.capacity || ""),
+    description: room.description || "",
+    image_url: room.image_url || "",
+    room_type_id: room.room_type_id || room.room_type?.id || "",
+    status_id: room.status_id || room.status?.id || "",
   }
 }
 

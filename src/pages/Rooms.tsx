@@ -1,5 +1,7 @@
 ﻿import { useDeferredValue, useMemo, useReducer, useState } from "react"
 import { CreateRoomSheet } from "@/features/rooms/components/CreateRoomSheet"
+import { DeleteRoomSheet } from "@/features/rooms/components/DeleteRoomSheet"
+import { EditRoomSheet } from "@/features/rooms/components/EditRoomSheet"
 import { RoomsFiltersBar } from "@/features/rooms/components/RoomsFiltersBar"
 import { RoomsHeader } from "@/features/rooms/components/RoomsHeader"
 import { RoomsStatsGrid } from "@/features/rooms/components/RoomsStatsGrid"
@@ -12,10 +14,14 @@ import { useHotelStats } from "@/hooks/getHotelStats"
 import UseRooms from "@/hooks/UseRooms"
 import UseRoomsStatuses from "@/hooks/UseRoomsStatuses"
 import UseRoomsTypes from "@/hooks/UseRoomsTypes"
+import type { IRoom } from "@/interfaces/IRooms"
 
 export default function Rooms() {
   const [filters, dispatch] = useReducer(roomsFilterReducer, initialRoomsFilters)
   const [isCreateRoomOpen, setIsCreateRoomOpen] = useState(false)
+  const [isEditRoomOpen, setIsEditRoomOpen] = useState(false)
+  const [isDeleteRoomOpen, setIsDeleteRoomOpen] = useState(false)
+  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null)
   const deferredSearchTerm = useDeferredValue(filters.searchTerm)
   const { data: hotelStats } = useHotelStats()
   const { data: rooms = [] } = UseRooms()
@@ -98,6 +104,30 @@ export default function Rooms() {
     })
   }, [cachedFilters, rooms])
 
+  const handleEditRoom = (room: IRoom) => {
+    setSelectedRoom(room)
+    setIsEditRoomOpen(true)
+  }
+
+  const handleDeleteRoom = (room: IRoom) => {
+    setSelectedRoom(room)
+    setIsDeleteRoomOpen(true)
+  }
+
+  const handleEditRoomOpenChange = (open: boolean) => {
+    setIsEditRoomOpen(open)
+    if (!open) {
+      setSelectedRoom(null)
+    }
+  }
+
+  const handleDeleteRoomOpenChange = (open: boolean) => {
+    setIsDeleteRoomOpen(open)
+    if (!open) {
+      setSelectedRoom(null)
+    }
+  }
+
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -110,7 +140,11 @@ export default function Rooms() {
             roomTypeOptions={roomTypeOptions}
             onDispatch={dispatch}
           />
-          <RoomsTable rooms={filteredRooms} />
+          <RoomsTable
+            rooms={filteredRooms}
+            onDeleteRoom={handleDeleteRoom}
+            onEditRoom={handleEditRoom}
+          />
         </section>
       </div>
 
@@ -119,6 +153,20 @@ export default function Rooms() {
         onOpenChange={setIsCreateRoomOpen}
         roomStatuses={roomStatuses}
         roomTypes={roomTypes}
+      />
+
+      <EditRoomSheet
+        open={isEditRoomOpen}
+        onOpenChange={handleEditRoomOpenChange}
+        room={selectedRoom}
+        roomStatuses={roomStatuses}
+        roomTypes={roomTypes}
+      />
+
+      <DeleteRoomSheet
+        open={isDeleteRoomOpen}
+        onOpenChange={handleDeleteRoomOpenChange}
+        room={selectedRoom}
       />
     </>
   )
