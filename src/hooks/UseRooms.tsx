@@ -1,11 +1,10 @@
-import type { IRoom } from "@/interfaces/IRooms"
+﻿import type { IRoom } from "@/interfaces/IRooms"
 import { fetchRoomsData } from "@/data/fetchRoomsData"
 import { useQuery } from "@tanstack/react-query"
 
 const UseRooms = () => {
   return useQuery<IRoom[], Error>({
     queryKey: ["rooms"],
-
     queryFn: async () => {
       const { rooms, error } = await fetchRoomsData()
       if (error) {
@@ -13,7 +12,7 @@ const UseRooms = () => {
       }
       return rooms ?? []
     },
-    initialData: []
+    initialData: [],
   })
 }
 

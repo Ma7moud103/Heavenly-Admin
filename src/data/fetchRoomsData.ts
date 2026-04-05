@@ -6,15 +6,14 @@ export const fetchRoomsData = async (): Promise<{
   rooms: IRoom[] | null;
   error: PostgrestError | null;
 }> => {
-  const { data, error } = await supabase
-    .from("rooms")
-    .select(
-      `
-      *,
-      room_type:room_type_id (*),
+  const { data, error } = await supabase.from("rooms").select(
+    `*,
+      room_type:rooms_room_type_id_fkey(*),
       status:status_id (*)
-    `
-    );
+    `,
+  );
+
+ 
 
   return {
     rooms: data ?? null,

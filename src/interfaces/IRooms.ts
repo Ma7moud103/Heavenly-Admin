@@ -1,4 +1,4 @@
-export interface RoomType {
+﻿export interface RoomType {
   id: string;
   name: string;
   price: number;
@@ -26,8 +26,6 @@ export interface IRoom {
   room_type?: RoomType | null;
   status?: RoomStatus | null;
 }
-
-
 
 export interface IRoomsTypes {
   id: string;
