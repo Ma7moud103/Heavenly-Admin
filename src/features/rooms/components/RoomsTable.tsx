@@ -107,7 +107,7 @@ function RoomsTableComponent({ rooms, onDeleteRoom, onEditRoom }: RoomsTableProp
       },
       {
         key: "price",
-        header: "Rate",
+        header: "Price",
         cell: (row) => <RoomRateCell row={row} />,
       },
       {

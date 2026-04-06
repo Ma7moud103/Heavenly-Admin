@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar"
+﻿import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,18 +21,19 @@ const routeTitles: Record<string, string> = {
   "/guests": "Guests",
   "/bookings": "Bookings",
   "/settings": "Settings",
+  "/room-types": "Room Types",
+  "/floor-plan": "Floor Plans",
 }
 
 export default function MainLayout() {
   const location = useLocation()
-  const currentTitle = routeTitles[location.pathname] || "Dashboard"
+  const currentTitle = routeTitles[location.pathname] || "Not Found"
 
   return (
     <SidebarProvider>
       <AppSidebar />
 
       <SidebarInset>
-        
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
@@ -43,9 +44,7 @@ export default function MainLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">
-                    Home
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
@@ -56,9 +55,8 @@ export default function MainLayout() {
           </div>
         </header>
 
-
-        <main className="flex flex-1  flex-col gap-4 p-4 min-h-screen md:min-h-min">
-          <Outlet/>
+        <main className="flex min-h-screen flex-1 flex-col gap-4 p-4 md:min-h-min">
+          <Outlet />
         </main>
       </SidebarInset>
     </SidebarProvider>

@@ -1,12 +1,18 @@
 ﻿import { BedDouble } from "lucide-react"
 import { StatCard } from "@/features/dashboard/components/StatCard"
+import { RoomsStatsGridSkeleton } from "@/features/rooms/components/RoomsSkeletons"
 import type { IHotelStats } from "@/interfaces/HotelStatus"
 
 interface RoomsStatsGridProps {
   hotelStats: IHotelStats | undefined
+  isLoading?: boolean
 }
 
-export function RoomsStatsGrid({ hotelStats }: RoomsStatsGridProps) {
+export function RoomsStatsGrid({ hotelStats, isLoading = false }: RoomsStatsGridProps) {
+  if (isLoading) {
+    return <RoomsStatsGridSkeleton />
+  }
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <StatCard

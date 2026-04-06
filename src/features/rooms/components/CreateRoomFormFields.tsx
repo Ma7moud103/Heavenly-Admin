@@ -2,7 +2,7 @@
 import type { ICreateRoomFormState } from "@/features/rooms/createRoomForm"
 import type { RoomStatus, IRoomsTypes } from "@/interfaces/IRooms"
 
-interface CreateRoomFormFieldsProps {
+interface IProps {
   errors: Partial<Record<keyof ICreateRoomFormState, string>>
   form: ICreateRoomFormState
   roomStatuses: RoomStatus[]
@@ -14,6 +14,7 @@ interface CreateRoomFormFieldsProps {
 }
 
 function FieldError({ message }: { message?: string }) {
+
   if (!message) return null
 
   return <p className="text-xs text-[--color-error]">{message}</p>
@@ -25,7 +26,11 @@ export function CreateRoomFormFields({
   roomStatuses,
   roomTypes,
   onChange,
-}: CreateRoomFormFieldsProps) {
+}: IProps) {
+
+
+
+
   return (
     <div className="grid gap-4 p-4">
       <SharedInput
