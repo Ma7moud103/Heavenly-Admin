@@ -19,7 +19,7 @@ export const updateBooking = async (
       *,
       room:room_id (*),
       status:status_id (*),
-      guest:user_id (*)
+      guest:guest_id (*)
     `
     )
     .single()

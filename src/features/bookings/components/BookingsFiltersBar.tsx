@@ -1,12 +1,5 @@
 import type { Dispatch } from "react"
-import { Filter, Search } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Search } from "lucide-react"
 import type {
   BookingsFilterAction,
   BookingsFiltersState,
@@ -49,49 +42,6 @@ export function BookingsFiltersBar({
             </option>
           ))}
         </select>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="btn btn-ghost" type="button">
-              <Filter className="h-4 w-4" />
-              More Filters
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64 p-3">
-            <DropdownMenuLabel className="px-0 text-[--color-text-sub]">
-              Refine Bookings
-            </DropdownMenuLabel>
-            <div className="mt-2 grid gap-3">
-              <label className="grid gap-1 text-xs text-[--color-text-sub]">
-                Status
-                <select
-                  value={filters.statusFilter}
-                  onChange={(e) =>
-                    onDispatch({ type: "SET_STATUS", value: e.target.value })
-                  }
-                  className="input h-9"
-                >
-                  <option value="all">All Status</option>
-                  {statusOptions.map((status) => (
-                    <option key={status} value={status.toLowerCase()}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <DropdownMenuSeparator className="my-3" />
-            <div className="flex justify-end">
-              <button
-                type="button"
-                className="btn btn-ghost"
-                onClick={() => onDispatch({ type: "RESET" })}
-              >
-                Reset
-              </button>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </div>
   )

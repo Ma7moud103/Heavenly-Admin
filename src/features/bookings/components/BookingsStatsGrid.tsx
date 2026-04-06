@@ -5,7 +5,7 @@ import { StatCard } from "@/features/dashboard/components/StatCard"
 interface BookingsStatsGridProps {
   totalBookings: number
   checkedInCount: number
-  reservedCount: number
+  confirmedCount: number
   pendingCount: number
   isLoading?: boolean
 }
@@ -13,7 +13,7 @@ interface BookingsStatsGridProps {
 export function BookingsStatsGrid({
   totalBookings,
   checkedInCount,
-  reservedCount,
+  confirmedCount,
   pendingCount,
   isLoading = false,
 }: BookingsStatsGridProps) {
@@ -29,21 +29,21 @@ export function BookingsStatsGrid({
         icon={<CalendarDays className="h-5 w-5" />}
       />
       <StatCard
-        title="Checked In"
-        value={checkedInCount}
-        variant="success"
+        title="Pending"
+        value={pendingCount}
+        variant="error"
         icon={<CalendarDays className="h-5 w-5" />}
       />
       <StatCard
-        title="Reserved"
-        value={reservedCount}
+        title="Confirmed"
+        value={confirmedCount}
         variant="warning"
         icon={<CalendarDays className="h-5 w-5" />}
       />
       <StatCard
-        title="Pending"
-        value={pendingCount}
-        variant="error"
+        title="Checked In"
+        value={checkedInCount}
+        variant="success"
         icon={<CalendarDays className="h-5 w-5" />}
       />
     </div>

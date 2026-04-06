@@ -1,30 +1,30 @@
 import { memo } from "react"
-import { CalendarDays, DoorClosed, DoorOpen } from "lucide-react"
+import { CalendarClock, ShieldCheck } from "lucide-react"
 
-interface CheckinHeaderProps {
+interface ReservationsHeaderProps {
   todayLabel: string
-  arrivalsToday: number
-  departuresToday: number
+  upcomingCount: number
+  arrivingSoonCount: number
 }
 
-function CheckinHeaderComponent({
+function ReservationsHeaderComponent({
   todayLabel,
-  arrivalsToday,
-  departuresToday,
-}: CheckinHeaderProps) {
+  upcomingCount,
+  arrivingSoonCount,
+}: ReservationsHeaderProps) {
   return (
-    <section className="overflow-hidden rounded-3xl border border-[--color-border] bg-[radial-gradient(circle_at_top_left,_rgba(212,175,55,0.18),_transparent_34%),linear-gradient(135deg,_var(--color-bg-raised),_var(--color-bg-subtle))]">
+    <section className="overflow-hidden rounded-3xl border border-[--color-border] bg-[radial-gradient(circle_at_top_right,_rgba(212,175,55,0.16),_transparent_34%),linear-gradient(135deg,_var(--color-bg-raised),_var(--color-bg-subtle))]">
       <div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_1fr] lg:items-center">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-[--color-border] bg-[--color-bg-raised]/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[--color-text-sub]">
-            <CalendarDays className="h-3.5 w-3.5" />
-            Front Desk Flow
+            <CalendarClock className="h-3.5 w-3.5" />
+            Pre-Arrival Pipeline
           </div>
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Check-in/out Desk</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Reservations</h1>
             <p className="max-w-2xl text-sm leading-6 text-[--color-text-sub] sm:text-base">
-              Keep the front desk moving with today&apos;s arrival and departure queues,
-              quick status updates, and a live view of what still needs attention.
+              Review upcoming stays, confirm pending reservations, and keep the
+              pre-arrival queue ready before guests reach the front desk.
             </p>
           </div>
         </div>
@@ -39,17 +39,17 @@ function CheckinHeaderComponent({
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-[--color-border] bg-[--color-bg-subtle] p-3">
               <div className="flex items-center gap-2 text-sm font-medium text-[--color-text]">
-                <DoorOpen className="h-4 w-4 text-[--color-success]" />
-                Arrivals
+                <ShieldCheck className="h-4 w-4 text-[--color-warning]" />
+                Upcoming
               </div>
-              <p className="mt-2 text-2xl font-bold">{arrivalsToday}</p>
+              <p className="mt-2 text-2xl font-bold">{upcomingCount}</p>
             </div>
             <div className="rounded-2xl border border-[--color-border] bg-[--color-bg-subtle] p-3">
               <div className="flex items-center gap-2 text-sm font-medium text-[--color-text]">
-                <DoorClosed className="h-4 w-4 text-[--color-warning]" />
-                Departures
+                <CalendarClock className="h-4 w-4 text-[--color-success]" />
+                Arriving Soon
               </div>
-              <p className="mt-2 text-2xl font-bold">{departuresToday}</p>
+              <p className="mt-2 text-2xl font-bold">{arrivingSoonCount}</p>
             </div>
           </div>
         </div>
@@ -58,4 +58,4 @@ function CheckinHeaderComponent({
   )
 }
 
-export const CheckinHeader = memo(CheckinHeaderComponent)
+export const ReservationsHeader = memo(ReservationsHeaderComponent)

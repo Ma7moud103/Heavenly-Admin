@@ -22,15 +22,31 @@ export default function Checkin() {
   const updateBookingMutation = UseUpdateBooking()
 
   const today = useMemo(() => getTodayDateKey(), [])
+  const todayLabel = useMemo(
+    () =>
+      new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      }),
+    []
+  )
 
   const arrivals = useMemo(
-    () => bookings.filter((booking) => booking.check_in === today),
+    () => bookings.filter((booking) => booking.check_in === today && booking.status?.name.toLowerCase() !== "checked-out" && booking.status?.name.toLowerCase() !== "checked-in" && booking.status?.name.toLowerCase() !== "cancelled"),
     [bookings, today]
   )
+
+  
   const departures = useMemo(
-    () => bookings.filter((booking) => booking.check_out === today),
-    [bookings, today]
-  )
+    () =>
+      bookings.filter(
+        (booking) =>
+          booking.check_out === today &&
+          booking.status?.name.toLowerCase() === "checked-in"
+      ),
+    [bookings, today],
+  );
 
   const stats = useMemo(() => {
     const inHouse = bookings.filter(
@@ -54,9 +70,7 @@ export default function Checkin() {
   ): { bookingId: string; payload: ICreateBookingPayload } | null => {
     const nextStatusId = getStatusIdByName(bookingStatuses, statusName)
 
-    if (!nextStatusId) {
-      return null
-    }
+    if (!nextStatusId)  return null
 
     return {
       bookingId: booking.id,
@@ -93,7 +107,11 @@ export default function Checkin() {
 
   return (
     <div className="flex flex-col gap-6">
-      <CheckinHeader />
+      <CheckinHeader
+        todayLabel={todayLabel}
+        arrivalsToday={stats.arrivalsToday}
+        departuresToday={stats.departuresToday}
+      />
       <CheckinStatsGrid
         arrivalsToday={stats.arrivalsToday}
         departuresToday={stats.departuresToday}

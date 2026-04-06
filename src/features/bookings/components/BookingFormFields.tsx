@@ -1,16 +1,17 @@
 import { CalendarDays, Hotel, User } from "lucide-react"
-import type { BookingStatus, GuestProfile } from "@/interfaces/IRoomBookings"
+import type { IBookingStatus } from "@/interfaces/IBooking"
 import type { IRoom } from "@/interfaces/IRooms"
 import type { BookingFormState } from "@/features/bookings/bookingForm"
 import { calculateBookingNights, calculateBookingTotal } from "@/features/bookings/bookingForm"
 import { formatCurrency } from "@/lib/utils"
+import type { IGuest } from "@/interfaces/IGuest"
 
 interface BookingFormFieldsProps {
   form: BookingFormState
   errors: Partial<Record<keyof BookingFormState, string>>
   rooms: IRoom[]
-  guests: GuestProfile[]
-  statuses: BookingStatus[]
+  guests: IGuest[]
+  statuses: IBookingStatus[]
   onChange: <K extends keyof BookingFormState>(field: K, value: BookingFormState[K]) => void
 }
 
@@ -53,18 +54,20 @@ export function BookingFormFields({
           Guest
         </span>
         <select
-          value={form.user_id}
-          onChange={(e) => onChange("user_id", e.target.value)}
+          value={form.guest_id}
+          onChange={(e) =>
+            onChange("guest_id", e.target.value === "" ? "" : Number(e.target.value))
+          }
           className="input"
         >
           <option value="">Select a guest</option>
           {guests.map((guest) => (
             <option key={guest.id} value={guest.id}>
-              {guest.full_name}
+              {guest.first_name} {guest.last_name}
             </option>
           ))}
         </select>
-        {errors.user_id ? <span className="text-xs text-[--color-error]">{errors.user_id}</span> : null}
+        {errors.guest_id ? <span className="text-xs text-[--color-error]">{errors.guest_id}</span> : null}
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -106,7 +109,7 @@ export function BookingFormFields({
         >
           <option value="">Select a status</option>
           {statuses.map((status) => (
-            <option key={status.id} value={status.id}>
+            <option key={status.id} value={String(status.id)}>
               {status.label || status.name}
             </option>
           ))}

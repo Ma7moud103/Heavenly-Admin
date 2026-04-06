@@ -1,13 +1,14 @@
 import { memo, useState } from "react"
 import { Plus } from "lucide-react"
 import { CreateBookingSheet } from "@/features/bookings/components/CreateBookingSheet"
-import type { BookingStatus, GuestProfile } from "@/interfaces/IRoomBookings"
+import type { IBookingStatus } from "@/interfaces/IBooking"
 import type { IRoom } from "@/interfaces/IRooms"
+import type { IGuest } from "@/interfaces/IGuest"
 
 interface CreateBookingActionProps {
   rooms: IRoom[]
-  guests: GuestProfile[]
-  statuses: BookingStatus[]
+  guests: IGuest[]
+  statuses: IBookingStatus[]
 }
 
 function CreateBookingActionComponent({

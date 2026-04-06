@@ -50,8 +50,8 @@ export function DeleteBookingSheet({
         <DialogHeader className="space-y-4">
           <DialogTitle className="text-center text-xl">Delete this booking?</DialogTitle>
           <DialogDescription className="text-center">
-            {booking?.guest?.full_name
-              ? `Are you sure you want to delete the booking for ${booking.guest.full_name}? This action cannot be undone.`
+            {booking?.guest
+              ? `Are you sure you want to delete the booking for ${booking.guest.first_name} ${booking.guest.last_name}? This action cannot be undone.`
               : "Are you sure you want to delete this booking? This action cannot be undone."}
           </DialogDescription>
         </DialogHeader>

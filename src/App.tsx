@@ -6,6 +6,7 @@ import Rooms from "@/pages/Rooms"
 import Guests from "@/pages/Guests"
 import Bookings from "@/pages/Bookings"
 import Checkin from "@/pages/Checkin"
+import Reservations from "@/pages/Reservations"
 import NotFound from "@/pages/NotFound"
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path="guests" element={<Guests />} />
         <Route path="bookings" element={<Bookings />} />
         <Route path="checkin" element={<Checkin />} />
+        <Route path="reservations" element={<Reservations />} />
         <Route path="settings" element={<Settings />} />
         <Route path="*" element={<NotFound />} />
       </Route>

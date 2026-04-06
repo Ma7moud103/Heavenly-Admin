@@ -1,10 +1,12 @@
 import type { ICreateBookingPayload } from "@/data/createBooking"
-import type { BookingStatus, GuestProfile, IRoomBooking } from "@/interfaces/IRoomBookings"
+import type { IBookingStatus } from "@/interfaces/IBooking"
+import type { IGuest } from "@/interfaces/IGuest"
+import type {  IRoomBooking } from "@/interfaces/IRoomBookings"
 import type { IRoom } from "@/interfaces/IRooms"
 
 export interface BookingFormState {
   room_id: string
-  user_id: string
+  guest_id: number | ""
   status_id: string
   check_in: string
   check_out: string
@@ -12,7 +14,7 @@ export interface BookingFormState {
 
 export const initialBookingForm: BookingFormState = {
   room_id: "",
-  user_id: "",
+  guest_id: "",
   status_id: "",
   check_in: "",
   check_out: "",
@@ -50,23 +52,23 @@ export function calculateBookingTotal(form: BookingFormState, rooms: IRoom[]) {
 export function buildBookingFormState(booking: IRoomBooking): BookingFormState {
   return {
     room_id: booking.room_id,
-    user_id: booking.user_id,
-    status_id: booking.status_id,
+    guest_id: booking.guest_id,
+    status_id: String(booking.status_id),
     check_in: booking.check_in,
     check_out: booking.check_out,
   }
 }
 
-export function getDefaultBookingStatusId(statuses: BookingStatus[]) {
+export function getDefaultBookingStatusId(statuses: IBookingStatus[]) {
   return (
     statuses.find((status) => {
       const name = (status.label || status.name || "").toLowerCase()
       return name === "pending" || name === "reserved" || name === "confirmed"
-    })?.id || statuses[0]?.id || ""
+    })?.id?.toString() || statuses[0]?.id?.toString() || ""
   )
 }
 
-export function getDefaultGuestId(guests: GuestProfile[]) {
+export function getDefaultGuestId(guests: IGuest[]) {
   return guests[0]?.id || ""
 }
 
@@ -77,8 +79,8 @@ export function getDefaultRoomId(rooms: IRoom[]) {
 export function validateBookingForm(
   form: BookingFormState,
   rooms: IRoom[],
-  guests: GuestProfile[],
-  statuses: BookingStatus[]
+  guests: IGuest[],
+  statuses: IBookingStatus[]
 ) {
   const errors: Partial<Record<keyof BookingFormState, string>> = {}
 
@@ -88,15 +90,15 @@ export function validateBookingForm(
     errors.room_id = "Select a valid room"
   }
 
-  if (!form.user_id) {
-    errors.user_id = "Guest is required"
-  } else if (!guests.some((guest) => guest.id === form.user_id)) {
-    errors.user_id = "Select a valid guest"
+  if (!form.guest_id) {
+    errors.guest_id = "Guest is required"
+  } else if (!guests.some((guest) => guest.id === form.guest_id)) {
+    errors.guest_id = "Select a valid guest"
   }
 
   if (!form.status_id) {
     errors.status_id = "Status is required"
-  } else if (!statuses.some((status) => status.id === form.status_id)) {
+  } else if (!statuses.some((status) => String(status.id) === form.status_id)) {
     errors.status_id = "Select a valid status"
   }
 
@@ -123,9 +125,13 @@ export function buildCreateBookingPayload(
   form: BookingFormState,
   rooms: IRoom[]
 ): ICreateBookingPayload {
+  if (form.guest_id === "") {
+    throw new Error("Guest is required")
+  }
+
   return {
     room_id: form.room_id,
-    user_id: form.user_id,
+    guest_id: form.guest_id,
     status_id: form.status_id,
     check_in: form.check_in,
     check_out: form.check_out,

@@ -1,3 +1,4 @@
+import type { IGuest } from "@/interfaces/IGuest"
 import type { IRoom } from "@/interfaces/IRooms"
 
 export interface BookingStatus {
@@ -8,23 +9,10 @@ export interface BookingStatus {
   created_at?: string
 }
 
-export interface GuestProfile {
-  id: string
-  full_name: string
-  phone?: string
-  avatar_url?: string | null
-  role_id?: string
-  is_active?: boolean
-  created_at?: string
-  email?: string
-  country?: string
-  visits?: number
-}
-
 export interface IRoomBooking {
   id: string
   room_id: string
-  user_id: string
+  guest_id: number
   check_in: string
   check_out: string
   total_price: number
@@ -32,5 +20,5 @@ export interface IRoomBooking {
   status_id: string
   room?: IRoom | null
   status?: BookingStatus | null
-  guest?: GuestProfile | null
+  guest?: IGuest | null
 }

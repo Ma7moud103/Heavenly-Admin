@@ -8,13 +8,15 @@ import {
   bookingsFilterReducer,
   initialBookingsFilters,
 } from "@/features/bookings/filters"
-import type { BookingStatus, GuestProfile, IRoomBooking } from "@/interfaces/IRoomBookings"
+import type { IBookingStatus } from "@/interfaces/IBooking"
+import type { IGuest } from "@/interfaces/IGuest"
+import type { IRoomBooking } from "@/interfaces/IRoomBookings"
 import type { IRoom } from "@/interfaces/IRooms"
 
 interface BookingsTableSectionProps {
   bookings: IRoomBooking[]
-  bookingStatuses: BookingStatus[]
-  guests: GuestProfile[]
+  bookingStatuses: IBookingStatus[]
+  guests: IGuest[]
   rooms: IRoom[]
   isLoading?: boolean
 }
@@ -57,7 +59,11 @@ function BookingsTableSectionComponent({
 
   const filteredBookings = useMemo(() => {
     return bookings.filter((booking) => {
-      const guestName = (booking.guest?.full_name || "").toLowerCase()
+      const guestName = booking.guest
+        ? `${booking.guest.first_name} ${booking.guest.last_name}`.toLowerCase()
+        : ""
+      const guestEmail = (booking.guest?.email || "").toLowerCase()
+      const guestPhone = (booking.guest?.phone || "").toLowerCase()
       const roomTitle = (booking.room?.title || "").toLowerCase()
       const roomType = (booking.room?.room_type?.name || "").toLowerCase()
       const statusLabel = (
@@ -69,6 +75,8 @@ function BookingsTableSectionComponent({
       const matchesSearch =
         normalizedFilters.searchTerm.length === 0 ||
         guestName.includes(normalizedFilters.searchTerm) ||
+        guestEmail.includes(normalizedFilters.searchTerm) ||
+        guestPhone.includes(normalizedFilters.searchTerm) ||
         roomTitle.includes(normalizedFilters.searchTerm) ||
         roomType.includes(normalizedFilters.searchTerm)
 

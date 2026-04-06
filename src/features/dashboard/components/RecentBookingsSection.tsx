@@ -1,4 +1,4 @@
-﻿import { ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Badge } from "@/features/dashboard/components/Badge"
 import { BookingsTableSkeleton } from "@/features/dashboard/components/DashboardSkeletons"
@@ -15,7 +15,9 @@ const bookingColumns: Column<IRoomBooking>[] = [
     header: "Guest",
     cell: (row) => (
       <div>
-        <div className="font-medium">{row.guest?.full_name || "Unknown guest"}</div>
+        <div className="font-medium">
+          {row.guest ? `${row.guest.first_name} ${row.guest.last_name}` : "Unknown guest"}
+        </div>
         <div className="text-xs text-[--color-text-muted]">
           {row.room?.title || "Unknown room"} | {row.room?.room_type?.name || "Unknown type"}
         </div>

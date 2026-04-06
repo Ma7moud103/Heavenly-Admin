@@ -13,14 +13,9 @@ interface SetStatusAction {
   value: string
 }
 
-interface ResetFiltersAction {
-  type: "RESET"
-}
-
 export type BookingsFilterAction =
   | SetSearchAction
   | SetStatusAction
-  | ResetFiltersAction
 
 export const initialBookingsFilters: BookingsFiltersState = {
   searchTerm: "",
@@ -36,8 +31,6 @@ export function bookingsFilterReducer(
       return { ...state, searchTerm: action.value }
     case "SET_STATUS":
       return { ...state, statusFilter: action.value }
-    case "RESET":
-      return initialBookingsFilters
     default:
       return state
   }

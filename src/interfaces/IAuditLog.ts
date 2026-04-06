@@ -1,6 +1,4 @@
-import type { GuestProfile } from "./IRoomBookings"
-
-
+import type { IGuest } from "./IGuest"
 
 export interface IRoomAuditData {
   id: string
@@ -31,7 +29,7 @@ export interface IAuditLog {
   table_name: "rooms" | "room_bookings"
   record_id: string
   performed_by: string | null
-  user: GuestProfile | null
+  user: IGuest | null
   old_data: IRoomAuditData | IRoomBookingAuditData | null
   new_data: IRoomAuditData | IRoomBookingAuditData | null
   created_at: string

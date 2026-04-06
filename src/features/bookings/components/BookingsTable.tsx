@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react"
-import { CalendarDays, User } from "lucide-react"
+import { BedDouble, CalendarDays, User } from "lucide-react"
 import { BookingActionsMenu } from "@/features/bookings/components/BookingActionsMenu"
 import { Badge } from "@/features/dashboard/components/Badge"
 import { DataTable, type Column } from "@/features/dashboard/components/DataTable"
@@ -14,20 +14,35 @@ const statusVariants: Record<string, "success" | "warning" | "error" | "info"> =
   "checked-out": "info",
 }
 
-const BookingIdCell = memo(function BookingIdCell({ row }: { row: IRoomBooking }) {
-  return <span className="font-mono text-sm">{row.id}</span>
-})
-
 const BookingGuestCell = memo(function BookingGuestCell({ row }: { row: IRoomBooking }) {
+  const guestName = row.guest
+    ? `${row.guest.first_name} ${row.guest.last_name}`
+    : "Unknown"
+  const guestMeta = row.guest?.email || row.guest?.phone || "No guest contact"
+
   return (
     <div className="flex items-center gap-3">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[--color-bg-inset]">
         <User className="h-4 w-4 text-[--color-text-sub]" />
       </div>
       <div className="min-w-0">
-        <div className="truncate font-medium">{row.guest?.full_name || "Unknown"}</div>
+        <div className="truncate font-medium">{guestName}</div>
+        <div className="truncate text-xs text-[--color-text-muted]">{guestMeta}</div>
+      </div>
+    </div>
+  )
+})
+
+const BookingRoomCell = memo(function BookingRoomCell({ row }: { row: IRoomBooking }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[--color-bg-inset]">
+        <BedDouble className="h-4 w-4 text-[--color-text-sub]" />
+      </div>
+      <div className="min-w-0">
+        <div className="truncate font-medium">{row.room?.title || "Unknown room"}</div>
         <div className="truncate text-xs text-[--color-text-muted]">
-          {row.room?.title || "-"} | {row.room?.room_type?.name || "-"}
+          {row.room?.room_type?.name || "Unknown type"}
         </div>
       </div>
     </div>
@@ -91,14 +106,14 @@ function BookingsTableComponent({
   const columns = useMemo<Column<IRoomBooking>[]>(
     () => [
       {
-        key: "id",
-        header: "Booking ID",
-        cell: (row) => <BookingIdCell row={row} />,
-      },
-      {
         key: "guest",
         header: "Guest",
         cell: (row) => <BookingGuestCell row={row} />,
+      },
+      {
+        key: "room",
+        header: "Room",
+        cell: (row) => <BookingRoomCell row={row} />,
       },
       {
         key: "dates",

@@ -21,16 +21,18 @@ import {
 } from "@/features/bookings/bookingForm"
 import UseCreateBooking from "@/hooks/UseCreateBooking"
 import UseUpdateBooking from "@/hooks/UseUpdateBooking"
-import type { BookingStatus, GuestProfile, IRoomBooking } from "@/interfaces/IRoomBookings"
+import type { IBookingStatus } from "@/interfaces/IBooking"
+import type {  IRoomBooking } from "@/interfaces/IRoomBookings"
 import type { IRoom } from "@/interfaces/IRooms"
+import type { IGuest } from "@/interfaces/IGuest"
 
-interface BookingFormSheetProps {
+interface IProps {
   mode: "create" | "edit"
   open: boolean
   booking?: IRoomBooking | null
   rooms: IRoom[]
-  guests: GuestProfile[]
-  statuses: BookingStatus[]
+  guests: IGuest[]
+  statuses: IBookingStatus[]
   onOpenChange: (open: boolean) => void
 }
 
@@ -42,7 +44,7 @@ export function BookingFormSheet({
   guests,
   statuses,
   onOpenChange,
-}: BookingFormSheetProps) {
+}: IProps) {
   const createBookingMutation = UseCreateBooking()
   const updateBookingMutation = UseUpdateBooking()
   const [form, setForm] = useState<BookingFormState>(initialBookingForm)
@@ -58,7 +60,7 @@ export function BookingFormSheet({
 
     setForm({
       room_id: getDefaultRoomId(rooms),
-      user_id: getDefaultGuestId(guests),
+      guest_id: getDefaultGuestId(guests),
       status_id: getDefaultBookingStatusId(statuses),
       check_in: "",
       check_out: "",
@@ -66,6 +68,7 @@ export function BookingFormSheet({
   }, [booking, guests, mode, open, rooms, statuses])
 
   const activeMutation = mode === "edit" ? updateBookingMutation : createBookingMutation
+  
   const hasRequiredOptions = useMemo(
     () => rooms.length > 0 && guests.length > 0 && statuses.length > 0,
     [guests.length, rooms.length, statuses.length]

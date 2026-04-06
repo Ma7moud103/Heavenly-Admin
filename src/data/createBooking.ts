@@ -4,7 +4,7 @@ import { supabase } from "@/services/supabase"
 
 export interface ICreateBookingPayload {
   room_id: string
-  user_id: string
+  guest_id: number
   check_in: string
   check_out: string
   total_price: number
@@ -25,7 +25,7 @@ export const createBooking = async (
       *,
       room:room_id (*),
       status:status_id (*),
-      guest:user_id (*)
+      guest:guest_id (*)
     `
     )
     .single()

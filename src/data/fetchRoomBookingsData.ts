@@ -9,9 +9,9 @@ export const fetchRoomBookingsData = async (): Promise<{
   const { data, error } = await supabase.from("room_bookings").select(
     `
       *,
-      room:room_id (*),
+      room:room_id (*, room_type:rooms_room_type_id_fkey(*)),
       status:status_id (*),
-      guest:user_id (*)
+      guest:guest_id (*)
     `
   );
 

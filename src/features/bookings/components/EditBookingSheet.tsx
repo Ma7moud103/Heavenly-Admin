@@ -1,13 +1,15 @@
 import { BookingFormSheet } from "@/features/bookings/components/BookingFormSheet"
-import type { BookingStatus, GuestProfile, IRoomBooking } from "@/interfaces/IRoomBookings"
+import type { IBookingStatus } from "@/interfaces/IBooking"
+import type { IGuest } from "@/interfaces/IGuest"
+import type { IRoomBooking } from "@/interfaces/IRoomBookings"
 import type { IRoom } from "@/interfaces/IRooms"
 
 interface EditBookingSheetProps {
   open: boolean
   booking: IRoomBooking | null
   rooms: IRoom[]
-  guests: GuestProfile[]
-  statuses: BookingStatus[]
+  guests: IGuest[]
+  statuses: IBookingStatus[]
   onOpenChange: (open: boolean) => void
 }
 

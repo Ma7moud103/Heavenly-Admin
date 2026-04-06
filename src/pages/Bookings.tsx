@@ -5,36 +5,28 @@ import { BookingsTableSection } from "@/features/bookings/components/BookingsTab
 import { CreateBookingAction } from "@/features/bookings/components/CreateBookingAction"
 import UseRoomBookings from "@/hooks/UseRoomBookings"
 import UseRooms from "@/hooks/UseRooms"
+import UseBookingStatus from "@/hooks/UseBookingStatus"
+import UseGuests from "@/hooks/UseGuests"
 
 function Bookings() {
   const { data: bookings = [], isFetching: isFetchingBookings } = UseRoomBookings()
   const { data: rooms = [] } = UseRooms()
+  const { data: bookingStatuses = [] } = UseBookingStatus()
 
-  const bookingStatuses = useMemo(
-    () =>
-      Array.from(
-        new Map(
-          bookings
-            .map((booking) => booking.status)
-            .filter((status): status is NonNullable<(typeof bookings)[number]["status"]> => Boolean(status))
-            .map((status) => [status.id, status])
-        ).values()
-      ),
-    [bookings]
-  )
+  // const guests = useMemo(
+  //   () =>
+  //     Array.from(
+  //       new Map(
+  //         bookings
+  //           .map((booking) => booking.guest)
+  //           .filter((guest): guest is NonNullable<(typeof bookings)[number]["guest"]> => Boolean(guest))
+  //           .map((guest) => [guest.id, guest])
+  //       ).values()
+  //     ),
+  //   [bookings]
+  // )
 
-  const guests = useMemo(
-    () =>
-      Array.from(
-        new Map(
-          bookings
-            .map((booking) => booking.guest)
-            .filter((guest): guest is NonNullable<(typeof bookings)[number]["guest"]> => Boolean(guest))
-            .map((guest) => [guest.id, guest])
-        ).values()
-      ),
-    [bookings]
-  )
+  const { data: guests = [] } = UseGuests()
 
   const bookingStats = useMemo(() => {
     return bookings.reduce(
@@ -45,8 +37,8 @@ function Bookings() {
           stats.checkedInCount += 1
         }
 
-        if (status === "confirmed" || status === "reserved") {
-          stats.reservedCount += 1
+        if (status === "confirmed") {
+          stats.confirmedCount += 1
         }
 
         if (status === "pending") {
@@ -58,7 +50,7 @@ function Bookings() {
       {
         totalBookings: bookings.length,
         checkedInCount: 0,
-        reservedCount: 0,
+        confirmedCount: 0,
         pendingCount: 0,
       }
     )
@@ -73,7 +65,7 @@ function Bookings() {
       <BookingsStatsGrid
         totalBookings={bookingStats.totalBookings}
         checkedInCount={bookingStats.checkedInCount}
-        reservedCount={bookingStats.reservedCount}
+        confirmedCount={bookingStats.confirmedCount}
         pendingCount={bookingStats.pendingCount}
         isLoading={isFetchingBookings}
       />
