@@ -1,52 +1,36 @@
-﻿import {
-  BedDouble,
-  DollarSign,
-  TrendingUp,
-  Users,
-} from "lucide-react"
-import type { IHotelStats } from "@/interfaces/HotelStatus"
-import { formatCurrency } from "@/lib/utils"
-import { StatCard } from "@/features/dashboard/components/StatCard"
-import { StatCardSkeleton } from "@/features/dashboard/components/DashboardSkeletons"
+import { BedDouble, DollarSign, TrendingUp, Users } from 'lucide-react';
+import { StatCardSkeleton } from '@/features/dashboard/components/DashboardSkeletons';
+import { StatCard } from '@/features/dashboard/components/StatCard';
+import { formatCurrency } from '@/lib/utils';
+import { useStats } from '@/hooks/useStats';
 
-interface IProps {
-  hotelStats: IHotelStats
-  isLoading: boolean
+function formatOccupancyRate(value: number) {
+  const disabledValue = value <= 1 ? value * 100 : value;
+  return `${Math.round(disabledValue)}%`;
 }
 
-export function DashboardStatsGrid({
-  hotelStats,
-  isLoading,
-}: IProps) {
+export function DashboardStatsGrid() {
+  const { roomStats, guestsInHouse, occupancyRate, isLoading: IsLoadingStats, dailyRevenue } = useStats();
+  const { totalRooms } = roomStats;
+
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {isLoading ? (
+      {IsLoadingStats ? (
         Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)
       ) : (
         <>
-          <StatCard
-            title="Total Rooms"
-            value={hotelStats.total_rooms}
-            changeType="neutral"
-            icon={<BedDouble className="h-5 w-5" />}
-          />
+          <StatCard title="Total Rooms" value={totalRooms} changeType="neutral" icon={<BedDouble className="h-5 w-5" />} />
           <StatCard
             title="Occupancy Rate"
-            value={`${formatCurrency(hotelStats.occupancy_rate)}%`}
+            value={formatOccupancyRate(occupancyRate)}
             changeType="positive"
             icon={<TrendingUp className="h-5 w-5" />}
             variant="gold"
           />
+          <StatCard title="Guests In House" value={guestsInHouse} changeType="neutral" icon={<Users className="h-5 w-5" />} />
           <StatCard
-            title="Guests In House"
-            value={hotelStats.occupied_rooms}
-            // change={`${hotelStats.checkins_today} check-ins today`}
-            changeType="neutral"
-            icon={<Users className="h-5 w-5" />}
-          />
-          <StatCard
-            title="Today&apos;s Revenue"
-            value={formatCurrency(hotelStats.revenue_today)}
+            title="Today's Revenue"
+            value={formatCurrency(dailyRevenue)}
             changeType="positive"
             icon={<DollarSign className="h-5 w-5" />}
             variant="success"
@@ -54,5 +38,5 @@ export function DashboardStatsGrid({
         </>
       )}
     </section>
-  )
+  );
 }

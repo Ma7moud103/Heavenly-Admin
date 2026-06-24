@@ -1,17 +1,19 @@
-import { memo, useMemo } from "react"
-import { BookingsHeader } from "@/features/bookings/components/BookingsHeader"
-import { BookingsStatsGrid } from "@/features/bookings/components/BookingsStatsGrid"
-import { BookingsTableSection } from "@/features/bookings/components/BookingsTableSection"
-import { CreateBookingAction } from "@/features/bookings/components/CreateBookingAction"
-import UseRoomBookings from "@/hooks/UseRoomBookings"
-import UseRooms from "@/hooks/UseRooms"
-import UseBookingStatus from "@/hooks/UseBookingStatus"
-import UseGuests from "@/hooks/UseGuests"
+import { memo, useMemo } from "react";
+import { BookingsHeader } from "@/features/bookings/components/BookingsHeader";
+import { BookingsStatsGrid } from "@/features/bookings/components/BookingsStatsGrid";
+import { BookingsTableSection } from "@/features/bookings/components/BookingsTableSection";
+import { CreateBookingAction } from "@/features/bookings/components/CreateBookingAction";
+import UseRoomBookings from "@/hooks/UseRoomBookings";
+import UseRooms from "@/hooks/UseRooms";
+import UseBookingStatus from "@/hooks/UseBookingStatus";
+import UseGuests from "@/hooks/UseGuests";
 
 function Bookings() {
-  const { data: bookings = [], isFetching: isFetchingBookings } = UseRoomBookings()
-  const { data: rooms = [] } = UseRooms()
-  const { data: bookingStatuses = [] } = UseBookingStatus()
+  const { data: bookings = [], isFetching: isFetchingBookings } =
+    UseRoomBookings();
+  const { data: rooms = [] } = UseRooms();
+  const { data: bookingStatuses = [] } = UseBookingStatus();
+  const { data: guests = [] } = UseGuests();
 
   // const guests = useMemo(
   //   () =>
@@ -26,40 +28,46 @@ function Bookings() {
   //   [bookings]
   // )
 
-  const { data: guests = [] } = UseGuests()
-
   const bookingStats = useMemo(() => {
     return bookings.reduce(
       (stats, booking) => {
-        const status = (booking.status?.label || booking.status?.name || "").toLowerCase()
+        const status = (
+          booking.status?.label ||
+          booking.status?.name ||
+          ""
+        ).toLowerCase();
 
         if (status === "checked-in") {
-          stats.checkedInCount += 1
+          stats.checkedInCount += 1;
         }
 
         if (status === "confirmed") {
-          stats.confirmedCount += 1
+          stats.confirmedCount += 1;
         }
 
         if (status === "pending") {
-          stats.pendingCount += 1
+          stats.pendingCount += 1;
         }
 
-        return stats
+        return stats;
       },
       {
         totalBookings: bookings.length,
         checkedInCount: 0,
         confirmedCount: 0,
         pendingCount: 0,
-      }
-    )
-  }, [bookings])
+      },
+    );
+  }, [bookings]);
 
   return (
     <div className="flex flex-col gap-6">
       <BookingsHeader>
-        <CreateBookingAction rooms={rooms} guests={guests} statuses={bookingStatuses} />
+        <CreateBookingAction
+          rooms={rooms}
+          guests={guests}
+          statuses={bookingStatuses}
+        />
       </BookingsHeader>
 
       <BookingsStatsGrid
@@ -78,7 +86,7 @@ function Bookings() {
         isLoading={isFetchingBookings}
       />
     </div>
-  )
+  );
 }
 
-export default memo(Bookings)
+export default memo(Bookings);

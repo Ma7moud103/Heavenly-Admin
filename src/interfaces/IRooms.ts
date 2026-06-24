@@ -28,8 +28,8 @@ export interface IRoom {
 }
 
 export interface IRoomsTypes {
-  id: string;
+  id?: string;
   name: string;
   price: number;
-  count: number;
+  count?: number;
 }

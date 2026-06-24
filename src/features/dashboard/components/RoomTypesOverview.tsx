@@ -1,18 +1,12 @@
-﻿import { RoomTypesSkeleton } from "@/features/dashboard/components/DashboardSkeletons"
-import type { IHotelStats } from "@/interfaces/HotelStatus"
-import type { IRoomsTypes } from "@/interfaces/IRooms"
+﻿import { RoomTypesSkeleton } from '@/features/dashboard/components/DashboardSkeletons';
+import type { IRoomsTypes } from '@/interfaces/IRooms';
 
 interface IProps {
-  hotelStats: IHotelStats
-  isLoading: boolean
-  roomTypes: IRoomsTypes[]
+  isLoading: boolean;
+  roomTypes: IRoomsTypes[];
 }
 
-export function RoomTypesOverview({
-
-  isLoading,
-  roomTypes,
-}: IProps) {
+export function RoomTypesOverview({ isLoading, roomTypes }: IProps) {
   return (
     <div className="card p-5">
       <h2 className="mb-4 text-lg font-semibold">Room Types Overview</h2>
@@ -20,7 +14,7 @@ export function RoomTypesOverview({
         <RoomTypesSkeleton />
       ) : (
         <div className="space-y-4">
-          {roomTypes.map((room,index) => {
+          {roomTypes.map((room, index) => {
             // const percentage = (room.count / (hotelStats.total_rooms || 1)) * 100
 
             return (
@@ -36,10 +30,10 @@ export function RoomTypesOverview({
                   />
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
+  );
 }
