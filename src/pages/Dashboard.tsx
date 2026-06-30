@@ -13,6 +13,7 @@ import { handleDateSort } from '@/utils/dates';
 export default function Dashboard() {
   const { data: bookingsData, isLoading: isLoadingBookings } = UseRoomBookings();
   const { data: roomTypesData, isLoading: isLoadingRoomTypes } = UseRoomsTypes();
+
   const { data: auditLogsData, isLoading: isLoadingAuditLogs } = UseAuditLogs();
 
   const recentAuditActivity = (auditLogsData ?? []).slice().sort(handleDateSort).slice(0, 5).map(mapAuditToActivity);

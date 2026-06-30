@@ -11,7 +11,7 @@ export async function createRoomTypeAction(roomTypes: IRoomsTypes[]) {
   if (error) throw new Error(error.message);
 }
 
-export function createRoomType(setFormData: React.Dispatch<React.SetStateAction<IRoomsTypes>>) {
+export function createRoomType() {
   const queryClient = useQueryClient();
   return useMutation({
     //here we used bind with null casue we don't want to change the context of the function and we want to pass the roomType as an argument to the function
@@ -22,10 +22,10 @@ export function createRoomType(setFormData: React.Dispatch<React.SetStateAction<
       toast.success('Room type created successfully');
       await queryClient.invalidateQueries({ queryKey: ['roomTypes'] });
     },
-    onMutate: () => {
-      setFormData({ name: '', price: '' });
-      console.log('Creating room type...');
-    },
+    // onMutate: () => {
+    //   setFormData({ name: '', price: '' });
+    //   console.log('Creating room type...');
+    // },
     onError: (error) => {
       console.error('Error creating room type:', error);
       toast.error(`Error creating room type: ${error.message}`);

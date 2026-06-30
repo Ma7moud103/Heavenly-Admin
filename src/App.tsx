@@ -21,7 +21,7 @@ function App() {
         <Route index element={<Dashboard />} />
         <Route path="rooms" element={<Rooms />} />
         <Route path="room-types" element={<RoomSettings />} />
-        <Route path="floor-plan" element={<p className="text-xl font-semibold">Floor Plan Management Coming Soon!</p>} />
+
         <Route path="guests" element={<Guests />} />
         <Route path="bookings" element={<Bookings />} />
         <Route path="checkin" element={<Checkin />} />

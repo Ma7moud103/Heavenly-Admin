@@ -17,7 +17,7 @@ const initialFormData: IRoomsTypes = {
 const RoomSettings = () => {
   const [formData, setFormData] = useState<IRoomsTypes>(initialFormData);
   const [formErrors, setFormErrors] = useState<{ name: string; price: string } | null>(null);
-  const { mutate } = createRoomType(setFormData);
+  const { mutate } = createRoomType();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

@@ -25,6 +25,7 @@ export interface IRoom {
   created_at?: string;
   room_type?: RoomType | null;
   status?: RoomStatus | null;
+  floor?: number;
 }
 
 export interface IRoomsTypes {

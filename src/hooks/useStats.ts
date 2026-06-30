@@ -13,6 +13,7 @@ export function useStats(): IStats {
     const roomStats = rooms.reduce<IRoomStats>(
       (acc, room) => {
         const status = normalizeStrings(room.status?.label || room.status?.name);
+
         if (status === 'available') acc.availableRooms += 1;
         if (status === 'occupied') acc.occupiedRooms += 1;
         if (status === 'maintenance') acc.maintenanceRooms += 1;
@@ -44,7 +45,7 @@ export function useStats(): IStats {
         const status = normalizeStrings(booking.status?.label || booking.status?.name);
         const bookingMonth = (booking.created_at || booking.check_in)?.slice(0, 7);
 
-        if (status === 'checked-in' && booking.check_in === today) {
+        if (status === 'checked in' && booking.check_in === today) {
           dailyRevenue += booking.total_price || 0;
           const guestId = booking.guest_id || booking.guest?.id;
           if (guestId !== null && guestId !== undefined) {

@@ -1,99 +1,89 @@
-import React from "react";
+import React from 'react';
 
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import { LayoutDashboard, Settings, Building2, DoorOpen } from "lucide-react";
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
+import { TeamSwitcher } from '@/components/team-switcher';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
+import { LayoutDashboard, Settings, Building2, DoorOpen } from 'lucide-react';
 
 const data = {
   user: {
-    name: "Admin User",
-    email: "admin@heavenlyhotel.com",
-    avatar: "/avatars/admin.jpg",
+    name: 'Admin User',
+    email: 'admin@heavenlyhotel.com',
+    avatar: '/avatars/admin.jpg',
   },
 
   teams: [
     {
-      name: "Heavenly Hotel",
+      name: 'Heavenly Hotel',
       logo: <Building2 className="w-5 h-5" />,
-      plan: "Luxury",
+      plan: 'Luxury',
     },
   ],
   navMain: [
     {
-      title: "Overview",
-      url: "/",
+      title: 'Overview',
+      url: '/',
       icon: <LayoutDashboard className="w-5 h-5" />,
       isActive: true,
       items: [
         {
-          title: "Dashboard",
-          url: "/",
+          title: 'Dashboard',
+          url: '/',
         },
       ],
     },
     {
-      title: "Rooms Management",
-      url: "/rooms",
+      title: 'Rooms Management',
+      url: '/rooms',
       icon: <Building2 className="w-5 h-5" />,
       items: [
         {
-          title: "Rooms",
-          url: "/rooms",
+          title: 'Rooms',
+          url: '/rooms',
         },
         {
-          title: "Room Types",
-          url: "/room-types",
-        },
-        {
-          title: "Floor Plan",
-          url: "/floor-plan",
+          title: 'Room Types',
+          url: '/room-types',
         },
       ],
     },
     {
-      title: "Bookings & Reservations",
-      url: "#",
+      title: 'Bookings & Reservations',
+      url: '#',
       icon: <DoorOpen className="w-5 h-5" />,
       items: [
         {
-          title: "Bookings",
-          url: "/bookings",
+          title: 'Bookings',
+          url: '/bookings',
         },
         {
-          title: "Check-in/out",
-          url: "/checkin",
+          title: 'Check-in/out',
+          url: '/checkin',
         },
         {
-          title: "Reservations",
-          url: "/reservations",
+          title: 'Reservations',
+          url: '/reservations',
         },
       ],
     },
 
     {
-      title: "Settings",
-      url: "/settings",
+      title: 'Settings',
+      url: '/settings',
       icon: <Settings className="w-5 h-5" />,
       items: [
         {
-          title: "General",
-          url: "/settings",
+          title: 'General',
+          url: '/settings',
         },
         {
-          title: "Hotel Profile",
-          url: "/settings/hotel",
+          title: 'Hotel Profile',
+          url: '/settings/hotel',
         },
         {
-          title: "Users",
-          url: "/settings/users",
+          title: 'Users',
+          url: '/settings/users',
         },
       ],
     },
