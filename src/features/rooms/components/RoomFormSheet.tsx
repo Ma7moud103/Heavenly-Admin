@@ -55,12 +55,14 @@ export function RoomFormSheet({ mode, open, room, roomStatuses, roomTypes, onOpe
   const activeMutation = mode === 'edit' ? updateRoomMutation : createRoomMutation;
 
   const handleChange = <K extends keyof ICreateRoomFormState>(field: K, value: ICreateRoomFormState[K]) => {
-    setForm((current) => {
+    setForm((current: ICreateRoomFormState) => {
       if (field === 'room_type_id') {
+        const roomTypeId = String(value);
+
         return {
           ...current,
-          room_type_id: value,
-          base_price: getRoomTypePrice(roomTypes, value),
+          room_type_id: roomTypeId,
+          base_price: getRoomTypePrice(roomTypes, roomTypeId),
         };
       }
 
@@ -117,13 +119,7 @@ export function RoomFormSheet({ mode, open, room, roomStatuses, roomTypes, onOpe
     mode === 'edit'
       ? 'Update room details, pricing, image, type, and status.'
       : 'Create a room with pricing, capacity, image, and linked room type and status.';
-  const submitLabel = activeMutation.isPending
-    ? mode === 'edit'
-      ? 'Saving...'
-      : 'Creating...'
-    : mode === 'edit'
-      ? 'Save Changes'
-      : 'Create Room';
+  const submitLabel = activeMutation.isPending ? (mode === 'edit' ? 'Saving...' : 'Creating...') : mode === 'edit' ? 'Save Changes' : 'Create Room';
 
   return (
     <Sheet open={open} onOpenChange={handleClose}>
@@ -134,17 +130,9 @@ export function RoomFormSheet({ mode, open, room, roomStatuses, roomTypes, onOpe
         </SheetHeader>
 
         <form className="flex h-full flex-col" onSubmit={handleSubmit}>
-          <CreateRoomFormFields
-            errors={errors}
-            form={form}
-            roomStatuses={roomStatuses}
-            roomTypes={roomTypes}
-            onChange={handleChange}
-          />
+          <CreateRoomFormFields errors={errors} form={form} roomStatuses={roomStatuses} roomTypes={roomTypes} onChange={handleChange} />
 
-          {activeMutation.isError ? (
-            <p className="px-4 text-sm text-[--color-error]">{activeMutation.error.message}</p>
-          ) : null}
+          {activeMutation.isError ? <p className="px-4 text-sm text-[--color-error]">{activeMutation.error.message}</p> : null}
 
           <SheetFooter className="border-t border-[--color-border] sm:flex-row sm:justify-end">
             <button type="button" className="btn btn-ghost" onClick={() => handleClose(false)}>

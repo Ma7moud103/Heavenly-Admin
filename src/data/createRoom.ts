@@ -25,7 +25,7 @@ export const createRoom = async (
     .select(
       `*,
       room_type:rooms_room_type_id_fkey(*),
-      status:status_id (*)
+      status:status_id(*)
     `,
     )
     .single();
