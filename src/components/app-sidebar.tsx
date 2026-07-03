@@ -4,7 +4,7 @@ import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { TeamSwitcher } from '@/components/team-switcher';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, Building2, DoorOpen } from 'lucide-react';
+import { LayoutDashboard, Settings, Building2, DoorOpen, Sparkles } from 'lucide-react';
 
 const data = {
   user: {
@@ -64,6 +64,41 @@ const data = {
         {
           title: 'Reservations',
           url: '/reservations',
+        },
+      ],
+    },
+    {
+      title: 'Spa & Relaxation',
+      url: '#',
+      icon: <Sparkles className="w-5 h-5" />,
+      items: [
+        {
+          title: 'Overview',
+          url: '/spa',
+        },
+        {
+          title: 'Categories',
+          url: '/spa/categories',
+        },
+        {
+          title: 'Services',
+          url: '/spa/services',
+        },
+        {
+          title: 'Packages',
+          url: '/spa/packages',
+        },
+        {
+          title: 'Therapists',
+          url: '/spa/therapists',
+        },
+        {
+          title: 'Guests',
+          url: '/spa/guests',
+        },
+        {
+          title: 'Bookings',
+          url: '/spa/bookings',
         },
       ],
     },

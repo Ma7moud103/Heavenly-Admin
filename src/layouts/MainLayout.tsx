@@ -24,6 +24,13 @@ const routeTitles: Record<string, string> = {
   "/reservations": "Reservations",
   "/settings": "Settings",
   "/room-types": "Room Types",
+  "/spa": "Spa Overview",
+  "/spa/categories": "Spa Categories",
+  "/spa/services": "Spa Services",
+  "/spa/packages": "Spa Packages",
+  "/spa/therapists": "Spa Therapists",
+  "/spa/guests": "Spa Guests",
+  "/spa/bookings": "Spa Bookings",
   "/floor-plan": "Floor Plans",
 }
 
