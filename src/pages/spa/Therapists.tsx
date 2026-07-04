@@ -1,7 +1,5 @@
-import { Sparkles } from 'lucide-react';
 import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import UseSpaTherapists from '@/hooks/spa/UseSpaTherapists';
 import SpaTherapist from '@/features/spa/components/SpaTherapist';

@@ -1,7 +1,5 @@
-import { Scissors } from 'lucide-react';
 import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import UseSpaServices from '@/hooks/spa/UseSpaServices';
 import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
