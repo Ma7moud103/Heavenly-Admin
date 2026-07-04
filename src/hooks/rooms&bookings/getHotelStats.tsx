@@ -1,6 +1,6 @@
-import { fetchHotelStats } from "@/data/hotelData";
-import type { IHotelStats } from "@/interfaces/HotelStatus";
-import { useQuery } from "@tanstack/react-query";
+import { fetchHotelStats } from '@/data/rooms&bookings/hotelData';
+import type { IHotelStats } from '@/interfaces/HotelStatus';
+import { useQuery } from '@tanstack/react-query';
 
 const defaultStats: IHotelStats = {
   total_rooms: 0,
@@ -19,11 +19,11 @@ const defaultStats: IHotelStats = {
 
 export const useHotelStats = () => {
   return useQuery<IHotelStats, Error>({
-    queryKey: ["hotelStats"],
+    queryKey: ['hotelStats'],
     queryFn: async () => {
       const { data, error } = await fetchHotelStats();
       if (error) {
-        console.error("Error fetching hotel stats:", error);
+        console.error('Error fetching hotel stats:', error);
         throw error;
       }
       return data?.[0] ?? defaultStats;

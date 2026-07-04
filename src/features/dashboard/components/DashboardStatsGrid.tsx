@@ -2,7 +2,7 @@ import { BedDouble, DollarSign, TrendingUp, Users } from 'lucide-react';
 import { StatCardSkeleton } from '@/features/dashboard/components/DashboardSkeletons';
 import { StatCard } from '@/features/dashboard/components/StatCard';
 import { formatCurrency } from '@/lib/utils';
-import { useStats } from '@/hooks/useStats';
+import { useStats } from '@/hooks/rooms&bookings/useStats';
 
 function formatOccupancyRate(value: number) {
   const disabledValue = value <= 1 ? value * 100 : value;

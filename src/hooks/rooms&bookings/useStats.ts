@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import UseRoomBookings from '@/hooks/UseRoomBookings';
-import UseRooms from '@/hooks/UseRooms';
+
 import { normalizeStrings } from '@/utils/normalizations';
 import { getCurrentMonthInCairo, getTodayInCairo } from '@/utils/dates';
 import type { IBookingStats, IRoomStats, IStats } from '@/interfaces/IStats';
+import UseRoomBookings from './UseRoomBookings';
+import UseRooms from './UseRooms';
 
 export function useStats(): IStats {
   const { data: rooms = [], isLoading: isLoadingRooms } = UseRooms();

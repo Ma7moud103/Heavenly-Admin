@@ -1,4 +1,4 @@
-﻿import type { ICreateRoomPayload } from '@/data/createRoom';
+﻿import type { ICreateRoomPayload } from '@/data/rooms&bookings/createRoom';
 import type { IRoom, RoomStatus, IRoomsTypes } from '@/interfaces/IRooms';
 
 export interface ICreateRoomFormState {

@@ -3,10 +3,11 @@ import { CreateRoomAction } from '@/features/rooms/components/CreateRoomAction';
 import { RoomsArea } from '@/features/rooms/components/RoomsArea';
 import { RoomsHeader } from '@/features/rooms/components/RoomsHeader';
 import { RoomsStatsGrid } from '@/features/rooms/components/RoomsStatsGrid';
-import UseRooms from '@/hooks/UseRooms';
-import UseRoomsStatuses from '@/hooks/UseRoomsStatuses';
-import UseRoomsTypes from '@/hooks/UseRoomsTypes';
+
 import type { IRoomStats } from '@/interfaces/IRoomStats';
+import UseRooms from '@/hooks/rooms&bookings/UseRooms';
+import UseRoomsTypes from '@/hooks/rooms&bookings/UseRoomsTypes';
+import UseRoomsStatuses from '@/hooks/rooms&bookings/UseRoomsStatuses';
 
 type TRoomStatus = 'available' | 'occupied' | 'maintenance' | 'out_of_service' | 'cleaning';
 function Rooms() {

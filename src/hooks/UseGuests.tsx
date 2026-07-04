@@ -1,4 +1,4 @@
-import fetchGuests from "@/data/fetchGuests"
+import fetchGuests from "@/data/rooms&bookings/fetchGuests"
 import type { IGuest } from "@/interfaces/IGuest"
 import { useQuery } from "@tanstack/react-query"
 

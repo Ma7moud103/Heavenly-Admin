@@ -1,6 +1,6 @@
 ﻿import { useQuery } from "@tanstack/react-query"
-import { getRoomStatuses } from "@/data/getRoomStatuses"
 import type { RoomStatus } from "@/interfaces/IRooms"
+import { getRoomStatuses } from "@/data/rooms&bookings/getRoomStatuses"
 
 const UseRoomsStatuses = () => {
   return useQuery<RoomStatus[], Error>({

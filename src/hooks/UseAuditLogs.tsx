@@ -1,6 +1,6 @@
-import fetchAudits from '@/data/fetchAudits';
 import { useQuery } from '@tanstack/react-query';
 import type { IAuditLog } from '@/interfaces/IAuditLog';
+import fetchAudits from '@/data/rooms&bookings/fetchAudits';
 
 const UseAuditLogs = () => {
   return useQuery<IAuditLog[]>({

@@ -5,7 +5,24 @@ function handleDateSort(first: IAuditLog, second: IAuditLog) {
   return parseUtcTimestamp(second.created_at).getTime() - parseUtcTimestamp(first.created_at).getTime();
 }
 
+export function timeNormalization(time: string): string {
+  if (!time?.trim()) {
+    return '-';
+  }
 
+  const [hoursPart = '', minutesPart = ''] = time.trim().split(':');
+  const hours = Number(hoursPart);
+  const minutes = Number(minutesPart);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return time;
+  }
+
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const normalizedHours = hours % 12 || 12;
+
+  return `${normalizedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+}
 
 function getTodayInCairo() {
   const parts = new Intl.DateTimeFormat('en-CA', {

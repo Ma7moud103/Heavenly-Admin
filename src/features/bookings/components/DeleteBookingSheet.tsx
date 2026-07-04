@@ -1,48 +1,37 @@
-import { toast } from "react-toastify"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import UseDeleteBooking from "@/hooks/UseDeleteBooking"
-import type { IRoomBooking } from "@/interfaces/IRoomBookings"
+import { toast } from 'react-toastify';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import type { IRoomBooking } from '@/interfaces/IRoomBookings';
+import UseDeleteBooking from '@/hooks/rooms&bookings/UseDeleteBooking';
 
 interface DeleteBookingSheetProps {
-  open: boolean
-  booking: IRoomBooking | null
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  booking: IRoomBooking | null;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteBookingSheet({
-  open,
-  booking,
-  onOpenChange,
-}: DeleteBookingSheetProps) {
-  const deleteBookingMutation = UseDeleteBooking()
+export function DeleteBookingSheet({ open, booking, onOpenChange }: DeleteBookingSheetProps) {
+  const deleteBookingMutation = UseDeleteBooking();
 
   const handleClose = (nextOpen: boolean) => {
     if (!nextOpen) {
-      deleteBookingMutation.reset()
+      deleteBookingMutation.reset();
     }
 
-    onOpenChange(nextOpen)
-  }
+    onOpenChange(nextOpen);
+  };
 
   const handleDelete = async () => {
-    if (!booking) return
+    if (!booking) return;
 
     try {
-      await deleteBookingMutation.mutateAsync(booking.id)
-      toast.success("Booking deleted successfully")
-      handleClose(false)
+      await deleteBookingMutation.mutateAsync(booking.id);
+      toast.success('Booking deleted successfully');
+      handleClose(false);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete booking"
-      toast.error(message)
+      const message = error instanceof Error ? error.message : 'Failed to delete booking';
+      toast.error(message);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -52,13 +41,11 @@ export function DeleteBookingSheet({
           <DialogDescription className="text-center">
             {booking?.guest
               ? `Are you sure you want to delete the booking for ${booking.guest.first_name} ${booking.guest.last_name}? This action cannot be undone.`
-              : "Are you sure you want to delete this booking? This action cannot be undone."}
+              : 'Are you sure you want to delete this booking? This action cannot be undone.'}
           </DialogDescription>
         </DialogHeader>
 
-        {deleteBookingMutation.isError ? (
-          <p className="px-4 text-sm text-[--color-error]">{deleteBookingMutation.error.message}</p>
-        ) : null}
+        {deleteBookingMutation.isError ? <p className="px-4 text-sm text-[--color-error]">{deleteBookingMutation.error.message}</p> : null}
 
         <DialogFooter className="border-t border-[--color-border]">
           <button type="button" className="btn btn-ghost" onClick={() => handleClose(false)}>
@@ -70,10 +57,10 @@ export function DeleteBookingSheet({
             onClick={handleDelete}
             disabled={deleteBookingMutation.isPending}
           >
-            {deleteBookingMutation.isPending ? "Deleting..." : "Delete Booking"}
+            {deleteBookingMutation.isPending ? 'Deleting...' : 'Delete Booking'}
           </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

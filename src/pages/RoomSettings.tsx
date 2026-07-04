@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { createRoomType } from '@/data/createRoomType';
+import { createRoomType } from '@/data/rooms&bookings/createRoomType';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 

@@ -5,8 +5,8 @@ import { RecentActivitySection } from '@/features/dashboard/components/RecentAct
 import { RecentBookingsSection } from '@/features/dashboard/components/RecentBookingsSection';
 import { RoomTypesOverview } from '@/features/dashboard/components/RoomTypesOverview';
 import UseAuditLogs from '@/hooks/UseAuditLogs';
-import UseRoomBookings from '@/hooks/UseRoomBookings';
-import UseRoomsTypes from '@/hooks/UseRoomsTypes';
+import UseRoomBookings from '@/hooks/rooms&bookings/UseRoomBookings';
+import UseRoomsTypes from '@/hooks/rooms&bookings/UseRoomsTypes';
 import { mapAuditToActivity } from '@/lib/utils';
 import { handleDateSort } from '@/utils/dates';
 

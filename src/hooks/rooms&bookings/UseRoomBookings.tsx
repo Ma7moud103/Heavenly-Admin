@@ -1,5 +1,5 @@
+import { fetchRoomBookingsData } from "@/data/rooms&bookings/fetchRoomBookingsData"
 import type { IRoomBooking } from "@/interfaces/IRoomBookings"
-import { fetchRoomBookingsData } from "@/data/fetchRoomBookingsData"
 import { useQuery } from "@tanstack/react-query"
 
 const UseRoomBookings = () => {

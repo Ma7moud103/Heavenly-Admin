@@ -1,4 +1,4 @@
-﻿import { getRoomTypes } from "@/data/getRoomTypes"
+﻿import { getRoomTypes } from "@/data/rooms&bookings/getRoomTypes"
 import type { IRoomsTypes } from "@/interfaces/IRooms"
 import { useQuery } from "@tanstack/react-query"
 

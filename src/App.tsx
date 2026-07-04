@@ -16,7 +16,7 @@ import SpaPackages from '@/pages/spa/Packages';
 import SpaTherapists from '@/pages/spa/Therapists';
 import SpaGuests from '@/pages/spa/Guests';
 import SpaBookings from '@/pages/spa/Bookings';
-import SpaOverview from './pages/spa/SpaOverview';
+import Spa from '@/pages/Spa';
 
 function App() {
   // HydrateFallback => Search for this method please
@@ -28,7 +28,7 @@ function App() {
         <Route index element={<Dashboard />} />
         <Route path="rooms" element={<Rooms />} />
         <Route path="room-types" element={<RoomSettings />} />
-        <Route path="spa" element={<SpaOverview />} />
+        <Route path="spa" element={<Spa />} />
         <Route path="spa/categories" element={<SpaCategories />} />
         <Route path="spa/services" element={<SpaServices />} />
         <Route path="spa/packages" element={<SpaPackages />} />

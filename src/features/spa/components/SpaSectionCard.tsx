@@ -10,10 +10,10 @@ export function SpaSectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="space-y-4 rounded-[2rem] border border-[--color-border] bg-[--color-bg-raised] p-6 shadow-sm">
+    <section className="space-y-4 rounded-[2rem] border border-[var(--color-border)] bg-[var(--color-bg-raised)] p-4 shadow-sm sm:p-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold tracking-tight text-[--color-text]">{title}</h2>
-        <p className="max-w-2xl text-sm leading-6 text-[--color-text-sub]">{description}</p>
+        <h2 className="text-xl font-semibold tracking-tight text-[var(--color-text)] sm:text-2xl">{title}</h2>
+        <p className="max-w-2xl text-sm leading-6 text-[var(--color-text-sub)]">{description}</p>
       </div>
       {children}
     </section>

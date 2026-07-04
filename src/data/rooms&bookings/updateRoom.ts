@@ -1,7 +1,7 @@
 ﻿import type { IRoom } from '@/interfaces/IRooms';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@/services/supabase';
-import type { ICreateRoomPayload } from '@/data/createRoom';
+import type { ICreateRoomPayload } from '@/data/rooms&bookings/createRoom';
 
 export const updateRoom = async (
   roomId: string,

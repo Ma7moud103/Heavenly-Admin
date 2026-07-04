@@ -1,6 +1,6 @@
 ﻿import { AlertCircle, CheckCircle2, Clock, TrendingUp, Users } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
-import { useStats } from '@/hooks/useStats';
+import { useStats } from '@/hooks/rooms&bookings/useStats';
 
 export function QuickStatsSection() {
   const {
