@@ -1,4 +1,3 @@
-import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 
@@ -6,6 +5,7 @@ import UseSpaBookings from '@/hooks/spa/UseSpaBookings';
 import SpaBookingTable from '@/features/spa/components/SpaBookingTable';
 import SpaBookingCard from '@/features/spa/components/SpaBookingCard';
 import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
+import BookingWindow from '@/features/spa/components/BookingWindow';
 
 export default function SpaBookingsPage() {
   const { data: spaBookingsData, isLoading, isError } = UseSpaBookings();
@@ -14,7 +14,7 @@ export default function SpaBookingsPage() {
       eyebrow="Spa Bookings"
       title="Track service and package bookings."
       description="Bookings connect customer, therapist, slot, and service-or-package in one record."
-      actions={<SpaCrudButtons />}
+      actions={<BookingWindow />}
     >
       <SpaSectionCard title="Bookings table" description="Static booking rows prepared for future CRUD operations.">
         <div className="overflow-hidden rounded-[1.75rem] border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">

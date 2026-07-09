@@ -80,6 +80,16 @@ export function getDefaultRoomId(rooms: IRoom[]) {
   return rooms[0]?.id || '';
 }
 
+export function buildCreateBookingFormState(rooms: IRoom[], guests: IGuest[], statuses: IBookingStatus[]): BookingFormState {
+  return {
+    room_id: getDefaultRoomId(rooms),
+    guest_id: getDefaultGuestId(guests),
+    status_id: getDefaultBookingStatusId(statuses),
+    check_in: '',
+    check_out: '',
+  };
+}
+
 export function validateBookingForm(form: BookingFormState, rooms: IRoom[], guests: IGuest[], statuses: IBookingStatus[]) {
   const errors: Partial<Record<keyof BookingFormState, string>> = {};
 

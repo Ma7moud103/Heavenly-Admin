@@ -1,5 +1,5 @@
-import { getSpaPackages } from '@/data/spa/Packages';
-import type { ISpaPackageServices } from '@/interfaces/ISpa';
+import { getSpaPackages, getSpaPackagesWithoutServices } from '@/data/spa/Packages';
+import type { ISpaPackages, ISpaPackageServices } from '@/interfaces/ISpa';
 import { useQuery } from '@tanstack/react-query';
 
 const UseSpaPackages = () => {
@@ -37,4 +37,19 @@ const UseSpaPackages = () => {
   });
 };
 
-export default UseSpaPackages;
+const UseSpaPackagesWithoutServices = () => {
+  return useQuery<ISpaPackages[]>({
+    queryKey: ['spaPackagesWithoutServices'],
+    queryFn: async () => {
+      const { data, error } = await getSpaPackagesWithoutServices();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data ?? [];
+    },
+  });
+};
+
+export { UseSpaPackages, UseSpaPackagesWithoutServices };

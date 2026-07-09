@@ -1,17 +1,14 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useReducer, type FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { BookingFormFields } from '@/features/bookings/components/BookingFormFields';
 import {
-  buildBookingFormState,
+  buildCreateBookingFormState,
   buildCreateBookingPayload,
-  getDefaultBookingStatusId,
-  getDefaultGuestId,
-  getDefaultRoomId,
-  initialBookingForm,
   validateBookingForm,
   type BookingFormState,
 } from '@/features/bookings/bookingForm';
+import { bookingFormReducer, initialBookingFormReducerState } from '@/features/bookings/bookingFormReducer';
 import UseCreateBooking from '@/hooks/rooms&bookings/UseCreateBooking';
 import type { IBookingStatus } from '@/interfaces/IBooking';
 import type { IRoomBooking } from '@/interfaces/IRoomBookings';
@@ -32,25 +29,28 @@ interface IProps {
 export function BookingFormSheet({ mode, open, booking, rooms, guests, statuses, onOpenChange }: IProps) {
   const createBookingMutation = UseCreateBooking();
   const updateBookingMutation = UseUpdateBooking();
-  const [form, setForm] = useState<BookingFormState>(initialBookingForm);
-  const [errors, setErrors] = useState<Partial<Record<keyof BookingFormState, string>>>({});
+  const [state, dispatch] = useReducer(bookingFormReducer, initialBookingFormReducerState);
+  const { form, errors } = state;
 
   useEffect(() => {
     if (!open) return;
 
     if (mode === 'edit' && booking) {
-      setForm(buildBookingFormState(booking));
+      dispatch({ type: 'hydrate', booking });
       return;
     }
 
-    setForm({
-      room_id: getDefaultRoomId(rooms),
-      guest_id: getDefaultGuestId(guests),
-      status_id: getDefaultBookingStatusId(statuses),
-      check_in: '',
-      check_out: '',
+    dispatch({
+      type: 'initialize',
+      form: buildCreateBookingFormState(rooms, guests, statuses),
     });
   }, [booking, guests, mode, open, rooms, statuses]);
+
+  useEffect(() => {
+    if (!open) {
+      dispatch({ type: 'reset' });
+    }
+  }, [open]);
 
   const activeMutation = mode === 'edit' ? updateBookingMutation : createBookingMutation;
 
@@ -60,14 +60,16 @@ export function BookingFormSheet({ mode, open, booking, rooms, guests, statuses,
   );
 
   const handleChange = <K extends keyof BookingFormState>(field: K, value: BookingFormState[K]) => {
-    setForm((current) => ({ ...current, [field]: value }));
-    setErrors((current) => ({ ...current, [field]: undefined }));
+    dispatch({
+      type: 'setField',
+      field,
+      value,
+    });
   };
 
   const handleClose = (nextOpen: boolean) => {
     if (!nextOpen) {
-      setForm(initialBookingForm);
-      setErrors({});
+      dispatch({ type: 'reset' });
       createBookingMutation.reset();
       updateBookingMutation.reset();
     }
@@ -85,7 +87,7 @@ export function BookingFormSheet({ mode, open, booking, rooms, guests, statuses,
 
     const nextErrors = validateBookingForm(form, rooms, guests, statuses);
     if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
+      dispatch({ type: 'setErrors', errors: nextErrors });
       return;
     }
 

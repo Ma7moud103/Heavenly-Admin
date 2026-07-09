@@ -14,3 +14,11 @@ export async function getSpaPackages(): Promise<{ data: IProps[] | []; error: Po
 
   return { data: data || [], error };
 }
+
+export async function getSpaPackagesWithoutServices(): Promise<{ data: ISpaPackages[] | []; error: PostgrestError | null }> {
+  const { data, error } = await supabase.from('spa_packages').select('*,category_id(*)');
+
+  if (error) console.error('Error fetching spa packages:', error);
+
+  return { data: data || [], error };
+}

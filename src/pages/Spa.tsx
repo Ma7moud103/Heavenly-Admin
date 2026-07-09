@@ -1,11 +1,33 @@
-import { memo } from 'react';
-import { Activity, CalendarDays, CircleDollarSign, Clock3, Gem, Leaf, Users2, WandSparkles } from 'lucide-react';
+import { memo, useMemo } from 'react';
+import { Activity, CircleDollarSign, Clock3, Gem, Leaf, Users2, WandSparkles } from 'lucide-react';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaStatCard } from '@/features/spa/components/SpaStatCard';
 import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
-import { bookingSteps, spaCategories, spaPackages, spaServices, spaTherapists, timeSlots } from '@/features/spa/data';
+import { bookingSteps, timeSlots } from '@/features/spa/data';
+import UseSpaTherapists from '@/hooks/spa/UseSpaTherapists';
+import UseSpaCategories from '@/hooks/spa/UseSpaCategories';
+import { UseSpaPackages, UseSpaPackagesWithoutServices } from '@/hooks/spa/UseSpaPackages';
+import UseSpaServices from '@/hooks/spa/UseSpaServices';
+import { timeNormalization } from '@/utils/dates';
+import BookingWindow from '@/features/spa/components/BookingWindow';
 
 const Spa = () => {
+  const { data: spaTherapistsData, isLoading: isLoadingTherapists } = UseSpaTherapists();
+  const { data: spaCategoriesData, isLoading: isLoadingCategories } = UseSpaCategories();
+  const { data: spaPackagesWithServices } = UseSpaPackages();
+  const { data: spaPackagesData } = UseSpaPackagesWithoutServices();
+  const { data: spaServicesData } = UseSpaServices();
+
+  const categoriesWithCounts = useMemo(() => {
+    if (!spaCategoriesData) return [];
+
+    return spaCategoriesData.map((category) => ({
+      ...category,
+      servicesCount: spaServicesData?.filter((service) => service.category_id?.id === category.id).length ?? 0,
+      packagesCount: spaPackagesData?.filter((pkg) => pkg.category_id?.id === category.id).length ?? 0,
+    }));
+  }, [spaCategoriesData, spaServicesData, spaPackagesData]);
+
   return (
     <div className="flex flex-col gap-6">
       <section className="overflow-hidden rounded-[2rem] border border-[var(--color-border)] bg-[radial-gradient(circle_at_top_left,_rgba(212,175,55,0.22),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.16),_transparent_28%),linear-gradient(135deg,_var(--color-bg-raised),_var(--color-bg-subtle))]">
@@ -21,13 +43,8 @@ const Spa = () => {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-text-gold)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto"
-            >
-              <CalendarDays className="size-4" />
-              New Booking
-            </button>
+            <BookingWindow />
+
             <button
               type="button"
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/70 px-5 py-3 text-sm font-semibold text-[var(--color-text)] backdrop-blur transition-transform hover:-translate-y-0.5 sm:w-auto"
@@ -40,9 +57,21 @@ const Spa = () => {
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <SpaStatCard icon={Leaf} title="Categories" value="4" note="Massage, facial, sauna, wellness" />
-        <SpaStatCard icon={Users2} title="Therapists" value="4" note="Shifts and availability by day" />
-        <SpaStatCard icon={CircleDollarSign} title="Average ticket" value="1,480" note="Single services and packages" />
+        <SpaStatCard
+          icon={Leaf}
+          title="Categories"
+          isLoading={isLoadingCategories}
+          value={spaCategoriesData?.length || 0}
+          note="Massage, facial, sauna, wellness"
+        />
+        <SpaStatCard
+          icon={Users2}
+          title="Therapists"
+          isLoading={isLoadingTherapists}
+          value={spaTherapistsData?.length || 0}
+          note="Shifts and availability by day"
+        />
+        <SpaStatCard icon={CircleDollarSign} title="Average ticket" value={1400} note="Single services and packages" />
         <SpaStatCard icon={Clock3} title="Time-slot model" value="Dynamic" note="Generated from opening hours" />
       </section>
 
@@ -52,15 +81,14 @@ const Spa = () => {
           description="Services are organized by category and remain independent from therapists. The therapist is chosen later during booking."
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            {spaCategories.map((category) => (
-              <div key={category.name} className={`rounded-3xl border border-[var(--color-border)] bg-gradient-to-br ${category.accent} p-5`}>
+            {categoriesWithCounts?.map((item) => (
+              <div key={item.name} className={`rounded-3xl border border-[var(--color-border)] bg-gradient-to-br p-5`}>
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-[var(--color-text)]">{category.name}</h3>
-                  <SpaStatusPill label={`${category.count} services`} />
+                  <h3 className="text-lg font-semibold text-[var(--color-text)]">{item.name}</h3>
+                  {item.servicesCount > 0 && <SpaStatusPill label={`${item.servicesCount} services`} />}
+                  {item.packagesCount > 0 && <SpaStatusPill label={`${item.packagesCount} packages`} />}
                 </div>
-                <p className="mt-3 text-sm leading-6 text-[var(--color-text-sub)]">
-                  Curated treatments focused on guest comfort, recovery, and premium resort relaxation.
-                </p>
+                <p className="mt-3 text-sm leading-6 text-[var(--color-text-sub)]">{item.description}</p>
               </div>
             ))}
           </div>
@@ -72,12 +100,12 @@ const Spa = () => {
               <span>Price</span>
             </div>
             <div className="hidden divide-y divide-[var(--color-border)] sm:block">
-              {spaServices.map((service) => (
-                <div key={service.name} className="grid grid-cols-[1.5fr_0.7fr_0.7fr] gap-4 px-5 py-4">
+              {spaServicesData?.map((service) => (
+                <div key={service.id} className="grid grid-cols-[1.5fr_0.7fr_0.7fr] gap-4 px-5 py-4">
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-semibold text-[var(--color-text)]">{service.name}</p>
-                      <SpaStatusPill label={service.category} />
+                      <SpaStatusPill label={service.category_id?.name} />
                     </div>
                     <p className="mt-2 text-sm leading-6 text-[var(--color-text-sub)]">{service.description}</p>
                   </div>
@@ -87,14 +115,14 @@ const Spa = () => {
               ))}
             </div>
             <div className="space-y-3 p-4 sm:hidden">
-              {spaServices.map((service) => (
-                <div key={service.name} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-raised)] p-4">
+              {spaServicesData?.map((service) => (
+                <div key={service.id} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-raised)] p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-semibold text-[var(--color-text)]">{service.name}</p>
                       <p className="mt-1 text-sm text-[var(--color-text-sub)]">{service.description}</p>
                     </div>
-                    <SpaStatusPill label={service.category} />
+                    <SpaStatusPill label={service.category_id?.name} />
                   </div>
                   <div className="mt-3 flex items-center justify-between gap-3 text-sm">
                     <span className="text-[var(--color-text-sub)]">{service.duration}</span>
@@ -182,9 +210,9 @@ const Spa = () => {
           description="Each package is a bundle of services with its own final price and a clear premium presentation."
         >
           <div className="space-y-4">
-            {spaPackages.map((pack) => (
+            {spaPackagesWithServices?.map((pack) => (
               <div
-                key={pack.name}
+                key={pack.id}
                 className="rounded-3xl border border-[var(--color-border)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.96),_rgba(248,250,252,0.92))] p-5"
               >
                 <div className="flex items-start justify-between gap-4">
@@ -199,7 +227,7 @@ const Spa = () => {
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {pack.services.map((service) => (
-                    <SpaStatusPill key={service} label={service} />
+                    <SpaStatusPill key={service.id} label={service.name} />
                   ))}
                 </div>
               </div>
@@ -212,19 +240,19 @@ const Spa = () => {
           description="Therapists are independent resources that can be assigned per booking based on service type and slot availability."
         >
           <div className="grid gap-4 md:grid-cols-2">
-            {spaTherapists.map((therapist) => (
-              <div key={therapist.name} className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-5">
+            {spaTherapistsData?.map((therapist) => (
+              <div key={therapist.id} className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,_rgba(212,175,55,0.18),_rgba(255,255,255,0.9))]">
                     <Gem className="size-5 text-[var(--color-text-gold)]" />
                   </div>
-                  <SpaStatusPill label={therapist.status} />
+                  <SpaStatusPill label={therapist.availability} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-[var(--color-text)]">{therapist.name}</h3>
+                <h3 className="mt-4 text-lg font-semibold text-[var(--color-text)]">{therapist.full_name}</h3>
                 <p className="mt-1 text-sm text-[var(--color-text-sub)]">{therapist.specialty}</p>
                 <div className="mt-4 flex items-center gap-2 text-sm text-[var(--color-text-sub)]">
                   <Activity className="size-4 text-[var(--color-text-gold)]" />
-                  {therapist.shift}
+                  {timeNormalization(therapist.shift_from)} - {timeNormalization(therapist.shift_to)}
                 </div>
               </div>
             ))}

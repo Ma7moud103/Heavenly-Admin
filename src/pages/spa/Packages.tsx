@@ -2,8 +2,8 @@ import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
-import UseSpaPackages from '@/hooks/spa/UseSpaPackages';
 import SpaPackage from '@/features/spa/components/SpaPackage';
+import { UseSpaPackages } from '@/hooks/spa/UseSpaPackages';
 
 export default function SpaPackagesPage() {
   const { data: packagesWithItsServices, isLoading, isError, error } = UseSpaPackages();
