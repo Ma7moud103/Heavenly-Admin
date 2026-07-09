@@ -19,7 +19,7 @@ const SelectBox = <TFieldValues extends FieldValues>({ label, name, options, pla
       rules={rules}
       name={name}
       control={control}
-      render={({ field, fieldState }) => (
+      render={({ field }) => (
         <Select onValueChange={field.onChange} value={field.value ?? ''}>
           <SelectTrigger id={name} className="w-full">
             <SelectValue placeholder={placeholder} />

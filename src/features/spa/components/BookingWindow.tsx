@@ -38,8 +38,6 @@ interface IBookingData {
   total_price: string;
 }
 
-const today = new Date().toISOString().slice(0, 10);
-
 const BookingWindow = () => {
   const ArrOfStatues = [...Object.values(EStatus)];
 
@@ -56,13 +54,7 @@ const BookingWindow = () => {
     statuses: ArrOfStatues.map((status) => ({ value: status, label: status })),
   };
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<IBookingData>({
+  const { register, handleSubmit, control, reset } = useForm<IBookingData>({
     defaultValues: {
       booking_date: '',
       customer_id: '',
