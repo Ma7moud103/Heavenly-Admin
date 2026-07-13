@@ -106,3 +106,16 @@ export enum ECustomerType {
   external = 'external',
   hotel_guest = 'hotel_guest',
 }
+
+export interface IBookingData {
+  booking_date: string;
+  customer_id: string;
+  start_time: string;
+  end_time: string;
+  notes: string;
+  package_id: string | null;
+  service_id: string | null;
+  status: EStatus | null;
+  therapist_id: string;
+  total_price: number;
+}

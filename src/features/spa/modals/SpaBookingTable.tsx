@@ -1,6 +1,6 @@
 import type { ISpaBookings } from '@/interfaces/ISpa';
 import { CalendarCheck2 } from 'lucide-react';
-import { SpaStatusPill } from './SpaStatusPill';
+import { SpaStatusPill } from '../components/SpaStatusPill';
 import { timeNormalization } from '@/utils/dates';
 
 const SpaBookingTable = ({ booking }: { booking: ISpaBookings }) => {

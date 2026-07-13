@@ -1,7 +1,6 @@
 import { memo, useMemo } from 'react';
-import { Activity, CircleDollarSign, Clock3, Gem, Leaf, Users2, WandSparkles } from 'lucide-react';
+import { Activity, CalendarDays, CircleDollarSign, Clock3, Gem, Leaf, Users2, WandSparkles } from 'lucide-react';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaStatCard } from '@/features/spa/components/SpaStatCard';
 import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
 import { bookingSteps, timeSlots } from '@/features/spa/data';
 import UseSpaTherapists from '@/hooks/spa/UseSpaTherapists';
@@ -9,7 +8,8 @@ import UseSpaCategories from '@/hooks/spa/UseSpaCategories';
 import { UseSpaPackages, UseSpaPackagesWithoutServices } from '@/hooks/spa/UseSpaPackages';
 import UseSpaServices from '@/hooks/spa/UseSpaServices';
 import { timeNormalization } from '@/utils/dates';
-import BookingWindow from '@/features/spa/components/BookingWindow';
+import BookingWindow from '@/features/spa/modals/BookingWindow';
+import SpaStatCard from '@/features/spa/components/SpaStatCard';
 
 const Spa = () => {
   const { data: spaTherapistsData, isLoading: isLoadingTherapists } = UseSpaTherapists();
@@ -43,7 +43,15 @@ const Spa = () => {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <BookingWindow />
+            <BookingWindow>
+              <button
+                type="button"
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-text-gold)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto"
+              >
+                <CalendarDays className="size-4" />
+                New Booking
+              </button>
+            </BookingWindow>
 
             <button
               type="button"

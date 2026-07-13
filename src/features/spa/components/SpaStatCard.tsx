@@ -1,18 +1,15 @@
 import type { LucideIcon } from 'lucide-react';
+import { memo } from 'react';
 
-export function SpaStatCard({
-  icon: Icon,
-  title,
-  value,
-  note,
-  isLoading = false,
-}: {
+interface IProps {
   icon: LucideIcon;
   title: string;
   value: number | string;
   note: string;
   isLoading?: boolean;
-}) {
+}
+
+const SpaStatCard = ({ icon: Icon, title, value, note, isLoading = false }: IProps) => {
   if (isLoading) {
     return <LoadingStatCard />;
   }
@@ -31,7 +28,7 @@ export function SpaStatCard({
       </div>
     </div>
   );
-}
+};
 
 function LoadingStatCard() {
   return (
@@ -49,3 +46,5 @@ function LoadingStatCard() {
     </div>
   );
 }
+
+export default memo(SpaStatCard);

@@ -1,5 +1,5 @@
 import type { ISpaBookings } from '@/interfaces/ISpa';
-import { SpaStatusPill } from './SpaStatusPill';
+import { SpaStatusPill } from '../components/SpaStatusPill';
 import { timeNormalization } from '@/utils/dates';
 
 const SpaBookingCard = ({ booking }: { booking: ISpaBookings }) => {
