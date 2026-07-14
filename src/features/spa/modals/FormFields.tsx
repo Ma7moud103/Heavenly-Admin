@@ -72,9 +72,9 @@ const FormFields = ({ control, setValue, errors, touchedFields, register }: IPro
 
   const showServicePackageError = Boolean(errors.root?.message && (touchedFields.service_id || touchedFields.package_id));
 
-  useEffect(() => {
-    setValue('total_price', derivedTotalPrice);
-  }, [selectedService?.price, selectedPackage?.price]);
+  // useEffect(() => {
+  //   setValue('total_price', derivedTotalPrice);
+  // }, [selectedService?.price, selectedPackage?.price]);
 
   return (
     <FieldGroup className="grid gap-4 md:grid-cols-2">
