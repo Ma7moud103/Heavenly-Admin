@@ -2,8 +2,8 @@ import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 
 import UseSpaBookings from '@/hooks/spa/UseSpaBookings';
-import SpaBookingTable from '@/features/spa/modals/SpaBookingTable';
-import SpaBookingCard from '@/features/spa/modals/SpaBookingCard';
+import SpaBookingTable from '@/features/spa/components/SpaBookingTable';
+import SpaBookingCard from '@/features/spa/components/SpaBookingCard';
 import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
 import BookingWindow from '@/features/spa/modals/BookingWindow';
 

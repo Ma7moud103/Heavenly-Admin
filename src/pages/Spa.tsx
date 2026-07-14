@@ -8,8 +8,8 @@ import UseSpaCategories from '@/hooks/spa/UseSpaCategories';
 import { UseSpaPackages, UseSpaPackagesWithoutServices } from '@/hooks/spa/UseSpaPackages';
 import UseSpaServices from '@/hooks/spa/UseSpaServices';
 import { timeNormalization } from '@/utils/dates';
-import BookingWindow from '@/features/spa/modals/BookingWindow';
 import SpaStatCard from '@/features/spa/components/SpaStatCard';
+import BookingWindow from '@/features/spa/modals/BookingWindow';
 
 const Spa = () => {
   const { data: spaTherapistsData, isLoading: isLoadingTherapists } = UseSpaTherapists();

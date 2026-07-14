@@ -119,3 +119,8 @@ export interface IBookingData {
   therapist_id: string;
   total_price: number;
 }
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}

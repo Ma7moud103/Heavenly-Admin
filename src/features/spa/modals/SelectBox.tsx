@@ -1,9 +1,8 @@
 import { Field, FieldError } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { IBookingData } from '@/interfaces/ISpa';
 import { Controller, type Control, type FieldPath } from 'react-hook-form';
-
-import type { IBookingData } from './BookingWindow';
 
 interface IProps {
   name: FieldPath<IBookingData>;
