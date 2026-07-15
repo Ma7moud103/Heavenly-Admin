@@ -4,18 +4,22 @@ import { UseSpaPackagesWithoutServices } from './UseSpaPackages';
 import UseSpaServices from './UseSpaServices';
 import UseSpaTherapists from './UseSpaTherapists';
 import { useMemo } from 'react';
+import UseSpaCategories from './UseSpaCategories';
 
 interface IProps {
   serviceOptions: SelectOption[];
   packageOptions: SelectOption[];
   customerOptions: SelectOption[];
   therapistOptions: SelectOption[];
+  categoryOptions: SelectOption[];
 }
 const UseBookingOptions = (): IProps => {
   const { data: services = [] } = UseSpaServices();
   const { data: packages = [] } = UseSpaPackagesWithoutServices();
   const { data: therapists = [] } = UseSpaTherapists();
   const { data: customers = [] } = UseSpaCustomers();
+  const { data: categories = [] } = UseSpaCategories();
+  const categoryOptions = useMemo<SelectOption[]>(() => categories.map((service) => ({ value: service.id, label: service.name })), [services]);
 
   const serviceOptions = useMemo<SelectOption[]>(() => services.map((service) => ({ value: service.id, label: service.name })), [services]);
   const packageOptions = useMemo<SelectOption[]>(() => packages.map((spaPackage) => ({ value: spaPackage.id, label: spaPackage.name })), [packages]);
@@ -29,7 +33,7 @@ const UseBookingOptions = (): IProps => {
     [therapists],
   );
 
-  return { serviceOptions, packageOptions, customerOptions, therapistOptions };
+  return { serviceOptions, packageOptions, customerOptions, therapistOptions, categoryOptions };
 };
 
 export default UseBookingOptions;

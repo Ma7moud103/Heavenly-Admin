@@ -1,4 +1,4 @@
-import { EStatus, type IBookingData } from '@/interfaces/ISpa';
+import { EStatus, type IBookingData, type ICreatePackage } from '@/interfaces/ISpa';
 import * as yup from 'yup';
 
 const spaBookingSchema: yup.ObjectSchema<IBookingData> = yup
@@ -31,4 +31,12 @@ const spaBookingSchema: yup.ObjectSchema<IBookingData> = yup
     return hasService || hasPackage;
   });
 
-export { spaBookingSchema };
+const spaPackageSchema: yup.ObjectSchema<ICreatePackage> = yup.object({
+  name: yup.string().required('you must type name'),
+  price: yup.number().required('you must type price').nullable(),
+  is_active: yup.bool().default(false),
+  description: yup.string().required('you must type description'),
+  category_id: yup.string().required('you must select category'),
+});
+
+export { spaBookingSchema, spaPackageSchema };

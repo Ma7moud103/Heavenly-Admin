@@ -18,7 +18,7 @@ const BookingTreatmentSection = () => {
 
   return (
     <>
-      <SelectBox
+      <SelectBox<IBookingData>
         label="Service"
         name="service_id"
         options={serviceOptions}
@@ -26,7 +26,7 @@ const BookingTreatmentSection = () => {
         control={control}
         onChangeExtra={handleServiceChange}
       />
-      <SelectBox
+      <SelectBox<IBookingData>
         label="Package"
         name="package_id"
         options={packageOptions}

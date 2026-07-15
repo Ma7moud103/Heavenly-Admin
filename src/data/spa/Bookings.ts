@@ -10,10 +10,12 @@ export async function getBookings(): Promise<{ data: ISpaBookings[] | []; error:
   return { data: data || [], error };
 }
 
-export async function createSpaBooking(booking: IBookingData): Promise<{ data: IBookingData[] | []; error: PostgrestError | null }> {
-  const { data, error } = await supabase.from('spa_bookings').insert(booking).select();
+export async function createSpaBooking(booking: IBookingData): Promise<IBookingData[]> {
+  const { data, error } = await supabase.from('spa_bookings').insert<IBookingData>(booking).select();
 
-  if (error) console.error('Error creating spa Booking:', error);
+  if (error) {
+    throw new Error(error.message);
+  }
 
-  return { data: data || [], error };
+  return data;
 }

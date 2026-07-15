@@ -10,7 +10,29 @@ import UseSpaServices from '@/hooks/spa/UseSpaServices';
 import { timeNormalization } from '@/utils/dates';
 import SpaStatCard from '@/features/spa/components/SpaStatCard';
 import BookingWindow from '@/features/spa/modals/BookingWindow';
+import type { IBookingData, ICreatePackage } from '@/interfaces/ISpa';
+import PackageWindow from '@/features/spa/modals/PackageWindow';
 
+const bookingDefaultValues: IBookingData = {
+  booking_date: '',
+  customer_id: '',
+  end_time: '',
+  notes: '',
+  package_id: null,
+  service_id: null,
+  start_time: '',
+  status: null,
+  therapist_id: '',
+  total_price: 0,
+};
+
+const packageDefaultValues: ICreatePackage = {
+  category_id: '',
+  description: '',
+  is_active: false,
+  name: '',
+  price: null,
+};
 const Spa = () => {
   const { data: spaTherapistsData, isLoading: isLoadingTherapists } = UseSpaTherapists();
   const { data: spaCategoriesData, isLoading: isLoadingCategories } = UseSpaCategories();
@@ -43,7 +65,7 @@ const Spa = () => {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <BookingWindow>
+            <BookingWindow initialValues={bookingDefaultValues}>
               <button
                 type="button"
                 className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-text-gold)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto"
@@ -53,13 +75,15 @@ const Spa = () => {
               </button>
             </BookingWindow>
 
-            <button
-              type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/70 px-5 py-3 text-sm font-semibold text-[var(--color-text)] backdrop-blur transition-transform hover:-translate-y-0.5 sm:w-auto"
-            >
-              <WandSparkles className="size-4 text-[var(--color-text-gold)]" />
-              Build Package
-            </button>
+            <PackageWindow initialValues={packageDefaultValues}>
+              <button
+                type="button"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/70 px-5 py-3 text-sm font-semibold text-[var(--color-text)] backdrop-blur transition-transform hover:-translate-y-0.5 sm:w-auto"
+              >
+                <WandSparkles className="size-4 text-[var(--color-text-gold)]" />
+                Build Package
+              </button>
+            </PackageWindow>
           </div>
         </div>
       </section>

@@ -1,3 +1,6 @@
+import type { ElementType } from 'react';
+import type { FieldPath, FieldValues } from 'react-hook-form';
+
 export interface ISpaCategories {
   id: string;
   name: string;
@@ -45,17 +48,6 @@ export interface ISpaTherapists {
   availability: 'on' | 'off' | 'break';
   createdAt: string;
 }
-
-avatar_url: 'https://iuotdaxbblcetdujhqbw.supabase.co/storage/v1/object/sign/avatars/main%20image%20for%20me.jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mY2IxMjg1Zi1kMmZhLTQ2N2YtODdiYi1jMjNkNTE0YTQ0NGQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhdmF0YXJzL21haW4gaW1hZ2UgZm9yIG1lLmpwZWciLCJpYXQiOjE3NzU1MTA2NTgsImV4cCI6MTgwNzA0NjY1OH0.A8TOcecgTMIWaTkM4TXlMKneIeUPaoOEoKJzmOvGKtw';
-country: null;
-created_at: '2026-03-04T00:08:20.184975';
-email: null;
-full_name: 'Youssef';
-id: '23575ea7-8c9d-425e-b990-76ca7da8ca35';
-is_active: true;
-phone: '+201115671984';
-role: 'superAdmin';
-visits: null;
 
 export interface IGuest {
   avatar_url: string;
@@ -123,4 +115,19 @@ export interface IBookingData {
 export interface SelectOption {
   value: string;
   label: string;
+}
+
+export interface ICreatePackage {
+  name: string;
+  description: string;
+  price: number | null;
+  is_active: boolean;
+  category_id: string;
+}
+
+export interface IPacageInputs<T extends FieldValues> {
+  labelName: string;
+  name: FieldPath<T>;
+  type?: React.HTMLInputTypeAttribute;
+  InputType: ElementType;
 }

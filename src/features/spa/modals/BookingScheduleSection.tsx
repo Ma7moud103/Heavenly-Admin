@@ -30,7 +30,7 @@ const BookingScheduleSection = () => {
         />
       </Field>
 
-      <SelectBox label="Status" name="status" options={statusOptions} placeholder="Select status" control={control} />
+      <SelectBox<IBookingData> label="Status" name="status" options={statusOptions} placeholder="Select status" control={control} />
 
       <Field>
         <Label htmlFor="start_time">Start Time</Label>
