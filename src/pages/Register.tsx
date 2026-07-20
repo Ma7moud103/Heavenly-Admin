@@ -9,7 +9,7 @@ import type { IForm } from '@/interfaces/IRegisterForm';
 const ROLE_OPTIONS = [
   { value: 'staff', label: 'Staff', icon: Users, color: 'emerald' },
   { value: 'admin', label: 'Admin', icon: ShieldCheck, color: 'sky' },
-  { value: 'super_admin', label: 'Super Admin', icon: Sparkles, color: 'amber' },
+  // { value: 'super_admin', label: 'Super Admin', icon: Sparkles, color: 'amber' },
 ] as const;
 
 const COUNTRY_OPTIONS = ['Egypt', 'Saudi Arabia', 'United Arab Emirates', 'United States', 'United Kingdom'];
@@ -302,11 +302,9 @@ export default function Register() {
                               </div>
                               <p className="text-lg font-bold text-slate-900 mb-1">{role.label}</p>
                               <p className="text-xs text-slate-600 leading-relaxed">
-                                {role.value === 'super_admin'
-                                  ? 'Full system access with unlimited permissions.'
-                                  : role.value === 'admin'
-                                    ? 'Manage staff, bookings, and hotel operations.'
-                                    : 'Front desk operations and guest management.'}
+                                {role.value === 'admin'
+                                  ? 'Manage staff, bookings, and hotel operations.'
+                                  : 'Front desk operations and guest management.'}
                               </p>
                             </button>
                           );

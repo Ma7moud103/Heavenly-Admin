@@ -1,26 +1,31 @@
 import { Route, Routes } from 'react-router-dom';
-import Settings from '@/pages/Settings';
-import MainLayout from '@/layouts/MainLayout';
-import Dashboard from '@/pages/Dashboard';
-import Rooms from '@/pages/Rooms';
-import Guests from '@/pages/Guests';
-import Bookings from '@/pages/Bookings';
-import Checkin from '@/pages/Checkin';
-import Reservations from '@/pages/Reservations';
-import Register from '@/pages/Register';
-import NotFound from '@/pages/NotFound';
-import RoomSettings from './pages/RoomSettings';
-import SpaCategories from '@/pages/spa/Categories';
-import SpaServices from '@/pages/spa/Services';
-import SpaPackages from '@/pages/spa/Packages';
-import SpaTherapists from '@/pages/spa/Therapists';
-import SpaGuests from '@/pages/spa/Guests';
-import SpaBookings from '@/pages/spa/Bookings';
-import Spa from '@/pages/Spa';
+import {
+  Register,
+  Bookings,
+  Checkin,
+  Dashboard,
+  Guests,
+  MainLayout,
+  NotFound,
+  Reservations,
+  RoomSettings,
+  Rooms,
+  Settings,
+  Spa,
+  SpaBookings,
+  SpaCategories,
+  SpaGuests,
+  SpaPackages,
+  SpaServices,
+  SpaTherapists,
+} from './pages/lazy-pages';
+// import { Suspense } from 'react';
+// import LoadingPage from './pages/LoadingPage';
 
 function App() {
   // HydrateFallback => Search for this method please
   return (
+    // <Suspense fallback={<LoadingPage />}>
     <Routes>
       <Route path="/register" element={<Register />} />
 
@@ -44,6 +49,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
+    // </Suspense>
   );
 }
 

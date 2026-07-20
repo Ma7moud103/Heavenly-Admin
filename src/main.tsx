@@ -7,11 +7,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+// { defaultOptions: { queries: { refetchInterval: 5000 } } }
 const queryClient = new QueryClient();
-
-// queryClient.defaultQueryOptions({
-
-// })
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>

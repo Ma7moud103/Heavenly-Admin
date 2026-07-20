@@ -12,6 +12,8 @@ import PackageInputs from './PackageInputs';
 import PackageSelecttions from './PackageSelecttions';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import UseCreatePackage from '@/hooks/spa/UseCreatePackage';
+import { toast } from 'react-toastify';
 
 interface IProps {
   header: string;
@@ -40,21 +42,26 @@ const packageInputs: IPacageInputs<ICreatePackage>[] = [
 ];
 const PackageForm = ({ header, description, headerIcon }: IProps) => {
   const { reset, handleSubmit } = useFormContext<ICreatePackage>();
+  const { mutateAsync } = UseCreatePackage();
 
   const onSubmit: SubmitHandler<ICreatePackage> = (data) => {
     console.log(data);
 
-    // mutateAsync(data, {
-    //   onSuccess: (data) => {
-    //     console.log(data);
-    //     reset();
-    //     toast.success('new booking created successfully');
-    //   },
-    //   onError: (err) => {
-    //     console.log(err.message);
-    //     toast.error('something went wrong');
-    //   },
-    // });
+    mutateAsync(
+      data,
+
+      {
+        onSuccess: (data) => {
+          console.log(data);
+          reset();
+          toast.success('new booking created successfully');
+        },
+        onError: (err) => {
+          console.log(err.message);
+          toast.error('something went wrong');
+        },
+      },
+    );
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -77,7 +84,7 @@ const PackageForm = ({ header, description, headerIcon }: IProps) => {
         </FieldGroup>
       </div>
 
-      <BookingFooter title="save package" isLoading={false} />
+      <BookingFooter title="Save Package" isLoading={false} />
     </form>
   );
 };
