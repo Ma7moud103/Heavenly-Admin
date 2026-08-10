@@ -6,7 +6,7 @@ export type SharedInputType = 'text' | 'email' | 'number' | 'password' | 'search
 
 export interface IInputProps extends Omit<ComponentProps<typeof Input>, 'type'> {
   label?: string;
-  error?: string;
+  error?: any;
   hint?: string;
   type?: SharedInputType;
   wrapperClassName?: string;

@@ -1,11 +1,17 @@
 import type { IForm } from '@/interfaces/IRegisterForm';
 import { supabase } from '@/services/supabase';
 
-interface SignupResult {
-  success?: boolean;
-  user?: any;
-  error?: string;
+export interface SignupSuccessResult {
+  success: true;
+  user: unknown;
 }
+
+export interface SignupErrorResult {
+  success: false;
+  error: string;
+}
+
+export type SignupResult = SignupSuccessResult | SignupErrorResult;
 
 async function signup(formData: IForm): Promise<SignupResult> {
   try {
@@ -19,7 +25,6 @@ async function signup(formData: IForm): Promise<SignupResult> {
     }
 
     if (!authData?.user) {
-      console.log(authData);
       throw new Error('Failed to create user account');
     }
 
@@ -30,11 +35,12 @@ async function signup(formData: IForm): Promise<SignupResult> {
 
     if (!profileResult.success) {
       return profileResult;
-    } else
-      return {
-        success: true,
-        user: authData.user,
-      };
+    }
+
+    return {
+      success: true,
+      user: authData.user,
+    };
   } catch (error: any) {
     console.error('Unexpected signup error:', error);
     return {
@@ -54,7 +60,7 @@ async function createUserProfile(userId: string, formData: IForm): Promise<Signu
         phone: formData.phone,
         avatar_url: formData.avatar_url || null,
         role: formData.role_name,
-        is_active: formData.is_active || true,
+        is_active: formData.is_active ?? true,
         country: formData.country,
         email: formData.email,
         visits: 0,
@@ -67,8 +73,6 @@ async function createUserProfile(userId: string, formData: IForm): Promise<Signu
       throw new Error(error.message);
     }
 
-    console.log('Profile created successfully:', data);
-
     return {
       success: true,
       user: data,
@@ -76,8 +80,8 @@ async function createUserProfile(userId: string, formData: IForm): Promise<Signu
   } catch (error: any) {
     console.error('Unexpected profile creation error:', error);
     return {
-      error: error,
       success: false,
+      error: error.message || 'An unexpected error occurred while creating the profile',
     };
   }
 }

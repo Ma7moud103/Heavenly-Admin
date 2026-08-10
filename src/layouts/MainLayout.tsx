@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 const routeTitles: Record<string, string> = {
-  '/': 'Dashboard',
+  '/dashboard': 'Dashboard',
   '/rooms': 'Rooms',
   '/guests': 'Guests',
   '/bookings': 'Bookings',
@@ -41,7 +41,7 @@ export default function MainLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

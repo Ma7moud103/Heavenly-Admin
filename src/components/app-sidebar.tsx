@@ -23,13 +23,13 @@ const data = {
   navMain: [
     {
       title: 'Overview',
-      url: '/',
+      url: '/dashboard',
       icon: <LayoutDashboard className="w-5 h-5" />,
       isActive: true,
       items: [
         {
           title: 'Dashboard',
-          url: '/',
+          url: '/dashboard',
         },
       ],
     },

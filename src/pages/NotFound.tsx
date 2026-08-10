@@ -14,7 +14,7 @@ export default function NotFound() {
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Link to="/" className="btn btn-primary">
+        <Link to="/dashboard" className="btn btn-primary">
           Back to Dashboard
         </Link>
         <Link to="/rooms" className="btn btn-ghost">

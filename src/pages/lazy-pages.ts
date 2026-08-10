@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 
 export const MainLayout = lazy(() => import('@/layouts/MainLayout'));
-
 export const Dashboard = lazy(() => import('@/pages/Dashboard'));
 export const Settings = lazy(() => import('@/pages/Settings'));
 export const Rooms = lazy(() => import('@/pages/Rooms'));
@@ -9,7 +8,8 @@ export const Guests = lazy(() => import('@/pages/Guests'));
 export const Bookings = lazy(() => import('@/pages/Bookings'));
 export const Checkin = lazy(() => import('@/pages/Checkin'));
 export const Reservations = lazy(() => import('@/pages/Reservations'));
-export const Register = lazy(() => import('@/pages/Register'));
+export const Register = lazy(() => import('@/features/register/pages/Register'));
+export const Login = lazy(() => import('@/pages/Login'));
 export const NotFound = lazy(() => import('@/pages/NotFound'));
 
 export const RoomSettings = lazy(() => import('@/pages/RoomSettings'));
