@@ -1,7 +1,4 @@
-import { useFormContext } from 'react-hook-form';
-
 const RegisterProgress = () => {
-  const { getValues } = useFormContext();
   const completion = 0; // Replace with actual completion logic
 
   return (
