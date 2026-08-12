@@ -6,17 +6,20 @@ import RegisterHeader from './RegisterHeader';
 import RegisterProgress from './RegisterProgress';
 import StepIndicator from './StepIndicator';
 import ReviewStep from './ReviewStep';
-import { type RegisterStepId } from '../../../utils/register/registerValidation';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { IForm } from '@/interfaces/IRegisterForm';
 import { useAuthStore } from '@/stores/auth/auth.store';
-import useRegisterMutation from '@/hooks/register/useRegisterMutation';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import useRegisterMutation from '@/hooks/useRegisterMutation';
+import { Registerschema } from '@/utils/schemas';
+import { useNavigate } from 'react-router-dom';
 
 const initialFormValues: IForm = {
   full_name: '',
   phone: '',
   avatar_url: '',
-  role_name: 'staff',
+  role: 'user',
   is_active: false,
   email: '',
   password: '',
@@ -24,31 +27,22 @@ const initialFormValues: IForm = {
   country: 'Egypt',
 };
 const RegisterWizard = () => {
+  const navigate = useNavigate();
   const methods = useForm<IForm>({
     defaultValues: initialFormValues,
-    mode: 'onChange',
+    resolver: yupResolver(Registerschema),
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
   });
-  const { handleSubmit, getValues } = methods;
-  const { mutate } = useRegisterMutation();
+  const { handleSubmit } = methods;
+  const { mutate, isSuccess } = useRegisterMutation();
 
-  const onsubmit = () => {
-    console.log('Submitting form data:', getValues());
-    mutate(getValues());
+  const onSubmit = (data: IForm) => {
+    mutate(data);
+    if (isSuccess) navigate('/login');
   };
 
   const step = useAuthStore((state) => state.step);
-
-  const renderCurrentStep = (currentStep: RegisterStepId) => {
-    if (currentStep === 1) {
-      return <ProfileStep />;
-    }
-
-    if (currentStep === 2) {
-      return <AccessStep />;
-    }
-
-    return <ReviewStep />;
-  };
 
   return (
     <FormProvider {...methods}>
@@ -64,8 +58,10 @@ const RegisterWizard = () => {
           <div className="p-8 sm:p-10">
             <ProfilePreview />
 
-            <form className="space-y-8" onSubmit={handleSubmit(onsubmit)}>
-              {renderCurrentStep(step)}
+            <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+              {step === 1 && <ProfileStep />}
+              {step === 2 && <AccessStep />}
+              {step === 3 && <ReviewStep />}
 
               <RegisterActions />
             </form>

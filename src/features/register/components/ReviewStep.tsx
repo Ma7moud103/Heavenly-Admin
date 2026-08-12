@@ -21,7 +21,7 @@ const ReviewStep = () => {
             <p className="text-slate-600">{getValues('email') || 'No email provided'}</p>
             <div className="flex items-center gap-3 mt-2">
               <span className="inline-flex rounded-full bg-sky-100 border border-sky-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-600">
-                {getValues('role_name') === 'staff' ? 'Staff' : getValues('role_name') === 'admin' ? 'Admin' : 'Super Admin'}
+                {getValues('role') === 'user' ? 'User' : getValues('role') === 'admin' ? 'Admin' : 'Super Admin'}
               </span>
               <span
                 className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${getValues('is_active') ? 'bg-emerald-100 border border-emerald-200 text-emerald-600' : 'bg-slate-100 border border-slate-200 text-slate-600'}`}
@@ -38,10 +38,7 @@ const ReviewStep = () => {
         <ReviewItem label="Phone Number" value={getValues('phone')} />
         <ReviewItem label="Email Address" value={getValues('email')} />
         <ReviewItem label="Country" value={getValues('country')} />
-        <ReviewItem
-          label="Account Role"
-          value={getValues('role_name') === 'staff' ? 'Staff' : getValues('role_name') === 'admin' ? 'Admin' : 'Super Admin'}
-        />
+        <ReviewItem label="Account Role" value={getValues('role') === 'user' ? 'User' : getValues('role') === 'admin' ? 'Admin' : 'Super Admin'} />
         <ReviewItem label="Account Status" value={getValues('is_active') ? 'Active' : 'Draft'} />
       </div>
 

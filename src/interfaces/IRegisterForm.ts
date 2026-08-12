@@ -1,15 +1,16 @@
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
-import type { RegisterRoleOption } from '@/utils/register/registerValidation';
+import type { STEPS } from '@/utils/register/constants.constants';
 
-type TRoles = 'staff' | 'admin' | 'super_admin';
-export interface IForm {
+type TRoles = 'user' | 'admin' | 'superAdmin';
+export interface ILoginForm {
   full_name: string;
-  phone: string;
-  avatar_url?: string;
-  role_name: TRoles;
-  is_active: boolean;
   email: string;
   password: string;
+}
+export interface IForm extends ILoginForm {
+  phone: string;
+  avatar_url?: string;
+  role: TRoles;
+  is_active: boolean;
   confirm_password: string;
   country: string;
   visits?: number;
@@ -23,3 +24,5 @@ export interface RegisterPasswordStateProps {
 }
 
 export type TrequiredFields = 'full_name' | 'phone' | 'email' | 'password' | 'country' | 'role_name';
+
+export type RegisterStepId = (typeof STEPS)[number]['id'];

@@ -17,7 +17,7 @@ const ProfileStep = () => {
           error={errors.full_name?.message}
           labelClassName="text-slate-700"
           className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500/20 h-12 rounded-xl"
-          {...register('full_name', { required: 'Full name is required' })}
+          {...register('full_name')}
         />
         <SharedInput
           label="Phone Number"
@@ -26,7 +26,7 @@ const ProfileStep = () => {
           error={errors.phone?.message}
           labelClassName="text-slate-700"
           className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500/20 h-12 rounded-xl"
-          {...register('phone', { required: 'Phone number is required' })}
+          {...register('phone')}
         />
       </div>
 
@@ -38,7 +38,7 @@ const ProfileStep = () => {
           error={errors.email?.message}
           labelClassName="text-slate-700"
           className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500/20 h-12 rounded-xl"
-          {...register('email', { required: 'Email address is required' })}
+          {...register('email')}
         />
         <SharedInput
           label="Country"

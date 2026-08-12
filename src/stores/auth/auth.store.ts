@@ -1,4 +1,4 @@
-import type { RegisterStepId } from '@/utils/register/registerValidation';
+import type { RegisterStepId } from '@/interfaces/IRegisterForm';
 import { create } from 'zustand';
 
 interface AuthState {
@@ -10,7 +10,7 @@ interface AuthState {
   nextStep: () => void;
   prevStep: () => void;
   totalSteps: number;
-  canGoNext: boolean;
+  resetSteps: () => void;
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
@@ -22,5 +22,5 @@ export const useAuthStore = create<AuthState>()((set) => ({
   nextStep: () => set((state) => ({ step: Math.min(state.step + 1, state.totalSteps) as RegisterStepId })),
   prevStep: () => set((state) => ({ step: Math.max(state.step - 1, 1) as RegisterStepId })),
   totalSteps: 3,
-  canGoNext: false,
+  resetSteps: () => set({ step: 1 }),
 }));

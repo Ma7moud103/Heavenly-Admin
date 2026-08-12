@@ -45,7 +45,7 @@ const ProfilePreview = () => {
             )}
           </div>
           <p className="mt-3 text-sm font-semibold text-slate-900">{getValues('full_name') || 'Profile Preview'}</p>
-          <p className="text-xs text-slate-500">{getValues('role_name') || 'Role'}</p>
+          <p className="text-xs text-slate-500">{getValues('role') || 'Role'}</p>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import type { IForm } from '@/interfaces/IRegisterForm';
 import { EStatus, type IBookingData, type ICreatePackage } from '@/interfaces/ISpa';
 import * as yup from 'yup';
 
@@ -39,4 +40,43 @@ const spaPackageSchema: yup.ObjectSchema<ICreatePackage> = yup.object({
   category_id: yup.string().required('you must select category'),
 });
 
-export { spaBookingSchema, spaPackageSchema };
+const Registerschema: yup.ObjectSchema<IForm> = yup.object({
+  full_name: yup
+    .string()
+    .trim()
+    .required('Full name is required')
+    .min(3, 'Full name must be at least 3 characters')
+    .max(100, 'Full name must not exceed 100 characters'),
+
+  phone: yup
+    .string()
+    .trim()
+    .required('Phone number is required')
+    .matches(/^01[0125][0-9]{8}$/, 'Please enter a valid Egyptian phone number'),
+
+  avatar_url: yup.string().trim().url('Please enter a valid avatar URL').optional(),
+
+  role: yup.mixed<IForm['role']>().oneOf(['user', 'admin', 'superAdmin'], 'Invalid role').required('Role is required'),
+
+  is_active: yup.boolean().default(false),
+
+  email: yup.string().trim().lowercase().email('Please enter a valid email').required('Email is required'),
+
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[0-9]/, 'Password must contain at least one number'),
+
+  confirm_password: yup
+    .string()
+    .required('Please confirm your password')
+    .oneOf([yup.ref('password')], 'Passwords must match'),
+
+  country: yup.string().trim().required('Country is required').default('Egypt'),
+  visits: yup.number().integer().min(0).default(0),
+});
+
+export { spaBookingSchema, spaPackageSchema, Registerschema };

@@ -1,5 +1,6 @@
 import { Check, ShieldCheck, UserRound, Users } from 'lucide-react';
 
+export const STRORED_USER_KEY = 'user';
 export const ROLE_OPTIONS = [
   { value: 'staff', label: 'Staff', icon: Users, color: 'emerald' },
   { value: 'admin', label: 'Admin', icon: ShieldCheck, color: 'sky' },
