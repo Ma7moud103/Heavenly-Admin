@@ -1,10 +1,9 @@
+import { useAuthSupabaseStore } from '@/stores/auth/authSupabase.stroe';
 import { Navigate, Outlet } from 'react-router-dom';
 
-interface IProps {
-  isAuthenticated: boolean;
-}
+export function AuthProtectedRouteGuard() {
+  const isAuthenticated = useAuthSupabaseStore((state) => state.isAuthenticated);
 
-export function AuthProtectedRouteGuard({ isAuthenticated }: IProps) {
   if (!isAuthenticated) {
     return <Navigate to="/register" replace />;
   }

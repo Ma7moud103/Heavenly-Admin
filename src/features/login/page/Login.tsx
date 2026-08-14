@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import LoginForm from '../components/LoginForm';
+import LoginHeader from '../components/LoginHeader';
 
 export default function Login() {
   return (
@@ -11,8 +13,19 @@ export default function Login() {
 
       <section className="mx-auto max-w-7xl relative z-10">
         {/* <RegisterWizard /> */}
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem repellendus soluta placeat commodi, ducimus fugiat rerum mollitia temporibus!
-        Error placeat ab ipsam culpa sapiente corrupti non, consequuntur nam eligendi modi.
+        <LoginHeader />
+
+        <div className="max-w-4xl mx-auto">
+          <div className=" overflow-hidden rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-xl shadow-[0_40px_120px_rgba(0,0,0,0.08)]">
+            <div className="p-8 sm:p-10 space-y-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600 mb-1">Here we go</p>
+              <h2 className="text-3xl font-bold text-slate-900 mb-2">Profile Information</h2>
+              <p className="text-slate-600 max-w-xl">Enter the basic profile details.</p>
+              <LoginForm />
+            </div>
+          </div>
+        </div>
+
         <div className="mt-10 text-center">
           <p className="text-sm text-slate-600">
             Do you have an account?{' '}

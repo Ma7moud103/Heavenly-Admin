@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import RegisterWizard from '../components/RegisterWizard';
+import RegisterHeader from '../components/RegisterHeader';
+import RegisterProgress from '../components/RegisterProgress';
+import StepIndicator from '../components/StepIndicator';
 
 export default function Register() {
   return (
@@ -11,6 +14,10 @@ export default function Register() {
       </div>
 
       <section className="mx-auto max-w-7xl relative z-10">
+        <RegisterHeader />
+
+        <RegisterProgress />
+        <StepIndicator />
         <RegisterWizard />
 
         <div className="mt-10 text-center">

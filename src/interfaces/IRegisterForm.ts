@@ -2,11 +2,11 @@ import type { STEPS } from '@/utils/register/constants.constants';
 
 type TRoles = 'user' | 'admin' | 'superAdmin';
 export interface ILoginForm {
-  full_name: string;
   email: string;
   password: string;
 }
 export interface IForm extends ILoginForm {
+  full_name: string;
   phone: string;
   avatar_url?: string;
   role: TRoles;

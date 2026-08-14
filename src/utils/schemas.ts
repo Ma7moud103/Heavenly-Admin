@@ -1,4 +1,4 @@
-import type { IForm } from '@/interfaces/IRegisterForm';
+import type { IForm, ILoginForm } from '@/interfaces/IRegisterForm';
 import { EStatus, type IBookingData, type ICreatePackage } from '@/interfaces/ISpa';
 import * as yup from 'yup';
 
@@ -78,5 +78,16 @@ const Registerschema: yup.ObjectSchema<IForm> = yup.object({
   country: yup.string().trim().required('Country is required').default('Egypt'),
   visits: yup.number().integer().min(0).default(0),
 });
+const Loginschema: yup.ObjectSchema<ILoginForm> = yup.object({
+  email: yup.string().trim().lowercase().email('Please enter a valid email').required('Email is required'),
 
-export { spaBookingSchema, spaPackageSchema, Registerschema };
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[0-9]/, 'Password must contain at least one number'),
+});
+
+export { spaBookingSchema, spaPackageSchema, Registerschema, Loginschema };

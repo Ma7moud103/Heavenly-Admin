@@ -2,21 +2,29 @@ import type { RegisterStepId } from '@/interfaces/IRegisterForm';
 import { create } from 'zustand';
 
 interface AuthState {
-  isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
   step: RegisterStepId;
   setStep: (step: RegisterStepId) => void;
   nextStep: () => void;
   prevStep: () => void;
   totalSteps: number;
   resetSteps: () => void;
+  showPassword: boolean;
+  setShowPassword: () => void;
+  showConfirmPassword: boolean;
+  setShowConfirmPassword: () => void;
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
-  isAuthenticated: false,
-  login: () => set({ isAuthenticated: true }),
-  logout: () => set({ isAuthenticated: false }),
+  showPassword: false,
+  setShowPassword: () =>
+    set((state) => ({
+      showPassword: !state.showPassword,
+    })),
+  showConfirmPassword: false,
+  setShowConfirmPassword: () =>
+    set((state) => ({
+      showConfirmPassword: !state.showConfirmPassword,
+    })),
   step: 1,
   setStep: (step) => set({ step }),
   nextStep: () => set((state) => ({ step: Math.min(state.step + 1, state.totalSteps) as RegisterStepId })),

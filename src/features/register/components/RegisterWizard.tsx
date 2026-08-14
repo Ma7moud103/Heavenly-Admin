@@ -2,9 +2,7 @@ import AccessStep from './AccessStep';
 import ProfilePreview from './ProfilePreview';
 import ProfileStep from './ProfileStep';
 import RegisterActions from './RegisterActions';
-import RegisterHeader from './RegisterHeader';
-import RegisterProgress from './RegisterProgress';
-import StepIndicator from './StepIndicator';
+
 import ReviewStep from './ReviewStep';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { IForm } from '@/interfaces/IRegisterForm';
@@ -39,18 +37,15 @@ const RegisterWizard = () => {
 
   const onSubmit = (data: IForm) => {
     mutate(data);
-    if (isSuccess) navigate('/login');
+    if (isSuccess) {
+      navigate('/login');
+    }
   };
 
   const step = useAuthStore((state) => state.step);
 
   return (
     <FormProvider {...methods}>
-      <RegisterHeader />
-
-      <RegisterProgress />
-      <StepIndicator />
-
       <div className="max-w-4xl mx-auto">
         <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-xl shadow-[0_40px_120px_rgba(0,0,0,0.08)]">
           <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-sky-500 via-cyan-400 to-amber-400" />
