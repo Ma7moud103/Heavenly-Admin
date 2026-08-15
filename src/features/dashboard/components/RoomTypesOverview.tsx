@@ -25,7 +25,7 @@ export function RoomTypesOverview({ isLoading, roomTypes }: IProps) {
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-[--color-bg-inset]">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[--color-gold-600] to-[--color-gold-400] transition-all duration-500"
+                    className="h-full rounded-full bg-linear-to-r from-[--color-gold-600] to-[--color-gold-400] transition-all duration-500"
                     // style={{ width: `${percentage}%` }}
                   />
                 </div>

@@ -25,6 +25,8 @@ import { LoadingPage } from './pages/LoadingPage';
 import { AuthProtectedRouteGuard } from './components/AuthProtectedRoute';
 import { ProtectedLayout } from './components/ProtectedLayout';
 import AuthProvider from './components/AuthProvider';
+import ForgetPassword from './features/forget-password/ForgetPassword';
+import ResetPassword from './features/reset-password/ResetPassword';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route element={<ProtectedLayout />}>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forget-password" element={<ForgetPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
 
           <Route element={<AuthProtectedRouteGuard />}>

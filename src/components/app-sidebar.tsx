@@ -7,11 +7,11 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } fr
 import { LayoutDashboard, Settings, Building2, DoorOpen, Sparkles } from 'lucide-react';
 
 const data = {
-  user: {
-    name: 'Admin User',
-    email: 'admin@heavenlyhotel.com',
-    avatar: '/avatars/admin.jpg',
-  },
+  // user: {
+  //   name: 'Admin User',
+  //   email: 'admin@heavenlyhotel.com',
+  //   avatar: '/avatars/admin.jpg',
+  // },
 
   teams: [
     {
@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
