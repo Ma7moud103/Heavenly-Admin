@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { SharedInput } from '@/components/shared/SharedInput';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -36,14 +36,12 @@ export default function ResetPassword() {
   const setShowPassword = useAuthStore((state) => state.setShowPassword);
   const showConfirmPassword = useAuthStore((state) => state.showConfirmPassword);
   const setShowConfirmPassword = useAuthStore((state) => state.setShowConfirmPassword);
-  const { isPasswordRecovery, resetPassword } = useAuthSupabaseStore((state) => ({
-    session: state.session,
-    isPasswordRecovery: state.isPasswordRecovery,
-    resetPassword: state.resetPassword,
-  }));
-  if (isPasswordRecovery) {
-    return;
-  }
+
+  const session = useAuthSupabaseStore((state) => state.session);
+  const resetPassword = useAuthSupabaseStore((state) => state.resetPassword);
+  const isPasswordRecovery = useAuthSupabaseStore((state) => state.isPasswordRecovery);
+  // console.log(session, isPasswordRecovery);
+
   const navigateTo = useNavigate();
   const {
     handleSubmit,

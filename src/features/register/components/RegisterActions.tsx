@@ -46,7 +46,7 @@ const RegisterActions = () => {
         Previous Step
       </button>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center">
         <button
           type="button"
           onClick={() => {
@@ -54,7 +54,7 @@ const RegisterActions = () => {
             resetSteps();
           }}
           disabled={IsSubmitting}
-          className="px-6 h-12 cursor-pointer rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold transition-all hover:bg-slate-50 flex items-center justify-center"
+          className="px-6 h-12 grow cursor-pointer rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold transition-all hover:bg-slate-50 flex items-center justify-center"
         >
           Cancel
         </button>
@@ -62,7 +62,7 @@ const RegisterActions = () => {
           <button
             type="submit"
             disabled={IsSubmitting || !isValid}
-            className="px-8 h-12 rounded-xl cursor-pointer bg-linear-to-r from-emerald-500 to-teal-500 text-white font-bold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="px-8 grow h-12 rounded-xl cursor-pointer bg-linear-to-r from-emerald-500 to-teal-500 text-white font-bold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Check className="h-5 w-5" />
             {IsSubmitting ? 'Creating...' : 'Create Account'}
@@ -72,7 +72,7 @@ const RegisterActions = () => {
             type="button"
             onClick={handleNext}
             disabled={IsSubmitting}
-            className="px-8 h-12 cursor-pointer rounded-xl bg-linear-to-r from-sky-500 to-cyan-500 text-white font-bold shadow-lg shadow-sky-200 hover:shadow-sky-300 transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="px-8 h-12 grow cursor-pointer rounded-xl bg-linear-to-r from-sky-500 to-cyan-500 text-white font-bold shadow-lg shadow-sky-200 hover:shadow-sky-300 transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             Continue
             <ArrowRight className="h-5 w-5" />

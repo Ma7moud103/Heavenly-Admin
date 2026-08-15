@@ -5,7 +5,7 @@ export function AuthProtectedRouteGuard() {
   const isAuthenticated = useAuthSupabaseStore((state) => state.isAuthenticated);
 
   if (!isAuthenticated) {
-    return <Navigate to="/register" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

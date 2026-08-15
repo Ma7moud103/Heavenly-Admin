@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 export function ProtectedLayout() {
   const isAuthenticated = useAuthSupabaseStore((state) => state.isAuthenticated);
+  console.log(isAuthenticated);
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }

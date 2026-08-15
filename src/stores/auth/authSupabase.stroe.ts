@@ -45,9 +45,9 @@ export const useAuthSupabaseStore = create<IAuthState>((set) => ({
       console.error('Update password failed:', error);
       throw error;
     }
-    set({
-      isPasswordRecovery: false,
-    });
+    // set({
+    //   isPasswordRecovery: false,
+    // });
   },
 
   handleLogout: async (navigate) => {
@@ -74,16 +74,6 @@ export const useAuthSupabaseStore = create<IAuthState>((set) => ({
     } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('AUTH EVENT:', event);
 
-      if (event === 'PASSWORD_RECOVERY') {
-        set({
-          isPasswordRecovery: true,
-          session,
-          user: session?.user ?? null,
-          isAuthenticated: !!session,
-        });
-
-        return;
-      }
       set({
         session,
         user: session?.user ?? null,
