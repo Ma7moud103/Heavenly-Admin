@@ -1,5 +1,5 @@
 import type { IForm } from '@/interfaces/IRegisterForm';
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
 import { UserRound } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 

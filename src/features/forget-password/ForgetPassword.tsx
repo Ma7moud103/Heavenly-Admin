@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import { SharedInput } from '@/components/shared/SharedInput';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { useAuthSupabaseStore } from '@/stores/auth/authSupabase.stroe';
-import { useMutation } from '@tanstack/react-query';
+
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Header from './Header';
 import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
+
+import { useForgetPassword } from '@/data/auth/forgetPassword';
 
 interface IEmail {
   email: string;
@@ -19,7 +19,6 @@ const emailvalidation = yup.object({
 });
 
 export default function ForgetPassword() {
-  const forgotPassword = useAuthSupabaseStore((state) => state.forgotPassword);
   const {
     handleSubmit,
     register,
@@ -31,15 +30,8 @@ export default function ForgetPassword() {
     reValidateMode: 'onChange',
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: forgotPassword,
-    onSuccess: () => {
-      toast.success('If an account exists for this email, you will receive a password reset link.');
-    },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to send password reset link.');
-    },
-  });
+  const { mutateAsync, isPending } = useForgetPassword();
+
   const onSubmit: SubmitHandler<IEmail> = async ({ email }) => {
     await mutateAsync(email);
   };

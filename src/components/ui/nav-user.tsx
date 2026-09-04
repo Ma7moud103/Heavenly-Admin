@@ -9,19 +9,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { useAuthSupabaseStore } from '@/stores/auth/authSupabase.stroe';
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from './button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/stores/auth/authLogic.store';
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
-  const user = useAuthSupabaseStore((state) => state.user);
-  const logout = useAuthSupabaseStore((state) => state.handleLogout);
+  const user = useAuth((state) => state.user);
+  const signOut = useAuth((state) => state.signOut);
 
-  const handleLogoutBtn = () => {
-    logout(navigate);
+  const handleLogoutBtn = async () => {
+    await signOut();
+    navigate('/login');
   };
   return (
     <SidebarMenu>

@@ -14,3 +14,5 @@ export const STEPS = [
   { id: 2, label: 'Access', icon: ShieldCheck },
   { id: 3, label: 'Review', icon: Check },
 ] as const;
+
+export const PASSWORD_RECOVERY_KEY = 'supabase_password_recovery';

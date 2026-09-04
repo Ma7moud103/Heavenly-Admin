@@ -22,9 +22,9 @@ import {
 } from './pages/lazy-pages';
 import { Suspense } from 'react';
 import { LoadingPage } from './pages/LoadingPage';
-import { AuthProtectedRouteGuard } from './components/AuthProtectedRoute';
-import { ProtectedLayout } from './components/ProtectedLayout';
-import AuthProvider from './components/AuthProvider';
+import { AuthProtectedRouteGuard } from './components/auth/AuthProtectedRoute';
+import { ProtectedLayout } from './components/auth/ProtectedLayout';
+import AuthProvider from './components/auth/AuthProvider';
 import ForgetPassword from './features/forget-password/ForgetPassword';
 import ResetPassword from './features/reset-password/ResetPassword';
 

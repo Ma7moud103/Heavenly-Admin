@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
 import { STEPS } from '@/utils/register/constants.constants';
 import { Check } from 'lucide-react';
 

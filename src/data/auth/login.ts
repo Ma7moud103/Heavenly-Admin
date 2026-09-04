@@ -1,5 +1,7 @@
 import type { ILoginForm } from '@/interfaces/IRegisterForm';
 import { supabase } from '@/services/supabase';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 async function login(formData: ILoginForm) {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -19,4 +21,15 @@ async function login(formData: ILoginForm) {
   console.log(data);
 }
 
-export default login;
+export const useLogin = () => {
+  return useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      toast.success('Login successful!');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'An error occurred during signing in.');
+      throw new Error(error.message || 'An error occurred during signing in.');
+    },
+  });
+};

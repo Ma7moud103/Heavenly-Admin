@@ -1,5 +1,5 @@
 import { SharedInput } from '@/components/shared/SharedInput';
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
 import { Eye, EyeOff } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 

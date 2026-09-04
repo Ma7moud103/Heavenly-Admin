@@ -6,12 +6,12 @@ import RegisterActions from './RegisterActions';
 import ReviewStep from './ReviewStep';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { IForm } from '@/interfaces/IRegisterForm';
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import useRegisterMutation from '@/hooks/useRegisterMutation';
 import { Registerschema } from '@/utils/schemas';
 import { useNavigate } from 'react-router-dom';
+import { useRegisterMutation } from '@/data/auth/register';
 
 const initialFormValues: IForm = {
   full_name: '',

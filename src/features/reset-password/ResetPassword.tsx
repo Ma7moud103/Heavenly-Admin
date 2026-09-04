@@ -1,15 +1,16 @@
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SharedInput } from '@/components/shared/SharedInput';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useAuthSupabaseStore } from '@/stores/auth/authSupabase.stroe';
-import { useMutation } from '@tanstack/react-query';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import Header from './Header';
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
+import { useResetPassword } from '@/data/auth/resetPassword';
+import { LoadingPage } from '@/pages/LoadingPage';
+import { EAuthFlow, useAuth } from '@/stores/auth/authLogic.store';
 
 interface IPassword {
   password: string;
@@ -37,10 +38,7 @@ export default function ResetPassword() {
   const showConfirmPassword = useAuthStore((state) => state.showConfirmPassword);
   const setShowConfirmPassword = useAuthStore((state) => state.setShowConfirmPassword);
 
-  const session = useAuthSupabaseStore((state) => state.session);
-  const resetPassword = useAuthSupabaseStore((state) => state.resetPassword);
-  const isPasswordRecovery = useAuthSupabaseStore((state) => state.isPasswordRecovery);
-  // console.log(session, isPasswordRecovery);
+  const { isAuthenticated, authFlow, isLoading } = useAuth();
 
   const navigateTo = useNavigate();
   const {
@@ -55,19 +53,31 @@ export default function ResetPassword() {
     reValidateMode: 'onChange',
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: resetPassword,
-    onSuccess: () => {
-      toast.success('you changed your password successfully!');
-      navigateTo('/login');
-    },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to change password.');
-    },
-  });
-  const onSubmit: SubmitHandler<IPassword> = async (data) => {
-    await mutateAsync(data);
+  const { mutateAsync, isPending } = useResetPassword();
+  const onSubmit: SubmitHandler<IPassword> = async ({ password }) => {
+    await mutateAsync(password, {
+      onSuccess: () => {
+        toast.success('you changed your password successfully!');
+        navigateTo('/login');
+      },
+    });
   };
+
+  if (isLoading) return <LoadingPage />;
+
+  if (!isAuthenticated || authFlow !== EAuthFlow.RECOVERY) {
+    return (
+      <main className="min-h-screen grid place-items-center bg-slate-50 px-4 text-center">
+        <div className="max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <h1 className="text-2xl font-bold text-slate-900">Password reset link is invalid or expired</h1>
+          <p className="mt-3 text-slate-600">Request a new password reset link and try again.</p>
+          <Link to="/forget-password" className="mt-6 inline-block font-medium text-sky-600 hover:text-sky-700">
+            Request a new reset link
+          </Link>
+        </div>
+      </main>
+    );
+  }
   return (
     <main className="min-h-screen relative overflow-hidden bg-linear-to-r from-slate-50 via-white to-slate-100 px-4 py-12 sm:px-6 lg:px-8">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -129,7 +139,7 @@ export default function ResetPassword() {
                   className={`px-8 h-12 self-end cursor-pointer  rounded-xl  bg-linear-to-r from-emerald-500 to-teal-500 text-white font-bold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 disabled:from-sky-500 disabled:to-cyan-500 disabled:text-white   disabled:shadow-sky-200 disabled:hover:shadow-sky-300  transition-all flex items-center justify-center gap-2  disabled:opacity-60 disabled:cursor-not-allowed`}
                 >
                   <Mail className="h-5 w-5" />
-                  {isPending ? 'Sending...' : 'Send Reset Link'}
+                  {isPending ? 'Updating...' : 'Update Password'}
                 </Button>
               </form>
             </div>

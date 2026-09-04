@@ -1,16 +1,14 @@
 import { SharedInput } from '@/components/shared/SharedInput';
 import { Button } from '@/components/ui/button';
-import login from '@/data/auth/login';
+import { useLogin } from '@/data/auth/login';
 import type { ILoginForm } from '@/interfaces/IRegisterForm';
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
 
 import { Loginschema } from '@/utils/schemas';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation } from '@tanstack/react-query';
 import { Eye, EyeOff, LogInIcon } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 const initialFormValues: ILoginForm = {
   email: '',
@@ -30,19 +28,10 @@ const LoginForm = () => {
     reValidateMode: 'onChange',
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: login,
-    onSuccess: () => {
-      toast.success('Welcome Welcome Welcome');
-
-      navigateTo('/dashboard');
-    },
-    onError: (error) => {
-      toast.error(error.message || 'An error occurred during signing in.');
-    },
-  });
+  const { mutateAsync, isPending, isSuccess } = useLogin();
   const onSubmit: SubmitHandler<ILoginForm> = (data) => {
     mutateAsync(data);
+    if (isSuccess) navigateTo('/dashboard');
   };
 
   const showPassword = useAuthStore((state) => state.showPassword);

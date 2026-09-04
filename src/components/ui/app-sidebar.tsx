@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
-import { TeamSwitcher } from '@/components/team-switcher';
+import { NavMain } from '@/components/ui/nav-main';
+import { NavUser } from '@/components/ui/nav-user';
+import { TeamSwitcher } from '@/components/ui/team-switcher';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 import { LayoutDashboard, Settings, Building2, DoorOpen, Sparkles } from 'lucide-react';
 

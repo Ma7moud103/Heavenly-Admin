@@ -1,5 +1,5 @@
 import type { IForm, RegisterStepId } from '@/interfaces/IRegisterForm';
-import { useAuthStore } from '@/stores/auth/auth.store';
+import { useAuthStore } from '@/stores/auth/authUi.store';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import type { MouseEvent } from 'react';
 import { useFormContext, type FieldPath } from 'react-hook-form';
