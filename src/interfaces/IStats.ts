@@ -14,13 +14,15 @@ interface IBookingStats {
   totalPending: number;
   totalConfirmed: number;
   totalCancelled: number;
+  checkInsMonthly: number;
 }
 
 interface IStats {
   roomStats: IRoomStats;
   bookingStats: IBookingStats;
   guestsInHouse: number;
-  occupancyRate: number;
+  occupancyRatePerDay: number;
+  occupancyRatePerMonth: number;
   isLoading?: boolean;
   dailyRevenue: number;
   monthlyRevenue: number;

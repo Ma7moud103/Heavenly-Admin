@@ -40,6 +40,14 @@ export function useStats(): IStats {
     const today = getTodayInCairo();
     const currentMonth = getCurrentMonthInCairo();
     const checkedInGuestIds = new Set<string>();
+    const totalCheckIns = bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'checked in').length;
+    const totalCheckOuts = bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'checked out').length;
+
+    const totalPending = bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'pending').length;
+
+    const totalConfirmed = bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'confirmed').length;
+
+    const totalCancelled = bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'cancelled').length;
 
     const bookingStats = bookings.reduce<IBookingStats>(
       (acc, booking) => {
@@ -69,18 +77,22 @@ export function useStats(): IStats {
 
         if (String(booking.check_out) === String(today)) acc.checkoutsToday += 1;
 
+        if (String(booking.check_in).slice(0, 7) === String(currentMonth)) acc.checkInsMonthly += 1;
+
         return acc;
       },
+
       {
         pendingBookings: 0,
         checkInsToday: 0,
         checkoutsToday: 0,
         totalBookings: bookings.length,
-        totalCheckIns: bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'checked in').length,
-        totalCheckOuts: bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'checked out').length,
-        totalPending: bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'pending').length,
-        totalConfirmed: bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'confirmed').length,
-        totalCancelled: bookings.filter((booking) => normalizeStrings(booking.status?.label || booking.status?.name) === 'cancelled').length,
+        totalCheckIns,
+        totalCheckOuts,
+        totalPending,
+        totalConfirmed,
+        totalCancelled,
+        checkInsMonthly: 0,
       },
     );
 
@@ -92,13 +104,15 @@ export function useStats(): IStats {
     };
   }, [bookings]);
 
-  const occupancyRate = roomsStats.totalRooms === 0 ? 0 : Math.round((roomsStats.occupiedRooms / roomsStats.totalRooms) * 100);
+  const occupancyRatePerDay = Math.round((bookingStats.checkInsToday / roomsStats.totalRooms) * 100);
+  const occupancyRatePerMonth = Math.round((bookingStats.checkInsMonthly / roomsStats.totalRooms) * 100);
 
   return {
     bookingStats: bookingStats,
     guestsInHouse: guestsInHouse,
     roomStats: roomsStats,
-    occupancyRate,
+    occupancyRatePerDay,
+    occupancyRatePerMonth,
     dailyRevenue: dailyRevenue,
     monthlyRevenue: monthlyRevenue,
     isLoading: isLoadingRooms || isLoadingBookings,
