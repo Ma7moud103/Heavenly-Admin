@@ -8,6 +8,12 @@ interface IBookingStats {
   pendingBookings: number;
   checkInsToday: number;
   checkoutsToday: number;
+  totalBookings: number;
+  totalCheckIns: number;
+  totalCheckOuts: number;
+  totalPending: number;
+  totalConfirmed: number;
+  totalCancelled: number;
 }
 
 interface IStats {

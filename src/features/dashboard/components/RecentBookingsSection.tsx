@@ -1,32 +1,28 @@
-import { ArrowRight } from "lucide-react"
-import { Link } from "react-router-dom"
-import { Badge } from "@/features/dashboard/components/Badge"
-import { BookingsTableSkeleton } from "@/features/dashboard/components/DashboardSkeletons"
-import {
-  DataTable,
-  type Column,
-} from "@/features/dashboard/components/DataTable"
-import type { IRoomBooking } from "@/interfaces/IRoomBookings"
-import { formatCurrency } from "@/lib/utils"
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Badge } from '@/features/dashboard/components/Badge';
+import { BookingsTableSkeleton } from '@/features/dashboard/components/DashboardSkeletons';
+import { DataTable, type Column } from '@/features/dashboard/components/DataTable';
+import type { IRoomBooking } from '@/interfaces/IRoomBookings';
+import { formatCurrency } from '@/lib/utils';
+import UseRoomBookings from '@/hooks/rooms&bookings/UseRoomBookings';
 
 const bookingColumns: Column<IRoomBooking>[] = [
   {
-    key: "guest",
-    header: "Guest",
+    key: 'guest',
+    header: 'Guest',
     cell: (row) => (
       <div>
-        <div className="font-medium">
-          {row.guest ? `${row.guest.first_name} ${row.guest.last_name}` : "Unknown guest"}
-        </div>
+        <div className="font-medium">{row.guest ? `${row.guest.first_name} ${row.guest.last_name}` : 'Unknown guest'}</div>
         <div className="text-xs text-[--color-text-muted]">
-          {row.room?.title || "Unknown room"} | {row.room?.room_type?.name || "Unknown type"}
+          {row.room?.title || 'Unknown room'} | {row.room?.room_type?.name || 'Unknown type'}
         </div>
       </div>
     ),
   },
   {
-    key: "checkIn",
-    header: "Check-in",
+    key: 'checkIn',
+    header: 'Check-in',
     cell: (row) => (
       <div className="text-sm">
         <div>{row.check_in}</div>
@@ -35,37 +31,31 @@ const bookingColumns: Column<IRoomBooking>[] = [
     ),
   },
   {
-    key: "status",
-    header: "Status",
+    key: 'status',
+    header: 'Status',
     cell: (row) => {
-      const variants: Record<string, "success" | "warning" | "error" | "info"> = {
-        "checked-in": "success",
-        reserved: "warning",
-        pending: "error",
-        "checked-out": "info",
-      }
-      const statusLabel = row.status?.label || row.status?.name || "Unknown"
-      const statusKey = statusLabel.toLowerCase().replace(/\s+/g, "-")
+      const variants: Record<string, 'success' | 'warning' | 'error' | 'info'> = {
+        'checked-in': 'success',
+        reserved: 'warning',
+        pending: 'error',
+        'checked-out': 'info',
+      };
+      const statusLabel = row.status?.label || row.status?.name || 'Unknown';
+      const statusKey = statusLabel.toLowerCase().replace(/\s+/g, '-');
 
-      return <Badge variant={variants[statusKey] || "info"}>{statusLabel}</Badge>
+      return <Badge variant={variants[statusKey] || 'info'}>{statusLabel}</Badge>;
     },
   },
   {
-    key: "total",
-    header: "Total",
+    key: 'total',
+    header: 'Total',
     cell: (row) => <span className="font-medium">{formatCurrency(row.total_price)}</span>,
   },
-]
+];
 
-interface IProps {
-  bookings: IRoomBooking[]
-  isLoading: boolean
-}
+export function RecentBookingsSection() {
+  const { data: bookingsData, isLoading: isLoadingBookings } = UseRoomBookings();
 
-export function RecentBookingsSection({
-  bookings,
-  isLoading,
-}: IProps) {
   return (
     <div className="lg:col-span-2">
       <div className="card">
@@ -79,16 +69,12 @@ export function RecentBookingsSection({
           </Link>
         </div>
 
-        {isLoading ? (
+        {isLoadingBookings ? (
           <BookingsTableSkeleton />
         ) : (
-          <DataTable
-            data={bookings.slice(0, 6)}
-            columns={bookingColumns}
-            emptyMessage="No bookings found"
-          />
+          <DataTable data={bookingsData?.slice(0, 6) || []} columns={bookingColumns} emptyMessage="No bookings found" />
         )}
       </div>
     </div>
-  )
+  );
 }

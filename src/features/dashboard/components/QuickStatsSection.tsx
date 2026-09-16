@@ -43,7 +43,7 @@ export function QuickStatsSection() {
         </div>
       </div>
 
-      <div className="mt-4 rounded-lg border border-[--color-border-gold] bg-gradient-to-r from-[--color-gold-900]/50 to-[--color-gold-800]/30 p-4">
+      <div className="mt-4 rounded-lg border border-[--color-border-gold] bg-linear-to-r from-[--color-gold-900]/50 to-[--color-gold-800]/30 p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-[--color-text-sub]">Monthly Revenue</p>

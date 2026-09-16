@@ -1,4 +1,4 @@
-import { BedDouble, DollarSign, TrendingUp, Users } from 'lucide-react';
+import { DollarSign, TrendingUp, Users } from 'lucide-react';
 import { StatCardSkeleton } from '@/features/dashboard/components/DashboardSkeletons';
 import { StatCard } from '@/features/dashboard/components/StatCard';
 import { formatCurrency } from '@/lib/utils';
@@ -10,8 +10,7 @@ function formatOccupancyRate(value: number) {
 }
 
 export function DashboardStatsGrid() {
-  const { roomStats, guestsInHouse, occupancyRate, isLoading: IsLoadingStats, dailyRevenue } = useStats();
-  const { totalRooms } = roomStats;
+  const { guestsInHouse, occupancyRate, isLoading: IsLoadingStats, dailyRevenue, monthlyRevenue } = useStats();
 
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -19,7 +18,13 @@ export function DashboardStatsGrid() {
         Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)
       ) : (
         <>
-          <StatCard title="Total Rooms" value={totalRooms} changeType="neutral" icon={<BedDouble className="h-5 w-5" />} />
+          <StatCard
+            title="Monthly Revenue"
+            value={formatCurrency(monthlyRevenue)}
+            changeType="positive"
+            icon={<DollarSign className="h-5 w-5" />}
+            variant="success"
+          />{' '}
           <StatCard
             title="Occupancy Rate"
             value={formatOccupancyRate(occupancyRate)}
@@ -29,7 +34,7 @@ export function DashboardStatsGrid() {
           />
           <StatCard title="Guests In House" value={guestsInHouse} changeType="neutral" icon={<Users className="h-5 w-5" />} />
           <StatCard
-            title="Today's Revenue"
+            title="Daily Revenue"
             value={formatCurrency(dailyRevenue)}
             changeType="positive"
             icon={<DollarSign className="h-5 w-5" />}
