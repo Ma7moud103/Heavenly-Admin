@@ -115,7 +115,7 @@ export function RoomFormSheet({ mode, open, room, roomStatuses, roomTypes, onOpe
     }
   };
 
-  const title = mode === 'edit' ? 'Edit Room' : 'Add New Room';
+  const title = mode === 'edit' ? 'Update Room' : 'Create New Room';
   const description =
     mode === 'edit'
       ? 'Update room details, pricing, image, type, and status.'

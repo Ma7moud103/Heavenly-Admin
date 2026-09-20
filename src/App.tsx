@@ -45,6 +45,7 @@ function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="rooms" element={<Rooms />} />
+
               <Route path="room-types" element={<RoomSettings />} />
               <Route path="spa" element={<Spa />} />
               <Route path="spa/categories" element={<SpaCategories />} />

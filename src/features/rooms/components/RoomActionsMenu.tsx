@@ -1,14 +1,9 @@
-﻿import { Edit3, MoreHorizontal, Trash2 } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+﻿import { Edit3, MoreHorizontal, Trash2 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface IProps {
-  onDelete: () => void
-  onEdit: () => void
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
 export function RoomActionsMenu({ onDelete, onEdit }: IProps) {
@@ -24,7 +19,7 @@ export function RoomActionsMenu({ onDelete, onEdit }: IProps) {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-40 sm:min-w-36">
-        <DropdownMenuItem  className="cursor-pointer" onClick={onEdit}>
+        <DropdownMenuItem className="cursor-pointer" onClick={onEdit}>
           <Edit3 className="h-4 w-4" />
           Edit room
         </DropdownMenuItem>
@@ -34,5 +29,5 @@ export function RoomActionsMenu({ onDelete, onEdit }: IProps) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

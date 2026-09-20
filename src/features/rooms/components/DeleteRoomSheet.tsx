@@ -35,9 +35,9 @@ export function DeleteRoomSheet({ open, room, onOpenChange }: IProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md p-0">
+      <DialogContent className="max-w-md p-6">
         <DialogHeader className=" space-y-4">
-          <DialogTitle className="text-xl text-center">Delete this room?</DialogTitle>
+          <DialogTitle className="text-xl text-center">Delete room?</DialogTitle>
           <DialogDescription className="text-center">
             {room?.title
               ? `Are you sure you want to delete ${room.title}? This action cannot be undone.`
@@ -47,7 +47,7 @@ export function DeleteRoomSheet({ open, room, onOpenChange }: IProps) {
 
         {deleteRoomMutation.isError ? <p className="px-4 text-sm text-[--color-error]">{deleteRoomMutation.error.message}</p> : null}
 
-        <DialogFooter className="border-t border-[--color-border]">
+        <DialogFooter className="border-t bg-transparent border-t-[--color-border]">
           <button type="button" className="btn btn-ghost" onClick={() => handleClose(false)}>
             Cancel
           </button>

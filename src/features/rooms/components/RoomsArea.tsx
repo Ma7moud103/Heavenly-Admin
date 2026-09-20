@@ -1,11 +1,11 @@
 import { memo, useCallback, useDeferredValue, useMemo, useReducer, useState } from 'react';
 import { DeleteRoomSheet } from '@/features/rooms/components/DeleteRoomSheet';
-import { EditRoomSheet } from '@/features/rooms/components/EditRoomSheet';
 import { RoomsFiltersBar } from '@/features/rooms/components/RoomsFiltersBar';
 import { RoomsTable } from '@/features/rooms/components/RoomsTable';
 import { RoomsTableSectionSkeleton } from '@/features/rooms/components/RoomsSkeletons';
 import { initialRoomsFilters, roomsFilterReducer } from '@/features/rooms/filters';
 import type { IRoom, IRoomsTypes, RoomStatus } from '@/interfaces/IRooms';
+import { RoomFormSheet } from './RoomFormSheet';
 
 interface RoomsAreaProps {
   isLoading?: boolean;
@@ -66,8 +66,7 @@ function RoomsAreaComponent({ isLoading = false, rooms, roomStatuses, roomTypes 
       const matchesStatus = normalizedFilters.statusFilter === 'all' || statusLabel === normalizedFilters.statusFilter;
 
       // type filter should match room type unless filter is 'all'
-      const matchesType =
-        normalizedFilters.typeFilter === 'all' || (room.room_type?.name || '') === normalizedFilters.typeFilter;
+      const matchesType = normalizedFilters.typeFilter === 'all' || (room.room_type?.name || '') === normalizedFilters.typeFilter;
 
       // price filters should match rooms with price greater than or equal to minPrice and less than or equal to maxPrice
       const matchesMinPrice = normalizedFilters.minPrice === null || roomPrice >= normalizedFilters.minPrice;
@@ -83,14 +82,7 @@ function RoomsAreaComponent({ isLoading = false, rooms, roomStatuses, roomTypes 
       const matchesDescription = !normalizedFilters.hasDescription || Boolean(room.description?.trim());
 
       return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesType &&
-        matchesMinPrice &&
-        matchesMaxPrice &&
-        matchesCapacity &&
-        matchesImage &&
-        matchesDescription
+        matchesSearch && matchesStatus && matchesType && matchesMinPrice && matchesMaxPrice && matchesCapacity && matchesImage && matchesDescription
       );
     });
   }, [normalizedFilters, rooms]);
@@ -130,12 +122,13 @@ function RoomsAreaComponent({ isLoading = false, rooms, roomStatuses, roomTypes 
         <RoomsTable rooms={filteredRooms} onDeleteRoom={handleDeleteRoom} onEditRoom={handleEditRoom} />
       </section>
 
-      <EditRoomSheet
+      <RoomFormSheet
+        mode="edit"
         open={isEditRoomOpen}
-        onOpenChange={handleEditRoomOpenChange}
         room={selectedRoom}
         roomStatuses={roomStatuses}
         roomTypes={roomTypes}
+        onOpenChange={handleEditRoomOpenChange}
       />
 
       <DeleteRoomSheet open={isDeleteRoomOpen} onOpenChange={handleDeleteRoomOpenChange} room={selectedRoom} />
