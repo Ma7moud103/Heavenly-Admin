@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/features/dashboard/components/Badge';
 import { BookingsTableSkeleton } from '@/features/dashboard/components/DashboardSkeletons';
-import { DataTable, type Column } from '@/features/dashboard/components/DataTable';
+import { DataTable, type Column } from '@/components/shared/DataTable';
 import type { IRoomBooking } from '@/interfaces/IRoomBookings';
 import { formatCurrency } from '@/lib/utils';
 import UseRoomBookings from '@/hooks/rooms&bookings/UseRoomBookings';

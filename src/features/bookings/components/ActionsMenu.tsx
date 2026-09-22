@@ -1,17 +1,12 @@
-import { Edit3, MoreHorizontal, Trash2 } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Edit3, MoreHorizontal, Trash2 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface BookingActionsMenuProps {
-  onDelete: () => void
-  onEdit: () => void
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
-export function BookingActionsMenu({ onDelete, onEdit }: BookingActionsMenuProps) {
+export function ActionsMenu({ onDelete, onEdit }: BookingActionsMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -34,5 +29,5 @@ export function BookingActionsMenu({ onDelete, onEdit }: BookingActionsMenuProps
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

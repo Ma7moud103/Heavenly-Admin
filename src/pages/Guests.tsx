@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Search, Filter, Plus, MoreHorizontal, User, Mail, Phone, Globe, Star } from 'lucide-react';
 import { StatCard } from '@/features/dashboard/components/StatCard';
-import { DataTable } from '@/features/dashboard/components/DataTable';
+import { DataTable } from '@/components/shared/DataTable';
 import { Badge } from '@/features/dashboard/components/Badge';
 import { guests } from '@/data/rooms&bookings/hotelData';
 

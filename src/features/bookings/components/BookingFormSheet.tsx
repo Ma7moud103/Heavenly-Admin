@@ -2,12 +2,7 @@ import { useEffect, useMemo, useReducer, type FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { BookingFormFields } from '@/features/bookings/components/BookingFormFields';
-import {
-  buildCreateBookingFormState,
-  buildCreateBookingPayload,
-  validateBookingForm,
-  type BookingFormState,
-} from '@/features/bookings/bookingForm';
+import { buildCreateBookingFormState, buildCreateBookingPayload, validateBookingForm, type BookingFormState } from '@/features/bookings/bookingForm';
 import { bookingFormReducer, initialBookingFormReducerState } from '@/features/bookings/bookingFormReducer';
 import UseCreateBooking from '@/hooks/rooms&bookings/UseCreateBooking';
 import type { IBookingStatus } from '@/interfaces/IBooking';
@@ -124,7 +119,7 @@ export function BookingFormSheet({ mode, open, booking, rooms, guests, statuses,
 
   return (
     <Sheet open={open} onOpenChange={handleClose}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
+      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl ">
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>

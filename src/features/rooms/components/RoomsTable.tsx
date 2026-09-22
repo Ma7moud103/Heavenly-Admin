@@ -1,6 +1,6 @@
 ﻿import { memo, useCallback, useMemo, useState } from 'react';
 import { Badge } from '@/features/dashboard/components/Badge';
-import { DataTable, type Column } from '@/features/dashboard/components/DataTable';
+import { DataTable, type Column } from '@/components/shared/DataTable';
 import { RoomActionsMenu } from '@/features/rooms/components/RoomActionsMenu';
 import type { IRoom } from '@/interfaces/IRooms';
 import RoomIdentityCell from './RoomIdentityCell';

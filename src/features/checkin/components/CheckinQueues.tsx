@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { CalendarDays, DoorClosed, DoorOpen, User } from 'lucide-react';
 import { Badge } from '@/features/dashboard/components/Badge';
-import { DataTable, type Column } from '@/features/dashboard/components/DataTable';
+import { DataTable, type Column } from '@/components/shared/DataTable';
 import { getBookingStatusName } from '@/features/checkin/utils';
 import type { IRoomBooking } from '@/interfaces/IRoomBookings';
 import type { ICreateBookingPayload } from '@/data/rooms&bookings/createBooking';

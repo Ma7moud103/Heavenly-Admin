@@ -35,7 +35,7 @@ export function DeleteBookingSheet({ open, booking, onOpenChange }: DeleteBookin
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md p-0">
+      <DialogContent className="max-w-md p-4">
         <DialogHeader className="space-y-4">
           <DialogTitle className="text-center text-xl">Delete this booking?</DialogTitle>
           <DialogDescription className="text-center">
