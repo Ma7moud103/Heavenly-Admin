@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { BookingsHeader } from '@/features/bookings/components/BookingsHeader';
 import { BookingsStatsGrid } from '@/features/bookings/components/BookingsStatsGrid';
 import { BookingsTableSection } from '@/features/bookings/components/BookingsTableSection';
-import { CreateBookingAction } from '@/features/bookings/components/CreateBookingAction';
+import { CreateBookingAction } from '@/features/bookings/components/actions/CreateBookingAction';
 import UseRoomBookings from '@/hooks/rooms&bookings/UseRoomBookings';
 import UseRooms from '@/hooks/rooms&bookings/UseRooms';
 import UseBookingStatus from '@/hooks/rooms&bookings/UseBookingStatus';

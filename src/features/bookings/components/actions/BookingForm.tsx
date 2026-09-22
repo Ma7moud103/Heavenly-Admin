@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, type FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { BookingFormFields } from '@/features/bookings/components/BookingFormFields';
+import { BookingFormFields } from '@/features/bookings/components/actions/BookingFormFields';
 import { buildCreateBookingFormState, buildCreateBookingPayload, validateBookingForm, type BookingFormState } from '@/features/bookings/bookingForm';
 import { bookingFormReducer, initialBookingFormReducerState } from '@/features/bookings/bookingFormReducer';
 import UseCreateBooking from '@/hooks/rooms&bookings/UseCreateBooking';
@@ -21,7 +21,7 @@ interface IProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function BookingFormSheet({ mode, open, booking, rooms, guests, statuses, onOpenChange }: IProps) {
+export function BookingForm({ mode, open, booking, rooms, guests, statuses, onOpenChange }: IProps) {
   const createBookingMutation = UseCreateBooking();
   const updateBookingMutation = UseUpdateBooking();
   const [state, dispatch] = useReducer(bookingFormReducer, initialBookingFormReducerState);
@@ -104,7 +104,7 @@ export function BookingFormSheet({ mode, open, booking, rooms, guests, statuses,
     }
   };
 
-  const title = mode === 'edit' ? 'Edit Booking' : 'Add New Booking';
+  const title = mode === 'edit' ? 'Edit Booking' : 'Create New Booking';
   const description =
     mode === 'edit'
       ? 'Update the guest, room, stay dates, and reservation status.'

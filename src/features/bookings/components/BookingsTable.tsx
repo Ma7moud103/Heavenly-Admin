@@ -6,6 +6,12 @@ import type { IRoomBooking } from '@/interfaces/IRoomBookings';
 import { formatCurrency } from '@/lib/utils';
 import { ActionsMenu } from './ActionsMenu';
 
+interface BookingsTableProps {
+  bookings: IRoomBooking[];
+  onDeleteBooking: (booking: IRoomBooking) => void;
+  onEditBooking: (booking: IRoomBooking) => void;
+}
+
 const statusVariants: Record<string, 'success' | 'warning' | 'error' | 'info'> = {
   'checked-in': 'success',
   confirmed: 'warning',
@@ -87,12 +93,6 @@ const BookingActionsCell = memo(function BookingActionsCell({
     </div>
   );
 });
-
-interface BookingsTableProps {
-  bookings: IRoomBooking[];
-  onDeleteBooking: (booking: IRoomBooking) => void;
-  onEditBooking: (booking: IRoomBooking) => void;
-}
 
 function BookingsTableComponent({ bookings, onDeleteBooking, onEditBooking }: BookingsTableProps) {
   const columns = useMemo<Column<IRoomBooking>[]>(
