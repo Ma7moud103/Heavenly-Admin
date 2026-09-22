@@ -25,15 +25,7 @@ const BookingWindow = ({ children, initialValues }: IProps) => {
     <Drawer>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
 
-      <DrawerContent
-        className="sm:max-w-2xl min-h-0 overflow-y-auto"
-        onPointerDownOutside={(e) => {
-          // Allow closing only when the pointer is actually outside the drawer overlay area.
-          // Prevent closing when interacting with Select dropdown content.
-          e.preventDefault();
-          // console.log(e.bubbles);
-        }}
-      >
+      <DrawerContent className="sm:max-w-2xl min-h-0 overflow-y-auto">
         <FormProvider {...methods}>
           <BookingForm
             header="Create New Booking"

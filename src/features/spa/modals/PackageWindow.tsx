@@ -25,15 +25,7 @@ const PackageWindow = ({ children, initialValues }: IProps) => {
     <Drawer>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
 
-      <DrawerContent
-        className="sm:max-w-md min-h-0 overflow-y-auto"
-        onPointerDownOutside={(e) => {
-          // Allow closing only when the pointer is actually outside the drawer overlay area.
-          // Prevent closing when interacting with Select dropdown content.
-          e.preventDefault();
-          // console.log(e.bubbles);
-        }}
-      >
+      <DrawerContent className="sm:max-w-md min-h-0 overflow-y-auto">
         <FormProvider {...methods}>
           <PackageForm
             header="Create New Package"
