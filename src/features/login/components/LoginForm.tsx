@@ -11,8 +11,8 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 const initialFormValues: ILoginForm = {
-  email: '',
-  password: '',
+  email: 'mahmoudshawkyoffcial@gmail.com',
+  password: 'Themakan@87',
 };
 const LoginForm = () => {
   const navigateTo = useNavigate();
