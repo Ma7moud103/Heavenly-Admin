@@ -24,8 +24,7 @@ const BookingWindow = ({ children, initialValues }: IProps) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
-
-      <DrawerContent className="sm:max-w-2xl min-h-0 overflow-y-auto">
+      <DrawerContent className="sm:max-w-2xl min-h-0 overflow-y-auto rounded-none">
         <FormProvider {...methods}>
           <BookingForm
             header="Create New Booking"

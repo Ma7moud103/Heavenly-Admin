@@ -1,4 +1,4 @@
-import SelectBox from './SelectBox';
+import SelectBox from '../../../../components/shared/SelectBox';
 import { useFormContext } from 'react-hook-form';
 import type { IBookingData } from '@/interfaces/ISpa';
 import { FieldError } from '@/components/ui/field';

@@ -4,10 +4,10 @@ import { UseSpaPackagesWithoutServices } from './UseSpaPackages';
 import UseSpaServices from './UseSpaServices';
 
 const UseCategoriesWithCounts = () => {
-  const { data: spaPackagesData } = UseSpaPackagesWithoutServices();
-  const { data: spaCategoriesData } = UseSpaCategories();
+  const { data: spaPackagesData, isLoading: IsLoadingPackages } = UseSpaPackagesWithoutServices();
+  const { data: spaCategoriesData, isLoading: IsLoadingCategories } = UseSpaCategories();
 
-  const { data: spaServicesData } = UseSpaServices();
+  const { data: spaServicesData, isLoading: IsLoadingServices } = UseSpaServices();
 
   const categoriesWithCounts = useMemo(() => {
     if (!spaCategoriesData) return [];
@@ -19,7 +19,7 @@ const UseCategoriesWithCounts = () => {
     }));
   }, [spaCategoriesData, spaServicesData, spaPackagesData]);
 
-  return { categoriesWithCounts, spaServicesData };
+  return { categoriesWithCounts, spaServicesData, IsLoadingPackages, IsLoadingCategories, IsLoadingServices };
 };
 
 export default UseCategoriesWithCounts;

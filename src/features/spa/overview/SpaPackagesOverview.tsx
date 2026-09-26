@@ -14,7 +14,7 @@ const SpaPackagesOverview = () => {
         {spaPackagesWithServices?.map((pack) => (
           <div
             key={pack.id}
-            className="rounded-3xl border border-[var(--color-border)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.96),_rgba(248,250,252,0.92))] p-5"
+            className="rounded-3xl border border-(--color-border) bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92))] p-5"
           >
             <div className="flex items-start justify-between gap-4">
               <div>

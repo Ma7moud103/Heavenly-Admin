@@ -2,7 +2,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldError } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Controller, useFormContext } from 'react-hook-form';
-import SelectBox from './SelectBox';
+import SelectBox from '../../../../components/shared/SelectBox';
 import { Input } from '@/components/ui/input';
 import { EStatus, type IBookingData, type SelectOption } from '@/interfaces/ISpa';
 import { useMemo } from 'react';

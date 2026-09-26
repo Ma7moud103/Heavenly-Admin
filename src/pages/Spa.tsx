@@ -19,9 +19,7 @@ const Spa = () => {
         <SpaBookingGuide />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <SpaPackagesOverview />
-      </section>
+      <SpaPackagesOverview />
     </div>
   );
 };

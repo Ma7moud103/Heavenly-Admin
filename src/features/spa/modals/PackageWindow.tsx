@@ -25,7 +25,7 @@ const PackageWindow = ({ children, initialValues }: IProps) => {
     <Drawer>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
 
-      <DrawerContent className="sm:max-w-md min-h-0 overflow-y-auto">
+      <DrawerContent className="sm:max-w-md min-h-0 overflow-y-auto rounded-none">
         <FormProvider {...methods}>
           <PackageForm
             header="Create New Package"

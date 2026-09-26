@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import SelectBox from './SelectBox';
+import SelectBox from '../../../../components/shared/SelectBox';
 import UseBookingOptions from '@/hooks/spa/UseBookingOptions';
 import type { ICreatePackage, SelectOption } from '@/interfaces/ISpa';
 

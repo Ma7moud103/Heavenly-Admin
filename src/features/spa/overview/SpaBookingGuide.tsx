@@ -1,8 +1,5 @@
-import { Clock3 } from 'lucide-react';
 import { SpaSectionCard } from '../components/SpaSectionCard';
-import { SpaStatusPill } from '../components/SpaStatusPill';
 const bookingSteps: string[] = ['Choose customer type', 'Select service or package', 'Assign therapist', 'Pick a dynamic time slot'];
-const timeSlots: string[] = ['09:00', '10:00', '11:00', '13:00', '14:00', '16:00'];
 
 const SpaBookingGuide = () => {
   return (
@@ -25,24 +22,6 @@ const SpaBookingGuide = () => {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="rounded-[1.75rem] border border-[var(--color-border)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.92),_rgba(253,240,215,0.5))] p-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-text-sub)]">Time slots</p>
-            <p className="mt-1 text-lg font-semibold text-[var(--color-text)]">Generated dynamically</p>
-          </div>
-          <Clock3 className="size-5 text-[var(--color-text-gold)]" />
-        </div>
-        <p className="mt-3 text-sm leading-6 text-[var(--color-text-sub)]">
-          Slots are derived from opening hours, closing hours, service duration, and existing bookings.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {timeSlots.map((slot) => (
-            <SpaStatusPill key={slot} label={slot} />
-          ))}
-        </div>
       </div>
 
       <div className="grid gap-4 rounded-[1.75rem] border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 sm:p-5 md:grid-cols-2">

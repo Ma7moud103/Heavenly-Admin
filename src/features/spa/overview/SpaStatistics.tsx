@@ -51,15 +51,7 @@ const SpaStatistics = () => {
       {spaStatCards.map((item) => (
         <SpaStatCard key={item.title} icon={item.icon} title={item.title} isLoading={item?.isLoading} value={item.value} note={item.note} />
       ))}
-      {/* <SpaStatCard
-        icon={Users2}
-        title="Therapists"
-        isLoading={isLoadingTherapists}
-        value={spaTherapistsData?.length || 0}
-        note="Shifts and availability by day"
-      />
-      <SpaStatCard icon={CircleDollarSign} title="Average ticket" value={1400} note="Single services and packages" />
-      <SpaStatCard icon={Clock3} title="Time-slot model" value="Dynamic" note="Generated from opening hours" /> */}
+      =
     </section>
   );
 };

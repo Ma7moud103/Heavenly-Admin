@@ -6,10 +6,10 @@ import { FieldGroup } from '@/components/ui/field';
 import { type ICreatePackage, type IPacageInputs } from '@/interfaces/ISpa';
 
 import type { ReactNode } from 'react';
-import BookingFooter from './BookingFooter';
+import BookingFooter from './BFFeilds/BookingFooter';
 
-import PackageInputs from './PackageInputs';
-import PackageSelecttions from './PackageSelecttions';
+import PackageInputs from './PFFeilds/PackageInputs';
+import PackageSelecttions from './PFFeilds/PackageSelecttions';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import UseCreatePackage from '@/hooks/spa/UseCreatePackage';
