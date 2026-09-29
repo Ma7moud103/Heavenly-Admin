@@ -2,18 +2,25 @@ import { Button } from '@/components/ui/button';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
+import { ManageCat } from '@/features/spa/modals/C&ECategory/ManageCat';
 import UseCategoriesWithCounts from '@/hooks/spa/UseCategoriesWithCounts';
 import { Edit, Tag, Trash } from 'lucide-react';
+import { useState } from 'react';
 
 export default function SpaCategoriesPage() {
   const { categoriesWithCounts, IsLoadingCategories } = UseCategoriesWithCounts();
+  const [Open, setOpen] = useState<boolean>(false);
+  const handleOpenChange = (status: boolean) => setOpen(status);
   return (
     <SpaHeader
       eyebrow="Spa Categories"
       title="Organize spa services by category."
       description="Categories are used to group services like massage, facial, sauna, and wellness."
       actions={
-        <Button className=" inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-(--color-text-gold)  p-5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto">
+        <Button
+          onClick={() => handleOpenChange(true)}
+          className=" inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-(--color-text-gold)  p-5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto"
+        >
           Create New Category
         </Button>
       }
@@ -54,6 +61,8 @@ export default function SpaCategoriesPage() {
           </div>
         ) : null}
       </SpaSectionCard>
+
+      <ManageCat mode="create" onOpenChange={handleOpenChange} open={Open} />
     </SpaHeader>
   );
 }
