@@ -1,7 +1,7 @@
 ﻿import { toast } from 'react-toastify';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { IRoom } from '@/interfaces/IRooms';
 import UseDeleteRoom from '@/hooks/rooms&bookings/UseDeleteRoom';
+import { DeleteItem } from '@/components/shared/Delete';
 
 interface IProps {
   open: boolean;
@@ -34,33 +34,13 @@ export function DeleteRoomSheet({ open, room, onOpenChange }: IProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md p-6">
-        <DialogHeader className=" space-y-4">
-          <DialogTitle className="text-xl text-center">Delete room?</DialogTitle>
-          <DialogDescription className="text-center">
-            {room?.title
-              ? `Are you sure you want to delete ${room.title}? This action cannot be undone.`
-              : 'Are you sure you want to delete this room? This action cannot be undone.'}
-          </DialogDescription>
-        </DialogHeader>
-
-        {deleteRoomMutation.isError ? <p className="px-4 text-sm text-[--color-error]">{deleteRoomMutation.error.message}</p> : null}
-
-        <DialogFooter className="border-t bg-transparent border-t-[--color-border]">
-          <button type="button" className="btn btn-ghost" onClick={() => handleClose(false)}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary bg-[--color-error] text-white hover:bg-[--color-error]/90"
-            onClick={handleDelete}
-            disabled={deleteRoomMutation.isPending}
-          >
-            {deleteRoomMutation.isPending ? 'Deleting...' : 'Delete Room'}
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <DeleteItem
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Delete room?"
+      itemName={room?.title}
+      onConfirm={handleDelete}
+      isDeleting={deleteRoomMutation.isPending}
+    />
   );
 }

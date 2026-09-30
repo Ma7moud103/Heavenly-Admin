@@ -1,16 +1,59 @@
+import { DeleteItem } from '@/components/shared/Delete';
 import { Button } from '@/components/ui/button';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
 import { ManageCat } from '@/features/spa/modals/C&ECategory/ManageCat';
 import UseCategoriesWithCounts from '@/hooks/spa/UseCategoriesWithCounts';
+import type { ISpaCategories } from '@/interfaces/ISpa';
+import { supabase } from '@/services/supabase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Tag, Trash } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
+const useDeleteCat = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('spa_categories').delete().eq('id', id);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['spaCategories'],
+      });
+    },
+  });
+};
 export default function SpaCategoriesPage() {
   const { categoriesWithCounts, IsLoadingCategories } = UseCategoriesWithCounts();
-  const [Open, setOpen] = useState<boolean>(false);
-  const handleOpenChange = (status: boolean) => setOpen(status);
+  const [OpenAddCat, setOpenAddCat] = useState<boolean>(false);
+  const handleOpenAddCatChange = (status: boolean) => setOpenAddCat(status);
+  const [OpenUpdateCat, setOpenUpdateCat] = useState<boolean>(false);
+  const handleOpenUpdateCatChange = (status: boolean) => setOpenUpdateCat(status);
+  const [selectedCategory, setSelectedCategory] = useState<ISpaCategories | undefined>();
+
+  const [OpenDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const handleOpenDelete = (status: boolean) => setOpenDeleteModal(status);
+  const { mutateAsync, isPending } = useDeleteCat();
+  const handleDelete = async () => {
+    const id = selectedCategory?.id;
+    if (!id) return;
+
+    try {
+      await mutateAsync(id);
+      toast.success('Category is deleted Successfully!');
+      handleOpenDelete(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete room';
+
+      toast.error(message);
+    } finally {
+      setSelectedCategory(undefined);
+    }
+  };
+
   return (
     <SpaHeader
       eyebrow="Spa Categories"
@@ -18,10 +61,11 @@ export default function SpaCategoriesPage() {
       description="Categories are used to group services like massage, facial, sauna, and wellness."
       actions={
         <Button
-          onClick={() => handleOpenChange(true)}
+          onClick={() => handleOpenAddCatChange(true)}
           className=" inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-(--color-text-gold)  p-5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto"
         >
           Create New Category
+          <ManageCat mode="create" onOpenChange={handleOpenAddCatChange} open={OpenAddCat} />
         </Button>
       }
     >
@@ -48,21 +92,43 @@ export default function SpaCategoriesPage() {
 
                 <div className="flex items-center gap-x-1">
                   {!(category.packagesCount > 0) && !(category.servicesCount > 0) && (
-                    <Button variant={'outline'} className="cursor-pointer">
+                    <Button
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        handleOpenDelete(true);
+                      }}
+                      variant={'outline'}
+                      className="cursor-pointer"
+                    >
                       <Trash color="var(--color-text-gold)" size={20} />
                     </Button>
                   )}
-                  <Button variant={'outline'} className="cursor-pointer">
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setOpenUpdateCat(true);
+                    }}
+                  >
                     <Edit color="var(--color-text-gold)" size={20} />
                   </Button>
                 </div>
               </div>
             ))}
+            <ManageCat mode="edit" onOpenChange={handleOpenUpdateCatChange} open={OpenUpdateCat} category={selectedCategory} />
+            <DeleteItem
+              onConfirm={handleDelete}
+              onOpenChange={handleOpenDelete}
+              open={OpenDeleteModal}
+              // description=""
+              isDeleting={isPending}
+              itemName={selectedCategory?.name}
+              title="Delete category?"
+            />
           </div>
         ) : null}
       </SpaSectionCard>
-
-      <ManageCat mode="create" onOpenChange={handleOpenChange} open={Open} />
     </SpaHeader>
   );
 }
