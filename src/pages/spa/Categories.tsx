@@ -5,38 +5,28 @@ import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
 import { ManageCat } from '@/features/spa/modals/C&ECategory/ManageCat';
 import UseCategoriesWithCounts from '@/hooks/spa/UseCategoriesWithCounts';
-import type { ISpaCategories } from '@/interfaces/ISpa';
-import { supabase } from '@/services/supabase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDeleteCat } from '@/hooks/spa/useHandleDeleteCat';
+import { useCategory } from '@/stores/spa/Categories.store';
 import { Edit, Tag, Trash } from 'lucide-react';
-import { useState } from 'react';
+import { memo } from 'react';
 import { toast } from 'react-toastify';
 
-const useDeleteCat = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('spa_categories').delete().eq('id', id);
-      if (error) throw new Error(error.message);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['spaCategories'],
-      });
-    },
-  });
-};
-export default function SpaCategoriesPage() {
+const SpaCategoriesPage = function () {
   const { categoriesWithCounts, IsLoadingCategories } = UseCategoriesWithCounts();
-  const [OpenAddCat, setOpenAddCat] = useState<boolean>(false);
-  const handleOpenAddCatChange = (status: boolean) => setOpenAddCat(status);
-  const [OpenUpdateCat, setOpenUpdateCat] = useState<boolean>(false);
-  const handleOpenUpdateCatChange = (status: boolean) => setOpenUpdateCat(status);
-  const [selectedCategory, setSelectedCategory] = useState<ISpaCategories | undefined>();
 
-  const [OpenDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const handleOpenDelete = (status: boolean) => setOpenDeleteModal(status);
+  const {
+    OpenAddCat,
+    OpenDeleteModal,
+    OpenUpdateCat,
+    handleOpenAddCatChange,
+    handleOpenDelete,
+    handleOpenUpdateCatChange,
+    selectedCategory,
+    setSelectedCategory,
+  } = useCategory();
+
   const { mutateAsync, isPending } = useDeleteCat();
+
   const handleDelete = async () => {
     const id = selectedCategory?.id;
     if (!id) return;
@@ -80,10 +70,10 @@ export default function SpaCategoriesPage() {
             {categoriesWithCounts.map((category) => (
               <div key={category.id} className="rounded-3xl border border-(--color-border) bg-(--color-bg-subtle) p-5 flex flex-col gap-y-3">
                 <div className="flex items-center gap-2">
-                  <Tag className="size-4 text-[var(--color-text-gold)]" />
-                  <h3 className="text-lg font-semibold text-[var(--color-text)]">{category.name}</h3>
+                  <Tag className="size-4 text-(--color-text-gold)" />
+                  <h3 className="text-lg font-semibold text-(--color-text)">{category.name}</h3>
                 </div>
-                <p className="mt-1 text-sm leading-6 text-[var(--color-text-sub)]">{category.description}</p>
+                <p className="mt-1 text-sm leading-6 text-(--color-text-sub)">{category.description}</p>
 
                 <div className="flex items-center gap-x-3">
                   {category.packagesCount > 0 && <SpaStatusPill label={`Packages ${category.packagesCount}`} />}
@@ -108,7 +98,7 @@ export default function SpaCategoriesPage() {
                     className="cursor-pointer"
                     onClick={() => {
                       setSelectedCategory(category);
-                      setOpenUpdateCat(true);
+                      handleOpenUpdateCatChange(true);
                     }}
                   >
                     <Edit color="var(--color-text-gold)" size={20} />
@@ -117,6 +107,7 @@ export default function SpaCategoriesPage() {
               </div>
             ))}
             <ManageCat mode="edit" onOpenChange={handleOpenUpdateCatChange} open={OpenUpdateCat} category={selectedCategory} />
+
             <DeleteItem
               onConfirm={handleDelete}
               onOpenChange={handleOpenDelete}
@@ -131,4 +122,5 @@ export default function SpaCategoriesPage() {
       </SpaSectionCard>
     </SpaHeader>
   );
-}
+};
+export default memo(SpaCategoriesPage);
