@@ -1,9 +1,9 @@
-import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import UseSpaServices from '@/hooks/spa/UseSpaServices';
 import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
-import SpaService from '@/features/spa/components/SpaService';
+import SpaService from '@/features/spa/components/services/SpaService';
+import { Button } from '@/components/ui/button';
 
 export default function SpaServicesPage() {
   const { data: spaServices, isLoading, isError } = UseSpaServices();
@@ -12,36 +12,44 @@ export default function SpaServicesPage() {
       eyebrow="Spa Services"
       title="Manage single spa services."
       description="Each service belongs to a category and has its own duration, price, and description."
-      actions={<SpaCrudButtons />}
+      actions={
+        <Button
+          // onClick={() => handleOpenAddCatChange(true)}
+          className=" inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-(--color-text-gold)  p-5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-transform hover:-translate-y-0.5 sm:w-auto"
+        >
+          Create New Service
+          {/* <ManageCat mode="create" onOpenChange={handleOpenAddCatChange} open={OpenAddCat} /> */}
+        </Button>
+      }
     >
       <SpaSectionCard title="Services list" description="Static service cards ready for future create, edit, delete, and view actions.">
-        <div className="overflow-hidden rounded-[1.75rem] border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
-          <div className="hidden grid-cols-[1.5fr_0.7fr_0.7fr_0.7fr] gap-4 border-b border-[var(--color-border)] px-5 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-sub)] sm:grid">
+        <div className="overflow-hidden rounded-[1.75rem] border border-(--color-border) bg-(--color-bg-subtle)">
+          <div className="hidden grid-cols-[1.5fr_0.7fr_0.7fr_0.7fr] gap-4 border-b border-(--color-border) px-5 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-(--color-text-sub) sm:grid">
             <span>Service</span>
             <span>Category</span>
             <span>Duration</span>
             <span>Price</span>
           </div>
-          <div className="hidden divide-y divide-[var(--color-border)] sm:block">
+          <div className="hidden divide-y divide-(--color-border) sm:block">
             {isLoading ? (
               <SpaPackagesSkeleton />
             ) : isError ? (
-              <div className="flex items-center justify-center py-10 text-sm font-medium text-[var(--color-text-sub)]">Error loading services.</div>
+              <div className="flex items-center justify-center py-10 text-sm font-medium text-(--color-text-sub)">Error loading services.</div>
             ) : spaServices && spaServices.length > 0 ? (
               spaServices.map((service) => <SpaService key={service.id} service={service} />)
             ) : (
-              <div className="flex items-center justify-center py-10 text-sm font-medium text-[var(--color-text-sub)]">No services found.</div>
+              <div className="flex items-center justify-center py-10 text-sm font-medium text-(--color-text-sub)">No services found.</div>
             )}
           </div>
           <div className="space-y-3 p-4 sm:hidden">
             {isLoading ? (
               <SpaPackagesSkeleton />
             ) : isError ? (
-              <div className="py-8 text-center text-sm font-medium text-[var(--color-text-sub)]">Error loading services.</div>
+              <div className="py-8 text-center text-sm font-medium text-(--color-text-sub)">Error loading services.</div>
             ) : spaServices && spaServices.length > 0 ? (
               spaServices.map((service) => <SpaService key={service.id} service={service} />)
             ) : (
-              <div className="py-8 text-center text-sm font-medium text-[var(--color-text-sub)]">No services found.</div>
+              <div className="py-8 text-center text-sm font-medium text-(--color-text-sub)">No services found.</div>
             )}
           </div>
         </div>

@@ -52,6 +52,7 @@ export function ManageCat({ mode, open, onOpenChange, category }: IProps) {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Something went wrong');
     } finally {
+      onOpenChange(false);
     }
   };
 

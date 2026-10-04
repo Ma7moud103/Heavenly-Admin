@@ -1,5 +1,5 @@
 import { Scissors } from 'lucide-react';
-import { SpaStatusPill } from './SpaStatusPill';
+import { SpaStatusPill } from '../SpaStatusPill';
 import type { ISpaServices } from '@/interfaces/ISpa';
 
 const SpaService = ({ service }: { service: ISpaServices }) => {

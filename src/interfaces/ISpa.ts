@@ -8,6 +8,10 @@ export interface ISpaCategories {
   createdAt: string;
   updatedAt: string;
 }
+export interface ICategoryWithCounts extends ISpaCategories {
+  servicesCount: number;
+  packagesCount: number;
+}
 
 export interface ISpaPackages {
   id: string;

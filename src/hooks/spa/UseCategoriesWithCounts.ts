@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import UseSpaCategories from './UseSpaCategories';
 import { UseSpaPackagesWithoutServices } from './UseSpaPackages';
 import UseSpaServices from './UseSpaServices';
+import type { ICategoryWithCounts } from '@/interfaces/ISpa';
 
 const UseCategoriesWithCounts = () => {
   const { data: spaPackagesData, isLoading: IsLoadingPackages } = UseSpaPackagesWithoutServices();
@@ -9,7 +10,7 @@ const UseCategoriesWithCounts = () => {
 
   const { data: spaServicesData, isLoading: IsLoadingServices } = UseSpaServices();
 
-  const categoriesWithCounts = useMemo(() => {
+  const categoriesWithCounts = useMemo<ICategoryWithCounts[]>(() => {
     if (!spaCategoriesData) return [];
 
     return spaCategoriesData.map((category) => ({

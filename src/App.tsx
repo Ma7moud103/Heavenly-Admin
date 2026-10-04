@@ -28,6 +28,7 @@ import AuthProvider from './components/auth/AuthProvider';
 import ForgetPassword from './features/forget-password/ForgetPassword';
 import ResetPassword from './features/reset-password/ResetPassword';
 import { CategoryProvider } from './stores/spa/Categories.store';
+import { ServiceProvider } from './stores/spa/Services.store';
 
 function App() {
   return (
@@ -57,7 +58,14 @@ function App() {
                   </CategoryProvider>
                 }
               />
-              <Route path="spa/services" element={<SpaServices />} />
+              <Route
+                path="spa/services"
+                element={
+                  <ServiceProvider>
+                    <SpaServices />
+                  </ServiceProvider>
+                }
+              />
               <Route path="spa/packages" element={<SpaPackages />} />
               <Route path="spa/therapists" element={<SpaTherapists />} />
               <Route path="spa/guests" element={<SpaGuests />} />
