@@ -26,7 +26,7 @@ const SpaCategoriesPage = function () {
         </Button>
       }
     >
-      <SpaSectionCard title="Category cards" description="Simple static cards for future CRUD operations.">
+      <SpaSectionCard title="Category directory" description="Manage category details and see which services and packages belong to each category.">
         {IsLoadingCategories ? <p className="text-sm text-(--color-text-sub)">Loading categories...</p> : null}
 
         {!IsLoadingCategories && categoriesWithCounts.length === 0 ? (

@@ -1,50 +1,75 @@
 import { Button } from '@/components/ui/button';
-import { Edit, Tag, Trash } from 'lucide-react';
-import { SpaStatusPill } from '../SpaStatusPill';
+import { Gift, LockKeyhole, PencilLine, Scissors, Tag, Trash2 } from 'lucide-react';
 import type { ICategoryWithCounts } from '@/interfaces/ISpa';
 import { useCategory } from '@/stores/spa/Categories.store';
 
 const CategoryItem = ({ category }: { category: ICategoryWithCounts }) => {
   const { handleOpenDelete, handleOpenUpdateCatChange, setSelectedCategory } = useCategory();
+  const hasItems = category.servicesCount > 0 || category.packagesCount > 0;
+  const deleteTitle = hasItems
+    ? `Remove ${category.servicesCount} service(s) and ${category.packagesCount} package(s) before deleting this category.`
+    : `Delete ${category.name}`;
 
   return (
-    <div key={category.id} className="rounded-3xl border border-(--color-border) bg-(--color-bg-subtle) p-5 flex flex-col gap-y-3">
-      <div className="flex items-center gap-2">
-        <Tag className="size-4 text-(--color-text-gold)" />
-        <h3 className="text-lg font-semibold text-(--color-text)">{category.name}</h3>
-      </div>
-      <p className="mt-1 text-sm leading-6 text-(--color-text-sub)">{category.description}</p>
+    <article className="group flex min-h-full flex-col overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-bg-raised)] shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-start gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-[var(--color-text-gold)]">
+            <Tag className="size-5" aria-hidden="true" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-sub)]">Spa category</p>
+            <h3 className="mt-1 break-words text-lg font-semibold text-[var(--color-text)]">{category.name}</h3>
+          </div>
+        </div>
 
-      <div className="flex items-center gap-x-3">
-        {category.packagesCount > 0 && <SpaStatusPill label={`Packages ${category.packagesCount}`} />}
-        {category.servicesCount > 0 && <SpaStatusPill label={`Services ${category.servicesCount}`} />}
+        <p className="mt-4 min-h-12 text-sm leading-6 text-[var(--color-text-sub)]">{category.description || 'No description provided.'}</p>
+
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-3 py-3">
+            <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-text-sub)]"><Scissors className="size-3.5" />Services</div>
+            <p className="mt-1 text-xl font-semibold text-[var(--color-text)]">{category.servicesCount}</p>
+          </div>
+          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-3 py-3">
+            <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-text-sub)]"><Gift className="size-3.5" />Packages</div>
+            <p className="mt-1 text-xl font-semibold text-[var(--color-text)]">{category.packagesCount}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-x-1">
-        {!(category.packagesCount > 0) && !(category.servicesCount > 0) && (
+      <footer className="border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)]/70 p-4">
+        <div className="flex gap-2">
           <Button
+            type="button"
+            variant="outline"
+            className="min-h-10 flex-1 gap-2 border-[var(--color-border)] bg-white hover:border-amber-300 hover:bg-amber-50 hover:text-amber-900"
+            onClick={() => {
+              setSelectedCategory(category);
+              handleOpenUpdateCatChange(true);
+            }}
+            aria-label={`Edit ${category.name}`}
+          >
+            <PencilLine className="size-4" />Edit
+          </Button>
+          <Button
+            type="button"
+            variant={hasItems ? 'outline' : 'destructive'}
+            className={`min-h-10 flex-1 gap-2 ${hasItems ? 'cursor-not-allowed border-dashed text-[var(--color-text-sub)]' : ''}`}
+            disabled={hasItems}
+            title={deleteTitle}
+            aria-label={hasItems ? `Cannot delete ${category.name}: category still has services or packages` : `Delete ${category.name}`}
             onClick={() => {
               setSelectedCategory(category);
               handleOpenDelete(true);
             }}
-            variant={'outline'}
-            className="cursor-pointer"
           >
-            <Trash color="var(--color-text-gold)" size={20} />
+            {hasItems ? <LockKeyhole className="size-4" /> : <Trash2 className="size-4" />}
+            {hasItems ? 'In use' : 'Delete'}
           </Button>
-        )}
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          onClick={() => {
-            setSelectedCategory(category);
-            handleOpenUpdateCatChange(true);
-          }}
-        >
-          <Edit color="var(--color-text-gold)" size={20} />
-        </Button>
-      </div>
-    </div>
+        </div>
+        {hasItems && <p className="mt-2 text-center text-xs leading-5 text-[var(--color-text-sub)]">Delete is available after this category has no services or packages.</p>}
+      </footer>
+    </article>
   );
 };
 

@@ -15,7 +15,7 @@ const PackageInputs = ({ labelName, name, type, InputType }: IPacageInputs<ICrea
       <Label htmlFor={name}>{labelName}</Label>
       <InputType
         //   {...Field()}
-        {...register(name)}
+        {...register(name, type === 'number' ? { valueAsNumber: true } : undefined)}
         placeholder={`Type ${labelName}`}
         {...(type ? { type } : {})}
         className="flex  w-full resize-y rounded-md px-3 py-2 text-sm  transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

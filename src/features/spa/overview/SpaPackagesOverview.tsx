@@ -3,7 +3,7 @@ import { SpaSectionCard } from '../components/SpaSectionCard';
 import { SpaStatusPill } from '../components/SpaStatusPill';
 
 const SpaPackagesOverview = () => {
-  const { data: spaPackagesWithServices } = UseSpaPackages();
+  const { data: packages } = UseSpaPackages();
 
   return (
     <SpaSectionCard
@@ -11,7 +11,7 @@ const SpaPackagesOverview = () => {
       description="Each package is a bundle of services with its own final price and a clear premium presentation."
     >
       <div className="space-y-4">
-        {spaPackagesWithServices?.map((pack) => (
+        {packages?.map((pack) => (
           <div
             key={pack.id}
             className="rounded-3xl border border-(--color-border) bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92))] p-5"
@@ -27,7 +27,7 @@ const SpaPackagesOverview = () => {
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              {pack.services.map((service) => (
+              {pack.services?.map((service) => (
                 <SpaStatusPill key={service.id} label={service.name} />
               ))}
             </div>

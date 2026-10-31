@@ -1,38 +1,64 @@
-import { Gift } from 'lucide-react';
+import { Gift, LockKeyhole, PencilLine, Trash2 } from 'lucide-react';
 import { SpaStatusPill } from './SpaStatusPill';
+import type { ISpaPackages } from '@/interfaces/ISpa';
 
 interface SpaPackageProps {
-  name: string;
-  description: string;
-  price: number;
-  services?: Array<{
-    id: string;
-    name: string;
-  }>;
+  packageItem: ISpaPackages;
+  locked: boolean;
+  lockMessage: string;
+  onEdit: (item: ISpaPackages) => void;
+  onDelete: (item: ISpaPackages) => void;
 }
 
-const SpaPackage = ({ name, description, price, services = [] }: SpaPackageProps) => {
+interface IPackageActionsProps { item: ISpaPackages; locked: boolean; lockMessage: string; onEdit: (item: ISpaPackages) => void; onDelete: (item: ISpaPackages) => void }
+
+const PackageActions = ({ item, locked, lockMessage, onEdit, onDelete }: IPackageActionsProps) => (
+  <div className="flex items-center justify-end gap-1">
+    {locked ? (
+      <span title={lockMessage} className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
+        <LockKeyhole className="size-4" />Protected
+      </span>
+    ) : (
+      <>
+        <button type="button" onClick={() => onEdit(item)} title="Edit package" aria-label={`Edit ${item.name}`} className="rounded-lg p-2 text-[var(--color-text-sub)] transition-colors hover:bg-amber-50 hover:text-amber-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <PencilLine className="size-4" />
+        </button>
+        <button type="button" onClick={() => onDelete(item)} title="Delete package" aria-label={`Delete ${item.name}`} className="rounded-lg p-2 text-[var(--color-error)] transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <Trash2 className="size-4" />
+        </button>
+      </>
+    )}
+  </div>
+);
+
+const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaPackageProps) => {
+  const services = packageItem.services ?? [];
   return (
-    <div className="rounded-3xl border border-[var(--color-border)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.96),_rgba(248,250,252,0.92))] p-4 sm:p-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <>
+      <div className="hidden grid-cols-[1.15fr_1.4fr_0.85fr_1.35fr_0.7fr_0.7fr_auto] items-center gap-4 px-5 py-4 sm:grid">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <Gift className="size-4 text-[var(--color-text-gold)]" />
-            <h3 className="text-lg font-semibold text-[var(--color-text)]">{name}</h3>
-          </div>
-          <p className="mt-2 text-sm leading-6 text-[var(--color-text-sub)]">{description}</p>
+          <div className="flex items-center gap-2"><Gift className="size-4 shrink-0 text-[var(--color-text-gold)]" /><p className="truncate font-semibold text-[var(--color-text)]">{packageItem.name}</p></div>
         </div>
-        <div className="w-full rounded-2xl bg-[var(--color-text-gold)] px-4 py-2 text-center text-white sm:w-auto sm:text-right">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] opacity-90">Fixed price</p>
-          <p className="text-xl font-semibold">{price}</p>
+        <p className="line-clamp-2 text-sm leading-5 text-[var(--color-text-sub)]">{packageItem.description}</p>
+        <SpaStatusPill label={packageItem.category_id?.name ?? 'Uncategorized'} />
+        <div className="flex flex-wrap gap-1.5">{services.length ? services.map((service) => <SpaStatusPill key={service.id} label={service.name} />) : <span className="text-xs text-[var(--color-text-sub)]">No services</span>}</div>
+        <p className="font-semibold text-[var(--color-text-gold)]">{packageItem.price}</p>
+        <SpaStatusPill label={packageItem.is_Active ? 'Active' : 'Inactive'} />
+        <PackageActions item={packageItem} locked={locked} lockMessage={lockMessage} onEdit={onEdit} onDelete={onDelete} />
+      </div>
+      <article className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-raised)] p-4 sm:hidden">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0"><div className="flex items-center gap-2"><Gift className="size-4 shrink-0 text-[var(--color-text-gold)]" /><h3 className="font-semibold text-[var(--color-text)]">{packageItem.name}</h3></div><p className="mt-2 text-sm leading-6 text-[var(--color-text-sub)]">{packageItem.description}</p>{locked && <p className="mt-2 text-xs font-medium text-amber-800">{lockMessage}</p>}</div>
+          <PackageActions item={packageItem} locked={locked} lockMessage={lockMessage} onEdit={onEdit} onDelete={onDelete} />
         </div>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {services.map((service) => (
-          <SpaStatusPill key={service.id} label={service.name} />
-        ))}
-      </div>
-    </div>
+        <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <div><dt className="text-xs text-[var(--color-text-sub)]">Category</dt><dd className="mt-1"><SpaStatusPill label={packageItem.category_id?.name ?? 'Uncategorized'} /></dd></div>
+          <div><dt className="text-xs text-[var(--color-text-sub)]">Status</dt><dd className="mt-1"><SpaStatusPill label={packageItem.is_Active ? 'Active' : 'Inactive'} /></dd></div>
+          <div><dt className="text-xs text-[var(--color-text-sub)]">Price</dt><dd className="mt-1 font-semibold text-[var(--color-text-gold)]">{packageItem.price}</dd></div>
+          <div className="col-span-2"><dt className="text-xs text-[var(--color-text-sub)]">Included services</dt><dd className="mt-1 flex flex-wrap gap-1.5">{services.length ? services.map((service) => <SpaStatusPill key={service.id} label={service.name} />) : 'No services'}</dd></div>
+        </dl>
+      </article>
+    </>
   );
 };
 

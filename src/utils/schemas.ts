@@ -34,10 +34,11 @@ const spaBookingSchema: yup.ObjectSchema<IBookingData> = yup
 
 const spaPackageSchema: yup.ObjectSchema<ICreatePackage> = yup.object({
   name: yup.string().required('you must type name'),
-  price: yup.number().required('you must type price').nullable(),
-  is_active: yup.bool().default(false),
+  price: yup.number().required('you must type price').positive('price must be positive').nullable(),
+  is_active: yup.bool().required(),
   description: yup.string().required('you must type description'),
   category_id: yup.string().required('you must select category'),
+  services: yup.array().of(yup.string().required()).min(1, 'Select at least one service').required(),
 });
 
 const Registerschema: yup.ObjectSchema<IForm> = yup.object({
@@ -90,4 +91,21 @@ const Loginschema: yup.ObjectSchema<ILoginForm> = yup.object({
     .matches(/[0-9]/, 'Password must contain at least one number'),
 });
 
-export { spaBookingSchema, spaPackageSchema, Registerschema, Loginschema };
+const SpaServicesSchema = yup.object({
+  name: yup.string().required(),
+  description: yup.string().required(),
+  duration: yup
+    .number()
+    // .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .required('Duration is required')
+    .positive('Duration must be a positive number')
+    .integer('Duration must be an integer'),
+  price: yup
+    .number()
+    // .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .required('Price is required')
+    .positive('Price must be a positive number'),
+  is_active: yup.boolean().required(),
+  category_id: yup.string().required('Category is required'),
+});
+export { spaBookingSchema, spaPackageSchema, Registerschema, Loginschema, SpaServicesSchema };

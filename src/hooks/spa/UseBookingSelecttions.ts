@@ -2,7 +2,7 @@ import type { IBookingData } from '@/interfaces/ISpa';
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import UseSpaServices from './UseSpaServices';
-import { UseSpaPackagesWithoutServices } from './UseSpaPackages';
+import { UseSpaPackages } from './UseSpaPackages';
 
 interface IReturnedValues {
   derivedTotalPrice: number;
@@ -13,7 +13,7 @@ const UseBookingSelecttions = (): IReturnedValues => {
   const { control, setValue } = useFormContext<IBookingData>();
 
   const { data: services = [] } = UseSpaServices();
-  const { data: packages = [] } = UseSpaPackagesWithoutServices();
+  const { data: packages = [] } = UseSpaPackages();
   const selectedServiceId = useWatch({ control, name: 'service_id' });
   const selectedPackageId = useWatch({ control, name: 'package_id' });
 

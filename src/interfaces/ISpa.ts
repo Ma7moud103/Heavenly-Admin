@@ -21,6 +21,7 @@ export interface ISpaPackages {
   is_Active: boolean;
   createdAt: string;
   updatedAt: string;
+  services?: ISpaServices[];
   category_id?: ISpaCategories;
 }
 
@@ -31,9 +32,18 @@ export interface ISpaServices {
   description: string;
   duration: number;
   price: number;
-  is_Active: boolean;
+  is_active: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ICreateSpaService {
+  name: string;
+  description: string;
+  duration: number;
+  price: number;
+  is_active: boolean;
+  category_id: string;
 }
 
 export interface ISpaPackageServices extends ISpaPackages {
@@ -127,6 +137,7 @@ export interface ICreatePackage {
   price: number | null;
   is_active: boolean;
   category_id: string;
+  services: string[];
 }
 
 export interface IPacageInputs<T extends FieldValues> {

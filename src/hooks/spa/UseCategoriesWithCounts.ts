@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import UseSpaCategories from './UseSpaCategories';
-import { UseSpaPackagesWithoutServices } from './UseSpaPackages';
+import { UseSpaPackages } from './UseSpaPackages';
 import UseSpaServices from './UseSpaServices';
 import type { ICategoryWithCounts } from '@/interfaces/ISpa';
 
 const UseCategoriesWithCounts = () => {
-  const { data: spaPackagesData, isLoading: IsLoadingPackages } = UseSpaPackagesWithoutServices();
+  const { data: spaPackagesData, isLoading: IsLoadingPackages } = UseSpaPackages();
   const { data: spaCategoriesData, isLoading: IsLoadingCategories } = UseSpaCategories();
 
   const { data: spaServicesData, isLoading: IsLoadingServices } = UseSpaServices();

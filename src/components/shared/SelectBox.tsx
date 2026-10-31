@@ -10,9 +10,10 @@ interface IProps<T extends FieldValues> {
   options: { value: string; label: string }[];
   control: Control<T>;
   onChangeExtra?: (value: string) => void;
+  defaultValue?: string;
 }
 
-function SelectBox<T extends FieldValues>({ label, name, options, placeholder = 'Select an item', control, onChangeExtra }: IProps<T>) {
+function SelectBox<T extends FieldValues>({ defaultValue, label, name, options, placeholder = 'Select an item', control, onChangeExtra }: IProps<T>) {
   return (
     <Field key={name}>
       <Label htmlFor={name}>{label}</Label>
@@ -22,6 +23,8 @@ function SelectBox<T extends FieldValues>({ label, name, options, placeholder = 
         render={({ field, fieldState: { error } }) => (
           <>
             <Select
+              defaultValue={defaultValue}
+              disabled={options.length === 0}
               name={field.name}
               value={field.value === null || field.value === undefined ? '' : String(field.value)}
               onValueChange={(value) => {

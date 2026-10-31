@@ -11,6 +11,7 @@ const UserseCreateSpaBooking = () => {
       await queryClient.invalidateQueries({
         queryKey: ['spaBookings'],
       });
+      await queryClient.invalidateQueries({ queryKey: ['spaBookingReferences'] });
     },
 
     onError: (error) => {

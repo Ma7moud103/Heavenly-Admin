@@ -1,35 +1,50 @@
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import type { ReactNode } from 'react';
-import { FormProvider, useForm, type DefaultValues, type FieldValues } from 'react-hook-form';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { spaPackageSchema } from '@/utils/schemas';
-import type { ICreatePackage } from '@/interfaces/ISpa';
+import type { ICreatePackage, ISpaPackages } from '@/interfaces/ISpa';
 import { Sparkles } from 'lucide-react';
+import { useEffect } from 'react';
 import PackageForm from './PackageForm';
 
 interface IProps {
-  children: ReactNode;
-  initialValues: DefaultValues<FieldValues>;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  mode: 'create' | 'edit';
+  packageItem?: ISpaPackages;
 }
 
-const PackageWindow = ({ children, initialValues }: IProps) => {
-  // const [open, setOpen] = React.useState(false);
+const emptyValues: ICreatePackage = { category_id: '', description: '', is_active: true, name: '', price: null, services: [] };
 
-  const methods = useForm<ICreatePackage>({
-    defaultValues: initialValues,
-    resolver: yupResolver(spaPackageSchema),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+const PackageWindow = ({ open, onOpenChange, mode, packageItem }: IProps) => {
+  const methods = useForm<ICreatePackage>({ defaultValues: emptyValues, resolver: yupResolver(spaPackageSchema), mode: 'onTouched' });
+
+  useEffect(() => {
+    if (!open) return;
+    methods.reset(mode === 'edit' && packageItem ? {
+      name: packageItem.name,
+      description: packageItem.description,
+      price: packageItem.price,
+      is_active: packageItem.is_Active,
+      category_id: packageItem.category_id?.id ?? '',
+      services: packageItem.services?.map((service) => service.id) ?? [],
+    } : emptyValues);
+  }, [open, mode, packageItem, methods]);
+
   return (
-    <Drawer>
-      <DrawerTrigger asChild>{children}</DrawerTrigger>
-
-      <DrawerContent className="sm:max-w-md min-h-0 overflow-y-auto rounded-none">
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent
+        className="sm:max-w-md min-h-0 overflow-y-auto rounded-none"
+        onInteractOutside={(event) => {
+          const target = event.target;
+          if (target instanceof Element && target.closest('[data-slot="select-content"]')) event.preventDefault();
+        }}
+      >
         <FormProvider {...methods}>
           <PackageForm
-            header="Create New Package"
-            description="Build a spa package with name, description, price, active status, and category details."
+            mode={mode}
+            packageId={packageItem?.id}
+            onSaved={() => onOpenChange(false)}
             headerIcon={<Sparkles className="size-5" />}
           />
         </FormProvider>

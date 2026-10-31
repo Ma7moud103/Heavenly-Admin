@@ -1,39 +1,39 @@
 import type { ICreatePackage, ISpaPackages, ISpaServices } from '@/interfaces/ISpa';
 import { supabase } from '@/services/supabase';
 import type { PostgrestError } from '@supabase/supabase-js';
+import { ensurePackageHasNoBookings } from '@/data/spa/BookingGuards';
 
-interface IProps {
-  id: string;
-  package_id: ISpaPackages;
-  service_id: ISpaServices;
-}
-export async function getSpaPackages(): Promise<{ data: IProps[] | []; error: PostgrestError | null }> {
-  const { data, error } = await supabase.from('spa_package_services').select('*,package_id(*),service_id(*)');
-
-  if (error) {
-    throw new Error('Error fetching spa packages:', error);
-  }
-  return { data: data || [], error };
+export async function getSpaPackages(): Promise<{ data: ISpaPackages[]; error: PostgrestError | null }> {
+  const { data, error } = await supabase.from('spa_packages').select('*,category_id(*),spa_package_services(service_id(*))');
+  if (error) throw new Error(error.message);
+  const packageRows = (data ?? []) as Array<ISpaPackages & { spa_package_services?: Array<{ service_id: ISpaServices | null }> }>;
+  const packages = packageRows.map((item) => ({
+    ...item,
+    services: item.spa_package_services?.map((relation) => relation.service_id).filter(Boolean) ?? [],
+  })) as ISpaPackages[];
+  return { data: packages, error: null };
 }
 
-export async function getSpaPackagesWithoutServices(): Promise<{ data: ISpaPackages[] | []; error: PostgrestError | null }> {
-  const { data, error } = await supabase.from('spa_packages').select('*,category_id(*)');
+export async function saveSpaPackage(selectedPackage: ICreatePackage, id?: string): Promise<void> {
+  const { services, ...packageFields } = selectedPackage;
+  let packageId = id;
 
-  if (error) {
-    console.error('Error fetching spa packages:', error);
-    throw new Error('Error fetching spa packages:', error);
+  if (id) {
+    await ensurePackageHasNoBookings(id);
+    const { error } = await supabase.from('spa_packages').update(packageFields).eq('id', id);
+    if (error) throw new Error(error.message);
+    const { error: deleteError } = await supabase.from('spa_package_services').delete().eq('package_id', id);
+    if (deleteError) throw new Error(deleteError.message);
+  } else {
+    const { data, error } = await supabase.from('spa_packages').insert(packageFields).select('id').single();
+    if (error) throw new Error(error.message);
+    packageId = data.id;
   }
 
-  return { data: data || [], error };
-}
-
-export async function createNewPackage(x: ICreatePackage): Promise<ICreatePackage[]> {
-  const { data, error } = await supabase.from('spa_packages').insert<ICreatePackage>(x).select();
-
-  if (error) {
-    console.log(error);
-    throw new Error('something went wrong whild creating new package', error);
+  if (services.length && packageId) {
+    const { error } = await supabase
+      .from('spa_package_services')
+      .insert(services.map((serviceId) => ({ package_id: packageId, service_id: serviceId })));
+    if (error) throw new Error(error.message);
   }
-
-  return data ?? [];
 }

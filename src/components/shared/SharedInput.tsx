@@ -1,6 +1,7 @@
 ﻿import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { forwardRef, memo, useId, type ComponentProps } from 'react';
+import { FieldError } from '../ui/field';
 
 export type SharedInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url' | 'date' | 'time';
 
@@ -24,7 +25,7 @@ const InputBase = forwardRef<HTMLInputElement, IInputProps>(
         {label ? <span className={cn('text-[--color-text-sub]', labelClassName)}>{label}</span> : null}
         <Input ref={ref} id={inputId} type={type} aria-invalid={Boolean(error)} className={className} {...props} />
         {error ? (
-          <p className="text-xs text-[--color-error]">{error}</p>
+          <FieldError className="text-xs text-[--color-error]">{error}</FieldError>
         ) : hint ? (
           <p className={cn('text-xs text-[--color-text-muted]', hintClassName)}>{hint}</p>
         ) : null}
