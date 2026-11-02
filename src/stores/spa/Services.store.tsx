@@ -1,4 +1,4 @@
-import UseSpaCategories from '@/hooks/spa/UseSpaCategories';
+import UseSpaCategories from '@/hooks/spa/categories/UseSpaCategories';
 import type { ISpaCategories, ISpaServices } from '@/interfaces/ISpa';
 import { createContext, useContext, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 

@@ -1,6 +1,6 @@
-﻿import { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Activity, Clock3, UserRoundCheck, Users } from 'lucide-react';
-import { useTherapistRosterContext } from '@/stores/spa/SpaTherapistsContext';
+import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
 
 const cards = [
   { key: 'total', label: 'Total therapists', icon: Users, color: 'blue', description: 'In your spa roster' },
@@ -16,7 +16,8 @@ const colors = {
 } as const;
 
 function TherapistStats() {
-  const { therapists, isLoading, isError } = useTherapistRosterContext();
+  const { data: therapistData, isLoading, isError } = UseSpaTherapists();
+  const therapists = therapistData ?? [];
   const stats = useMemo(
     () => ({
       total: therapists.length,

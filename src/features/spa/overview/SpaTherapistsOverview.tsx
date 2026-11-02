@@ -2,7 +2,7 @@ import { timeNormalization } from '@/utils/dates';
 import { SpaSectionCard } from '../components/SpaSectionCard';
 import { Activity, Gem } from 'lucide-react';
 import { SpaStatusPill } from '../components/SpaStatusPill';
-import UseSpaTherapists from '@/hooks/spa/UseSpaTherapists';
+import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
 
 const SpaTherapistsOverview = () => {
   const { data: spaTherapistsData } = UseSpaTherapists();
@@ -25,7 +25,9 @@ const SpaTherapistsOverview = () => {
             <p className="mt-1 text-sm text-[var(--color-text-sub)]">{therapist.specialty || 'No specialty'}</p>
             <div className="mt-4 flex items-center gap-2 text-sm text-[var(--color-text-sub)]">
               <Activity className="size-4 text-[var(--color-text-gold)]" />
-              {therapist.shift_from && therapist.shift_to ? timeNormalization(therapist.shift_from) + ' - ' + timeNormalization(therapist.shift_to) : 'Managed by daily schedules'}
+              {therapist.shift_from && therapist.shift_to
+                ? timeNormalization(therapist.shift_from) + ' - ' + timeNormalization(therapist.shift_to)
+                : 'Managed by daily schedules'}
             </div>
           </div>
         ))}

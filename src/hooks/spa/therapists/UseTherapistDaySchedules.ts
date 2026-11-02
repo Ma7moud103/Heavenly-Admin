@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/services/supabase';
 import type { TherapistDailySchedule } from '@/interfaces/ISpa';
+import { therapistKeys } from '@/data/spa/Therapists';
 
 export default function UseTherapistDaySchedules(date: string) {
   return useQuery({
-    queryKey: ['spaTherapistDaySchedules', date],
+    queryKey: therapistKeys.daySchedules(date),
     queryFn: async () => {
       const { data, error } = await supabase
         .from('spa_therapist_daily_schedules')

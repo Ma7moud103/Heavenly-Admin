@@ -2,8 +2,8 @@ import SelectBox from '../../../../components/shared/SelectBox';
 import { useFormContext } from 'react-hook-form';
 import type { IBookingData } from '@/interfaces/ISpa';
 import { FieldError } from '@/components/ui/field';
-import UseBookingOptions from '@/hooks/spa/UseBookingOptions';
-import UseBookingSelecttions from '@/hooks/spa/UseBookingSelecttions';
+import UseBookingOptions from '@/hooks/spa/bookings/UseBookingOptions';
+import UseBookingSelecttions from '@/hooks/spa/bookings/UseBookingSelecttions';
 
 const BookingTreatmentSection = () => {
   const { serviceOptions, packageOptions } = UseBookingOptions();

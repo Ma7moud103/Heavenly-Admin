@@ -1,7 +1,7 @@
 import { SpaSectionCard } from '../components/SpaSectionCard';
 import { SpaStatusPill } from '../components/SpaStatusPill';
 
-import UseCategoriesWithCounts from '@/hooks/spa/UseCategoriesWithCounts';
+import UseCategoriesWithCounts from '@/hooks/spa/categories/UseCategoriesWithCounts';
 
 const SpaServicesOverview = () => {
   const { categoriesWithCounts, spaServicesData } = UseCategoriesWithCounts();

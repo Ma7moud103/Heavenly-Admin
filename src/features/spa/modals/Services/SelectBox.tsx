@@ -1,6 +1,6 @@
 import SelectBox from '@/components/shared/SelectBox';
 // import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import UseSpaCategories from '@/hooks/spa/UseSpaCategories';
+import UseSpaCategories from '@/hooks/spa/categories/UseSpaCategories';
 import type { ICreateSpaService } from '@/interfaces/ISpa';
 import type { Control, FieldValues } from 'react-hook-form';
 interface IProps<T extends FieldValues> {

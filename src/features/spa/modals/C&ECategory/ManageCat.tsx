@@ -7,7 +7,7 @@ import { FieldError } from '@/components/ui/field';
 import type { ISpaCategories } from '@/interfaces/ISpa';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import { useCOrECat, type IPayload } from '@/hooks/spa/useCorECat';
+import { useCOrECat, type IPayload } from '@/hooks/spa/categories/useCorECat';
 interface IProps {
   mode: 'create' | 'edit';
   open: boolean;

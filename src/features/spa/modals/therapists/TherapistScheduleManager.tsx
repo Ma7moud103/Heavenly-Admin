@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useDeleteTherapistSchedule, useSaveTherapistSchedule, useTherapistSchedules } from '@/hooks/spa/UseTherapistSchedules';
+import { useDeleteTherapistSchedule, useSaveTherapistSchedule, useTherapistSchedules } from '@/hooks/spa/therapists/UseTherapistSchedules';
 import type { DailyScheduleStatus, DailyTimeSlotType, ISpaTherapists, TherapistScheduleSlotInput } from '@/interfaces/ISpa';
 import { getTodayInCairo } from '@/utils/dates';
 
@@ -48,25 +48,35 @@ function validateSlots(status: DailyScheduleStatus, slots: TherapistScheduleSlot
     return 'Each break must fit inside a working shift.';
   return null;
 }
-
+const today = getTodayInCairo();
 export default function TherapistScheduleManager({ open, onOpenChange, therapist }: Props) {
-  const today = getTodayInCairo();
   const [month, setMonth] = useState(() => new Date(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 1, 1));
   const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDates, setSelectedDates] = useState<string[]>([today]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const from = dateKey(new Date(month.getFullYear(), month.getMonth(), 1));
   const to = dateKey(new Date(month.getFullYear(), month.getMonth() + 1, 0));
-  const schedulesQuery = useTherapistSchedules(therapist.id, from, to);
-  const schedules = schedulesQuery.data ?? [];
-  const activeSchedule = schedules.find((schedule) => schedule.schedule_date === selectedDate);
+  const { data: schedulesQuery, isLoading: isSchedulesLoading, isError: isSchedulesError } = useTherapistSchedules(therapist.id, from, to);
+  const schedulesData = schedulesQuery ?? [];
+  const toggleScheduleDate = (date: string) => {
+    if (selectedDates.includes(date)) {
+      const nextDates = selectedDates.filter((item) => item !== date);
+      setSelectedDates(nextDates);
+      if (selectedDate === date && nextDates.length) setSelectedDate(nextDates[0]);
+      return;
+    }
+    setSelectedDate(date);
+    setSelectedDates([...selectedDates, date].sort());
+  };
+  const activeSchedule = schedulesData.find((schedule) => schedule.schedule_date === selectedDate);
   const form = useForm<ScheduleForm>({ defaultValues: { status: 'working', notes: '', slots: [] } });
   const { control, register, reset, setValue, handleSubmit } = form;
   const slotArray = useFieldArray({ control, name: 'slots' });
   const status = useWatch({ control, name: 'status' });
   const slotValues = useWatch({ control, name: 'slots' }) ?? [];
   const validation = validateSlots(status, slotValues);
-  const save = useSaveTherapistSchedule(therapist.id, from, to);
-  const remove = useDeleteTherapistSchedule(therapist.id, from, to);
+  const save = useSaveTherapistSchedule(therapist.id);
+  const remove = useDeleteTherapistSchedule(therapist.id);
   const calendarDays = useMemo(() => {
     const first = new Date(month.getFullYear(), month.getMonth(), 1);
     const count = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
@@ -92,10 +102,14 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
       return;
     }
     try {
-      await save.mutateAsync({ schedule_date: selectedDate, status: data.status, notes: data.notes, slots: data.slots });
-      toast.success('Daily schedule saved');
+      for (const scheduleDate of selectedDates) {
+        await save.mutateAsync({ schedule_date: scheduleDate, status: data.status, notes: data.notes, slots: data.slots });
+      }
+      toast.success(selectedDates.length === 1 ? 'Daily schedule saved' : `Schedule saved for ${selectedDates.length} dates`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not save schedule');
+    } finally {
+      onOpenChange(false);
     }
   });
   const deleteSchedule = async () => {
@@ -106,6 +120,8 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
       setConfirmDelete(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not remove schedule');
+    } finally {
+      onOpenChange(false);
     }
   };
 
@@ -116,11 +132,11 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
           <DialogHeader className="px-5 pt-5 pr-12">
             <DialogTitle>Schedule: {therapist.full_name}</DialogTitle>
             <DialogDescription>
-              Choose a date, then configure working hours, breaks, and notes. Unconfigured dates are not days off.
+              Select one or more dates, then configure shared working hours, breaks, and notes. Unconfigured dates are not days off.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 px-4 pb-5 lg:grid-cols-[0.9fr_1.1fr]">
-            <section className="rounded-2xl border border-[var(--color-border)] p-4">
+            <section className="rounded-2xl border border-(--color-border) p-4">
               <div className="mb-4 flex items-center justify-between">
                 <Button
                   variant="ghost"
@@ -151,18 +167,18 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                 {calendarDays.map((day, index) => {
                   if (!day) return <span key={'blank-' + index} />;
                   const key = dateKey(new Date(month.getFullYear(), month.getMonth(), day));
-                  const schedule = schedules.find((item) => item.schedule_date === key);
-                  const selected = key === selectedDate;
+                  const schedule = schedulesData.find((item) => item.schedule_date === key);
+                  // const selected = key === selectedDate;
                   return (
                     <button
                       key={key}
                       type="button"
-                      onClick={() => setSelectedDate(key)}
+                      onClick={() => toggleScheduleDate(key)}
                       aria-label={key + (schedule ? ', ' + schedule.status : ', not configured')}
-                      aria-pressed={selected}
+                      aria-pressed={selectedDates.includes(key)}
                       className={
                         'relative aspect-square rounded-xl text-sm transition-colors ' +
-                        (selected ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')
+                        (selectedDates.includes(key) ? 'bg-black text-white hover:bg-black/85' : 'hover:bg-muted')
                       }
                     >
                       {day}
@@ -170,7 +186,7 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                         <span
                           className={
                             'absolute bottom-1 left-1/2 size-1.5 -translate-x-1/2 rounded-full ' +
-                            (selected ? 'bg-primary-foreground' : schedule.status === 'working' ? 'bg-emerald-600' : 'bg-slate-400')
+                            (selectedDates.includes(key) ? 'bg-white' : schedule.status === 'working' ? 'bg-emerald-600' : 'bg-slate-400')
                           }
                         />
                       )}
@@ -178,7 +194,10 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                   );
                 })}
               </div>
-              <p className="mt-4 text-xs text-muted-foreground">Green: working · Gray: day off · No marker: not configured</p>
+              <p className="mt-4 text-xs text-muted-foreground">Green: working· Gray: day off· No marker: not configured</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {selectedDates.length} date(s) selected. Saving applies these shift details to every selected date.
+              </p>
             </section>
             <section className="space-y-4">
               <div>
@@ -187,9 +206,11 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                   {new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(new Date(selectedDate + 'T12:00:00'))}
                 </h3>
               </div>
-              {schedulesQuery.isLoading ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">Loading schedule…</p>
-              ) : schedulesQuery.isError ? (
+              {isSchedulesLoading ? (
+                <p className="py-8 text-center text-sm text-muted-foreground">
+                  Loading scheduleط·آ·ط¢آ£ط·آ¢ط¢آ¢ط·آ£ط¢آ¢ط£آ¢أ¢â€ڑآ¬ط¹â€کط·آ¢ط¢آ¬ط·آ·ط¢آ¢ط·آ¢ط¢آ¦
+                </p>
+              ) : isSchedulesError ? (
                 <p role="alert" className="text-sm text-destructive">
                   Could not load schedules. Check administrator access and try again.
                 </p>
@@ -219,7 +240,7 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                       {slotArray.fields.map((slot, index) => (
                         <div
                           key={slot.id}
-                          className="grid grid-cols-1 items-end gap-2 rounded-xl border border-[var(--color-border)] p-3 sm:grid-cols-[0.75fr_1fr_1fr_auto]"
+                          className="grid grid-cols-1 items-end gap-2 rounded-xl border border-(--color-border) p-3 sm:grid-cols-[0.75fr_1fr_1fr_auto]"
                         >
                           <div className="grid gap-1">
                             <Label className="text-xs">Type</Label>
@@ -273,14 +294,14 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                       {validation}
                     </p>
                   )}
-                  <div className="flex flex-wrap justify-between gap-2 border-t border-[var(--color-border)] pt-4">
+                  <div className="flex flex-wrap justify-between gap-2 border-t border-(--color-border) pt-4">
                     {activeSchedule && (
                       <Button type="button" variant="destructive" onClick={() => setConfirmDelete(true)} disabled={remove.isPending}>
                         Delete day
                       </Button>
                     )}
-                    <Button type="submit" className="ml-auto" disabled={save.isPending || Boolean(validation)}>
-                      {save.isPending ? 'Saving…' : 'Save schedule'}
+                    <Button type="submit" className="ml-auto" disabled={save.isPending || Boolean(validation) || selectedDates.length === 0}>
+                      {save.isPending ? 'Savingط·آ·ط¢آ£ط·آ¢ط¢آ¢ط·آ£ط¢آ¢ط£آ¢أ¢â€ڑآ¬ط¹â€کط·آ¢ط¢آ¬ط·آ·ط¢آ¢ط·آ¢ط¢آ¦' : 'Save schedule'}
                     </Button>
                   </div>
                 </form>

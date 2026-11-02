@@ -1,10 +1,12 @@
-﻿import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+﻿import * as React from 'react';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import * as yup from 'yup';
 import { TherapistSchedulesSchema } from '@/utils/schemas';
 import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { DailyScheduleStatus, DailyTimeSlotType, TherapistDailyScheduleInput } from '@/interfaces/ISpa';
 import { getTodayInCairo } from '@/utils/dates';
@@ -38,19 +40,30 @@ export default function CreateTherapistSchedules() {
   const schedules = useFieldArray({ control, name: 'schedules' });
   const slots = useFieldArray({ control, name: 'draft_slots' });
   const status = useWatch({ control, name: 'draft_status' });
-  const draftDate = useWatch({ control, name: 'draft_date' });
+  const [selectedDates, setSelectedDates] = React.useState<Date[]>([]);
   const addSchedule = async () => {
-    const schedule: TherapistDailyScheduleInput = {
-      schedule_date: getValues('draft_date'),
+    const dates = selectedDates
+      .map((date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`)
+      .sort();
+    if (!dates.length) {
+      setError('draft_date', { type: 'required', message: 'Choose at least one schedule date.' });
+      return;
+    }
+    if (dates.some((date) => date < getTodayInCairo())) {
+      setError('draft_date', { type: 'validate', message: 'Choose today or a future date.' });
+      return;
+    }
+    const draft = {
       status: getValues('draft_status'),
       notes: getValues('draft_notes'),
       slots: getValues('draft_slots'),
     };
+    const additions = dates.map((schedule_date) => ({ ...draft, schedule_date }));
     try {
-      const validated = await TherapistSchedulesSchema.validate([...getValues('schedules'), schedule], { abortEarly: false });
-
+      const validated = await TherapistSchedulesSchema.validate([...getValues('schedules'), ...additions], { abortEarly: false });
       clearErrors(['draft_date', 'draft_slots']);
-      schedules.append(validated[validated.length - 1]);
+      schedules.append(validated.slice(-additions.length));
+      setSelectedDates([]);
       setValue('draft_date', '');
       setValue('draft_notes', '');
       setValue('draft_status', 'working');
@@ -59,11 +72,11 @@ export default function CreateTherapistSchedules() {
       const validationError = error instanceof yup.ValidationError ? error : undefined;
       const issue = validationError?.inner[0] ?? validationError;
       const field = issue?.path?.includes('slots') ? 'draft_slots' : 'draft_date';
-      setError(field, { type: 'validate', message: issue?.message ?? 'Check this schedule and try again.' });
+      setError(field, { type: 'validate', message: issue?.message ?? 'Check these schedules and try again.' });
     }
   };
   return (
-    <section className="space-y-4 rounded-2xl border border-[var(--color-border)] p-4">
+    <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
       <div>
         <h3 className="font-semibold">
           Initial schedules <span className="font-normal text-muted-foreground">(optional)</span>
@@ -75,7 +88,7 @@ export default function CreateTherapistSchedules() {
           {schedules.fields.map((item, index) => (
             <li key={item.id} className="flex items-center justify-between gap-3 rounded-xl bg-muted px-3 py-2 text-sm">
               <span>
-                <strong>{item.schedule_date}</strong> � {item.status === 'off' ? 'Day off' : item.slots.length + ' time slots'}
+                <strong>{item.schedule_date}</strong> {item.status === 'off' ? 'Day off' : item.slots.length + ' time slots'}
               </span>
               <Button
                 type="button"
@@ -90,17 +103,29 @@ export default function CreateTherapistSchedules() {
           ))}
         </ul>
       )}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
         <div className="grid gap-1.5">
-          <Label htmlFor="initial-date">Schedule date</Label>
-          <Input id="initial-date" type="date" min={getTodayInCairo()} {...register('draft_date')} />
+          <div className="flex max-w-sm items-center justify-between">
+            <Label>Schedule dates</Label>
+            <span className="text-xs text-muted-foreground">{selectedDates.length} selected</span>
+          </div>
+          <Calendar
+            mode="multiple"
+            className="max-w-sm rounded-xl border border-(--color-border) bg-(--color-bg-raised) p-3"
+            selected={selectedDates}
+            onSelect={(dates) => {
+              setSelectedDates(dates);
+              clearErrors('draft_date');
+            }}
+          />
+          <p className="text-xs text-muted-foreground">Select one or more dates. Each date gets the same shift settings.</p>
           {errors.draft_date?.message && (
             <p role="alert" className="text-sm text-destructive">
               {errors.draft_date.message}
             </p>
           )}
         </div>
-        <div className="grid gap-1.5">
+        <div className="grid content-start gap-1.5">
           <Label>Day status</Label>
           <Controller
             control={control}
@@ -126,23 +151,6 @@ export default function CreateTherapistSchedules() {
               </Select>
             )}
           />
-          {/* <Select
-            value={status}
-            onValueChange={(value) => {
-              const next = value as DailyScheduleStatus;
-              setValue('draft_status', next);
-              if (next === 'off') slots.replace([]);
-              else if (!getValues('draft_slots').length) slots.replace([{ slot_type: 'shift', start_time: '09:00', end_time: '17:00' }]);
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="working">Working</SelectItem>
-              <SelectItem value="off">Day off</SelectItem>
-            </SelectContent>
-          </Select> */}
         </div>
       </div>
       {status === 'working' && (
@@ -206,8 +214,8 @@ export default function CreateTherapistSchedules() {
           {errors.draft_slots.message}
         </p>
       )}
-      <Button type="button" variant="secondary" disabled={!draftDate} onClick={addSchedule}>
-        Add date to summary
+      <Button type="button" variant="secondary" disabled={!selectedDates.length} onClick={addSchedule}>
+        Add selected dates to summary
       </Button>
     </section>
   );

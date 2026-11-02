@@ -1,6 +1,6 @@
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import UseBookingSelecttions from '@/hooks/spa/UseBookingSelecttions';
+import UseBookingSelecttions from '@/hooks/spa/bookings/UseBookingSelecttions';
 import type { IBookingData } from '@/interfaces/ISpa';
 import { useFormContext } from 'react-hook-form';
 

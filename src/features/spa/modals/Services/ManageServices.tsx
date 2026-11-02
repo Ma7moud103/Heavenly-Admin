@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import type { ICreateSpaService, ISpaServices } from '@/interfaces/ISpa';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import { useCreateOrEditSpaService } from '@/hooks/spa/useCorECat';
+import { useCreateOrEditSpaService } from '@/hooks/spa/categories/useCorECat';
 import SelectBoxField from './SelectBox';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';

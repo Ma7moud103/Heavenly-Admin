@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import UseSpaCategories from './UseSpaCategories';
-import { UseSpaPackages } from './UseSpaPackages';
-import UseSpaServices from './UseSpaServices';
+import { UseSpaPackages } from '../packages/UseSpaPackages';
+import UseSpaServices from '../services/UseSpaServices';
 import type { ICategoryWithCounts } from '@/interfaces/ISpa';
 
 const UseCategoriesWithCounts = () => {

@@ -1,7 +1,7 @@
 import SelectBox from '../../../../components/shared/SelectBox';
 import { useFormContext } from 'react-hook-form';
 import type { IBookingData } from '@/interfaces/ISpa';
-import UseBookingOptions from '@/hooks/spa/UseBookingOptions';
+import UseBookingOptions from '@/hooks/spa/bookings/UseBookingOptions';
 
 const BookingCustomerSection = () => {
   const { control } = useFormContext<IBookingData>();

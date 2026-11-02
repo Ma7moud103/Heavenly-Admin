@@ -1,4 +1,5 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Link } from 'react-router-dom';
 import { CalendarDays, Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 
 interface Props {
@@ -7,8 +8,9 @@ interface Props {
   onSchedule: () => void;
   onDelete: () => void;
   deleteLocked: boolean;
+  scheduleHref: string;
 }
-export default function TherapistActions({ onView, onEdit, onSchedule, onDelete, deleteLocked }: Props) {
+export default function TherapistActions({ onView, onEdit, onSchedule, onDelete, deleteLocked, scheduleHref }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,6 +31,9 @@ export default function TherapistActions({ onView, onEdit, onSchedule, onDelete,
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onSchedule}>
           <CalendarDays className="size-4" /> Manage schedule
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to={scheduleHref}><CalendarDays className="size-4" /> View full schedule</Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onDelete} disabled={deleteLocked} variant="destructive">
           <Trash2 className="size-4" /> {deleteLocked ? 'Delete unavailable: has bookings' : 'Delete therapist'}

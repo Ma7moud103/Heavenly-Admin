@@ -1,9 +1,9 @@
-import UseSpaTherapists from '@/hooks/spa/UseSpaTherapists';
+import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
 import SpaStatCard from '../components/SpaStatCard';
 import { CircleDollarSign, Clock3, Leaf, Users2 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';
-import UseSpaCategories from '@/hooks/spa/UseSpaCategories';
+import UseSpaCategories from '@/hooks/spa/categories/UseSpaCategories';
 
 export interface ISpaStatCard {
   icon: LucideIcon;

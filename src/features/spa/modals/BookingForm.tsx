@@ -11,8 +11,8 @@ import BookingTreatmentSection from './BFFeilds/BookingTreatmentSection';
 import BookingScheduleSection from './BFFeilds/BookingScheduleSection';
 import BookingPriceSection from './BFFeilds/BookingPriceSection';
 import BookingNotesSection from './BFFeilds/BookingNotesSection';
-import UseCreateSpaBooking from '@/hooks/spa/UseCreateSpaBooking';
-import UseBookingSelecttions from '@/hooks/spa/UseBookingSelecttions';
+import UseCreateSpaBooking from '@/hooks/spa/bookings/UseCreateSpaBooking';
+import UseBookingSelecttions from '@/hooks/spa/bookings/UseBookingSelecttions';
 import type { ReactNode } from 'react';
 import BookingFooter from './BFFeilds/BookingFooter';
 

@@ -6,9 +6,9 @@ import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
 import SpaPackage from '@/features/spa/components/packages/SpaPackage';
 import PackageWindow from '@/features/spa/modals/PackageWindow';
-import { UseSpaPackages } from '@/hooks/spa/UseSpaPackages';
-import UseSpaBookingLocks from '@/hooks/spa/UseSpaBookingLocks';
-import { useDeleteSpaPackage } from '@/hooks/spa/useDeleteSpaPackage';
+import { UseSpaPackages } from '@/hooks/spa/packages/UseSpaPackages';
+import UseSpaBookingLocks from '@/hooks/spa/bookings/UseSpaBookingLocks';
+import { useDeleteSpaPackage } from '@/hooks/spa/packages/useDeleteSpaPackage';
 import type { ISpaPackages } from '@/interfaces/ISpa';
 import { toast } from 'react-toastify';
 

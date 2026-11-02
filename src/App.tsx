@@ -19,6 +19,7 @@ import {
   SpaPackages,
   SpaServices,
   SpaTherapists,
+  TherapistSchedule,
 } from './pages/lazy-pages';
 import { Suspense } from 'react';
 import { LoadingPage } from './pages/LoadingPage';
@@ -68,6 +69,7 @@ function App() {
               />
               <Route path="spa/packages" element={<SpaPackages />} />
               <Route path="spa/therapists" element={<SpaTherapists />} />
+              <Route path="spa/therapists/:therapistId/schedule" element={<TherapistSchedule />} />
               <Route path="spa/guests" element={<SpaGuests />} />
               <Route path="spa/bookings" element={<SpaBookings />} />
 

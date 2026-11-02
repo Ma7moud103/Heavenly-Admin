@@ -1,4 +1,4 @@
-import { UseSpaPackages } from '@/hooks/spa/UseSpaPackages';
+import { UseSpaPackages } from '@/hooks/spa/packages/UseSpaPackages';
 import { SpaSectionCard } from '../components/SpaSectionCard';
 import { SpaStatusPill } from '../components/SpaStatusPill';
 

@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
@@ -9,9 +9,9 @@ import { Label } from '@/components/ui/label';
 import { FieldError } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ISpaTherapists } from '@/interfaces/ISpa';
-import { useCreateOrEditSpaTherapist } from '@/hooks/spa/useCreateOrEditSpaTherapist';
+import { useCreateOrEditSpaTherapist } from '@/hooks/spa/therapists/useCreateOrEditSpaTherapist';
 import { SpaTherapistSchema } from '@/utils/schemas';
-import InitialTherapistSchedules, { type TherapistFormValues } from './CreateTherapistSchedules';
+import CreateTherapistSchedules, { type TherapistFormValues } from './CreateTherapistSchedules';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -81,6 +81,8 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
       onOpenChange(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not save therapist');
+    } finally {
+      onOpenChange(false);
     }
   };
   return (
@@ -158,7 +160,7 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
                   <p className="text-xs text-muted-foreground">Storage upload is not configured in this project.</p>
                 </div>
               </div>
-              <fieldset className="grid gap-4 rounded-xl border border-[var(--color-border)] p-4 sm:grid-cols-2">
+              <fieldset className="grid gap-4 rounded-xl border border-(--color-border) p-4 sm:grid-cols-2">
                 <legend className="px-1 text-sm font-semibold">Legacy shift hours</legend>
                 <div className="grid gap-1.5">
                   <Label htmlFor="shift-from">Starts at</Label>
@@ -170,8 +172,8 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
                 </div>
               </fieldset>
             </section>
-            {mode === 'create' && <InitialTherapistSchedules />}
-            <SheetFooter className="border-t border-[--color-border] sm:flex-row sm:justify-end">
+            {mode === 'create' && <CreateTherapistSchedules key={open ? "open" : "closed"} />}
+            <SheetFooter className="border-t border-(--color-border) sm:flex-row sm:justify-end">
               <Button type="button" variant="ghost" disabled={mutation.isPending} onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>

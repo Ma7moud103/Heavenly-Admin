@@ -21,3 +21,5 @@ export const SpaPackages = lazy(() => import('@/pages/spa/Packages'));
 export const SpaTherapists = lazy(() => import('@/pages/spa/Therapists'));
 export const SpaGuests = lazy(() => import('@/pages/spa/Guests'));
 export const SpaBookings = lazy(() => import('@/pages/spa/Bookings'));
+
+export const TherapistSchedule = lazy(() => import('@/pages/spa/TherapistSchedule'));

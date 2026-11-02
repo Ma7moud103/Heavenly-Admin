@@ -8,10 +8,15 @@ import PackageInputs from './PFFeilds/PackageInputs';
 import PackageSelecttions from './PFFeilds/PackageSelecttions';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import UseCreatePackage from '@/hooks/spa/UseCreatePackage';
+import UseCreatePackage from '@/hooks/spa/packages/UseCreatePackage';
 import { toast } from 'react-toastify';
 
-interface IProps { mode: 'create' | 'edit'; packageId?: string; onSaved: () => void; headerIcon: ReactNode }
+interface IProps {
+  mode: 'create' | 'edit';
+  packageId?: string;
+  onSaved: () => void;
+  headerIcon: ReactNode;
+}
 const packageInputs: IPacageInputs<ICreatePackage>[] = [
   { labelName: 'Package Name', name: 'name', type: 'text', InputType: Input },
   { labelName: 'Price', name: 'price', type: 'number', InputType: Input },
@@ -19,7 +24,11 @@ const packageInputs: IPacageInputs<ICreatePackage>[] = [
 ];
 
 const PackageForm = ({ mode, packageId, onSaved, headerIcon }: IProps) => {
-  const { reset, handleSubmit, formState: { isSubmitting } } = useFormContext<ICreatePackage>();
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useFormContext<ICreatePackage>();
   const { mutateAsync, isPending } = UseCreatePackage(packageId);
 
   const onSubmit: SubmitHandler<ICreatePackage> = async (data) => {
@@ -39,14 +48,20 @@ const PackageForm = ({ mode, packageId, onSaved, headerIcon }: IProps) => {
         <div className="flex items-center gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-text-gold)] text-white">{headerIcon}</span>
           <div className="min-w-0">
-            <DrawerTitle className="text-xl text-[var(--color-text)] sm:text-2xl">{mode === 'edit' ? 'Edit Package' : 'Create New Package'}</DrawerTitle>
-            <DrawerDescription className="mt-1 text-sm leading-6 text-[var(--color-text-sub)]">Set the package price, category, and included services.</DrawerDescription>
+            <DrawerTitle className="text-xl text-[var(--color-text)] sm:text-2xl">
+              {mode === 'edit' ? 'Edit Package' : 'Create New Package'}
+            </DrawerTitle>
+            <DrawerDescription className="mt-1 text-sm leading-6 text-[var(--color-text-sub)]">
+              Set the package price, category, and included services.
+            </DrawerDescription>
           </div>
         </div>
       </DrawerHeader>
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <FieldGroup className="flex flex-col gap-4">
-          {packageInputs.map((input) => <PackageInputs key={input.name} {...input} />)}
+          {packageInputs.map((input) => (
+            <PackageInputs key={input.name} {...input} />
+          ))}
           <PackageSelecttions />
         </FieldGroup>
       </div>

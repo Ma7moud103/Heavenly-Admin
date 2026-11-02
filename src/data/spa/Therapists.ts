@@ -3,10 +3,18 @@ import type { ICreateSpaTherapist, ISpaTherapists, TherapistDailySchedule, Thera
 
 export const therapistKeys = {
   all: ['spaTherapists'] as const,
-  list: () => ['spaTherapists'] as const,
-  detail: (id: string) => ['spaTherapist', id] as const,
-  schedules: (id: string, from: string, to: string) => ['spaTherapistSchedules', id, from, to] as const,
-  dailySchedule: (id: string, date: string) => ['spaTherapistDailySchedule', id, date] as const,
+
+  lists: () => [...therapistKeys.all, 'list'] as const,
+
+  details: () => [...therapistKeys.all, 'detail'] as const,
+
+  detail: (id: string) => [...therapistKeys.details(), id] as const,
+
+  schedules: (id: string, from: string, to: string) => [...therapistKeys.detail(id), 'schedules', from, to] as const,
+
+  dailySchedule: (id: string, date: string) => [...therapistKeys.detail(id), 'dailySchedule', date] as const,
+
+  daySchedules: (date: string) => [...therapistKeys.all, 'daySchedules', date] as const,
 };
 
 export async function getTherapists(): Promise<ISpaTherapists[]> {
@@ -83,6 +91,6 @@ export async function saveTherapistDailySchedule(id: string, schedule: Therapist
   return data as string;
 }
 export async function deleteTherapistDailySchedule(id: string): Promise<void> {
-  const { error } = await supabase.rpc('delete_spa_therapist_daily_schedule', { p_schedule_id: id });
+  const { error } = await supabase.from('spa_therapist_daily_schedules').delete().eq('id', id);
   if (error) throw new Error(error.message);
 }

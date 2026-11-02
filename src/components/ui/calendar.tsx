@@ -4,11 +4,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-interface CalendarProps {
-  selected?: Date;
-  onSelect?: (date: Date) => void;
-  className?: string;
-}
+type CalendarProps =
+  | { mode?: 'single'; selected?: Date; onSelect?: (date: Date) => void; className?: string }
+  | { mode: 'multiple'; selected?: Date[]; onSelect?: (dates: Date[]) => void; className?: string };
 
 const weekdayLabels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
@@ -41,14 +39,27 @@ function getMonthDays(monthDate: Date) {
   return days;
 }
 
-function Calendar({ selected, onSelect, className }: CalendarProps) {
-  const [monthDate, setMonthDate] = React.useState(() => selected ?? new Date());
+function Calendar(props: CalendarProps) {
+  const { className } = props;
+  const selectedDates = props.mode === 'multiple' ? props.selected ?? [] : props.selected ? [props.selected] : [];
+  const [monthDate, setMonthDate] = React.useState(() => selectedDates[0] ?? new Date());
   const days = getMonthDays(monthDate);
   const today = new Date();
 
   React.useEffect(() => {
-    if (selected) setMonthDate(selected);
-  }, [selected]);
+    if (selectedDates[0]) setMonthDate(selectedDates[0]);
+  }, [selectedDates[0]?.getTime()]);
+
+  const handleSelect = (date: Date) => {
+    if (props.mode === 'multiple') {
+      const alreadySelected = selectedDates.some((selectedDate) => isSameDate(date, selectedDate));
+      props.onSelect?.(
+        alreadySelected ? selectedDates.filter((selectedDate) => !isSameDate(date, selectedDate)) : [...selectedDates, date],
+      );
+      return;
+    }
+    props.onSelect?.(date);
+  };
 
   return (
     <div data-slot="calendar" className={cn('space-y-4 rounded-lg bg-popover text-popover-foreground', className)}>
@@ -88,11 +99,14 @@ function Calendar({ selected, onSelect, className }: CalendarProps) {
             <button
               key={date.toISOString()}
               type="button"
-              onClick={() => onSelect?.(date)}
+              onClick={() => handleSelect(date)}
               className={cn(
                 'flex aspect-square items-center justify-center rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                isSameDate(date, selected) && 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
-                isSameDate(date, today) && !isSameDate(date, selected) && 'ring-1 ring-[var(--color-text-gold)]',
+                selectedDates.some((selectedDate) => isSameDate(date, selectedDate)) &&
+                  (props.mode === 'multiple'
+                    ? 'bg-black text-white hover:bg-black/85 hover:text-white'
+                    : 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground'),
+                isSameDate(date, today) && !selectedDates.some((selectedDate) => isSameDate(date, selectedDate)) && 'ring-1 ring-[var(--color-text-gold)]',
               )}
             >
               {date.getDate()}

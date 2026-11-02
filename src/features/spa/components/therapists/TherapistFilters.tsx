@@ -1,12 +1,14 @@
-﻿import { memo } from 'react';
+import { memo } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useTherapistFilterContext, useTherapistRosterContext } from '@/stores/spa/SpaTherapistsContext';
+import { useTherapistFilterContext } from '@/stores/spa/SpaTherapistsContext';
+import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
 
 function TherapistFilters() {
   const { search, specialty, availability, setSearch, setSpecialty, setAvailability } = useTherapistFilterContext();
-  const { specialties } = useTherapistRosterContext();
+  const { data: therapists } = UseSpaTherapists();
+  const specialties = [...new Set((therapists ?? []).map((item) => item.specialty).filter((item): item is string => Boolean(item)))].sort();
   return (
     <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_0.75fr_0.75fr]">
       <div className="relative">
@@ -20,7 +22,7 @@ function TherapistFilters() {
         />
       </div>
       <Select value={specialty} onValueChange={setSpecialty}>
-        <SelectTrigger aria-label="Filter by specialty">
+        <SelectTrigger className="w-full" aria-label="Filter by specialty">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -33,7 +35,7 @@ function TherapistFilters() {
         </SelectContent>
       </Select>
       <Select value={availability} onValueChange={setAvailability}>
-        <SelectTrigger aria-label="Filter by availability">
+        <SelectTrigger className="w-full" aria-label="Filter by availability">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

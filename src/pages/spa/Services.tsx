@@ -1,12 +1,12 @@
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import UseSpaServices from '@/hooks/spa/UseSpaServices';
+import UseSpaServices from '@/hooks/spa/services/UseSpaServices';
 import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
 import SpaService from '@/features/spa/components/services/SpaService';
 import { Button } from '@/components/ui/button';
 import ServiceModels from '@/features/spa/components/services/Models';
 import { useService } from '@/stores/spa/Services.store';
-import UseSpaBookingLocks from '@/hooks/spa/UseSpaBookingLocks';
+import UseSpaBookingLocks from '@/hooks/spa/bookings/UseSpaBookingLocks';
 
 export default function SpaServicesPage() {
   const { data: spaServices, isLoading, isError } = UseSpaServices();

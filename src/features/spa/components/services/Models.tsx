@@ -1,5 +1,5 @@
 import { DeleteItem } from '@/components/shared/Delete';
-import { useDeleteSpaService } from '@/hooks/spa/useDeleteSpaService';
+import { useDeleteSpaService } from '@/hooks/spa/services/useDeleteSpaService';
 import { toast } from 'react-toastify';
 import { useService } from '@/stores/spa/Services.store';
 import { ManageServices } from '../../modals/Services/ManageServices';

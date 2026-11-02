@@ -1,8 +1,8 @@
 import type { IBookingData } from '@/interfaces/ISpa';
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import UseSpaServices from './UseSpaServices';
-import { UseSpaPackages } from './UseSpaPackages';
+import UseSpaServices from '../services/UseSpaServices';
+import { UseSpaPackages } from '../packages/UseSpaPackages';
 
 interface IReturnedValues {
   derivedTotalPrice: number;

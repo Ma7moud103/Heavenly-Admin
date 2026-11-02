@@ -3,7 +3,7 @@ import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import UseSpaCustomers from '@/hooks/spa/UseSpaCusteomers';
+import UseSpaCustomers from '@/hooks/spa/customers/UseSpaCusteomers';
 
 export default function SpaGuestsPage() {
   const { data: customers } = UseSpaCustomers();

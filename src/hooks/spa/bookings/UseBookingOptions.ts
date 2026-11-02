@@ -1,10 +1,10 @@
 import type { SelectOption } from '@/interfaces/ISpa';
-import UseSpaCustomers from './UseSpaCusteomers';
-import { UseSpaPackages } from './UseSpaPackages';
-import UseSpaServices from './UseSpaServices';
-import UseSpaTherapists from './UseSpaTherapists';
+import UseSpaCustomers from '../customers/UseSpaCusteomers';
+import { UseSpaPackages } from '../packages/UseSpaPackages';
+import UseSpaServices from '../services/UseSpaServices';
+import UseSpaTherapists from '../therapists/UseSpaTherapists';
 import { useMemo } from 'react';
-import UseSpaCategories from './UseSpaCategories';
+import UseSpaCategories from '../categories/UseSpaCategories';
 
 interface IProps {
   serviceOptions: SelectOption[];

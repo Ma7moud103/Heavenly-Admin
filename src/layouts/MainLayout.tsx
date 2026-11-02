@@ -1,4 +1,4 @@
-﻿import { AppSidebar } from '@/components/ui/app-sidebar';
+import { AppSidebar } from '@/components/ui/app-sidebar';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -20,6 +20,7 @@ const routeTitles: Record<string, string> = {
   '/spa/services': 'Spa Services',
   '/spa/packages': 'Spa Packages',
   '/spa/therapists': 'Spa Therapists',
+  '/spa/therapists/schedule': 'Therapist Schedule',
   '/spa/guests': 'Spa Guests',
   '/spa/bookings': 'Spa Bookings',
   '/floor-plan': 'Floor Plans',
@@ -27,7 +28,7 @@ const routeTitles: Record<string, string> = {
 
 export default function MainLayout() {
   const location = useLocation();
-  const currentTitle = routeTitles[location.pathname] || 'Not Found';
+  const currentTitle = routeTitles[location.pathname] || (location.pathname.includes('/schedule') && location.pathname.startsWith('/spa/therapists/') ? 'Therapist Schedule' : 'Not Found');
 
   return (
     <SidebarProvider>
