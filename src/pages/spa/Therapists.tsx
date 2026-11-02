@@ -1,36 +1,29 @@
-import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
+﻿import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import UseSpaTherapists from '@/hooks/spa/UseSpaTherapists';
-import SpaTherapist from '@/features/spa/components/SpaTherapist';
-import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
 
-export default function SpaTherapistsPage() {
-  const { data: spaTherapists, isLoading, isError } = UseSpaTherapists();
+import { AddTherapistButton } from '@/features/spa/components/therapists/AddTherapistButton';
+import TherapistFilters from '@/features/spa/components/therapists/TherapistFilters';
+import TherapistStats from '@/features/spa/components/therapists/TherapistStats';
+import TherapistMoadels from '@/features/spa/modals/therapists/TherapistMoadels';
+import { SpaTherapistsProvider } from '@/stores/spa/SpaTherapistsContext';
+import TherapistTable from '@/features/spa/components/therapists/TherapistTable';
+
+export default function TherapistsPageContent() {
   return (
-    <SpaHeader
-      eyebrow="Spa Therapists"
-      title="Therapist roster and availability."
-      description="Therapists are selected during booking. Their availability can be managed later."
-      actions={<SpaCrudButtons />}
-    >
-      <SpaSectionCard title="Therapists" description="Static roster cards for later CRUD handling.">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {isLoading ? (
-            <SpaPackagesSkeleton />
-          ) : isError ? (
-            <div className="col-span-full flex items-center justify-center py-10 text-sm font-medium text-[var(--color-text-sub)]">
-              Error loading therapists.
-            </div>
-          ) : spaTherapists && spaTherapists.length > 0 ? (
-            spaTherapists.map((therapist) => <SpaTherapist key={therapist.id} therapist={therapist} />)
-          ) : (
-            <div className="col-span-full flex items-center justify-center py-10 text-sm font-medium text-[var(--color-text-sub)]">
-              No therapists found.
-            </div>
-          )}
-        </div>
-      </SpaSectionCard>
-    </SpaHeader>
+    <SpaTherapistsProvider>
+      <SpaHeader
+        eyebrow="Spa Therapists"
+        title="Therapist roster and availability."
+        description="Manage therapist profiles and date-based working schedules."
+        actions={<AddTherapistButton />}
+      >
+        <TherapistStats />
+        <SpaSectionCard title="Therapist roster" description="Search, filter, and manage therapist details and schedules.">
+          <TherapistFilters />
+          <TherapistTable />
+        </SpaSectionCard>
+        <TherapistMoadels />
+      </SpaHeader>
+    </SpaTherapistsProvider>
   );
 }

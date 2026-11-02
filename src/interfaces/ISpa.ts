@@ -51,18 +51,60 @@ export interface ISpaPackageServices extends ISpaPackages {
   services: ISpaServices[];
 }
 
+export type TherapistAvailability = 'on' | 'break' | 'off';
+export type DailyScheduleStatus = 'working' | 'off';
+export type DailyTimeSlotType = 'shift' | 'break';
+
+export interface TherapistDailyTimeSlot {
+  id: string;
+  daily_schedule_id: string;
+  start_time: string;
+  end_time: string;
+  slot_type: DailyTimeSlotType;
+}
+export interface TherapistScheduleSlotInput {
+  start_time: string;
+  end_time: string;
+  slot_type: DailyTimeSlotType;
+}
+export interface TherapistDailyScheduleInput {
+  schedule_date: string;
+  status: DailyScheduleStatus;
+  notes: string;
+  slots: TherapistScheduleSlotInput[];
+}
+export interface TherapistDailySchedule extends Omit<TherapistDailyScheduleInput, 'slots'> {
+  id: string;
+  therapist_id: string;
+  created_at: string;
+  updated_at: string;
+  slots: TherapistDailyTimeSlot[];
+}
 export interface ISpaTherapists {
   id: string;
   full_name: string;
-  gender: 'male' | 'female';
+  phone: string | null;
+  email: string | null;
+  gender: string | null;
+  specialty: string | null;
+  avatar_url: string | null;
+  shift_from: string | null;
+  shift_to: string | null;
+  availability: TherapistAvailability | null;
+  created_at: string;
+  updated_at: string;
+}
+export interface ICreateSpaTherapist {
+  full_name: string;
   phone: string;
+  email: string;
+  gender: string;
   specialty: string;
+  avatar_url: string | null;
+  availability: TherapistAvailability;
   shift_from: string;
   shift_to: string;
-  availability: 'on' | 'off' | 'break';
-  createdAt: string;
 }
-
 export interface IGuest {
   avatar_url: string;
   country: string | null;

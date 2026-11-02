@@ -20,3 +20,9 @@ export async function ensurePackageHasNoBookings(id: string): Promise<void> {
   if (error) throw new Error(`Could not verify package booking history: ${error.message}`);
   if (data?.length) throw new Error('This package has booking history and can no longer be edited or deleted.');
 }
+
+export async function ensureTherapistHasNoBookings(id: string): Promise<void> {
+  const { data, error } = await supabase.from('spa_bookings').select('id').eq('therapist_id', id).limit(1);
+  if (error) throw new Error(`Could not verify therapist booking history: ${error.message}`);
+  if (data?.length) throw new Error('This therapist has booking history and can no longer be edited or deleted.');
+}

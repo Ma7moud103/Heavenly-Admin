@@ -1,20 +1,5 @@
-import { getTherapists } from '@/data/spa/Therapists';
-import type { ISpaTherapists } from '@/interfaces/ISpa';
 import { useQuery } from '@tanstack/react-query';
+import { getTherapists, therapistKeys } from '@/data/spa/Therapists';
 
-const UseSpaTherapists = () => {
-  return useQuery<ISpaTherapists[]>({
-    queryKey: ['spaTherapists'],
-    queryFn: async () => {
-      const { data, error } = await getTherapists();
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return data ?? [];
-    },
-  });
-};
-
+const UseSpaTherapists = () => useQuery({ queryKey: therapistKeys.list(), queryFn: getTherapists });
 export default UseSpaTherapists;

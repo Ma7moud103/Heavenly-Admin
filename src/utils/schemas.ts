@@ -1,5 +1,5 @@
-import type { IForm, ILoginForm } from '@/interfaces/IRegisterForm';
-import { EStatus, type IBookingData, type ICreatePackage } from '@/interfaces/ISpa';
+﻿import type { IForm, ILoginForm } from '@/interfaces/IRegisterForm';
+import { EStatus, type DailyScheduleStatus, type DailyTimeSlotType, type IBookingData, type ICreatePackage, type TherapistDailyScheduleInput } from '@/interfaces/ISpa';
 import * as yup from 'yup';
 
 const spaBookingSchema: yup.ObjectSchema<IBookingData> = yup
@@ -108,4 +108,51 @@ const SpaServicesSchema = yup.object({
   is_active: yup.boolean().required(),
   category_id: yup.string().required('Category is required'),
 });
-export { spaBookingSchema, spaPackageSchema, Registerschema, Loginschema, SpaServicesSchema };
+const therapistTimeSlotSchema = yup.object({
+  slot_type: yup.mixed<DailyTimeSlotType>().oneOf(['shift', 'break']).required('Slot type is required'),
+  start_time: yup.string().matches(/^([01]\d|2[0-3]):[0-5]\d$/, 'Enter a valid start time').required('Start time is required'),
+  end_time: yup.string().matches(/^([01]\d|2[0-3]):[0-5]\d$/, 'Enter a valid end time').required('End time is required'),
+}).required();
+
+export const TherapistDailyScheduleSchema: yup.ObjectSchema<TherapistDailyScheduleInput> = yup.object({
+  schedule_date: yup.string().required('Choose a schedule date'),
+  status: yup.mixed<DailyScheduleStatus>().oneOf(['working', 'off']).required('Choose a day status'),
+  notes: yup.string().defined(),
+  slots: yup.array().of(therapistTimeSlotSchema).required(),
+}).test('valid-daily-slots', function (schedule) {
+  if (!schedule) return true;
+  const { status, slots } = schedule;
+  if (status === 'off' && slots.length) return this.createError({ path: 'slots', message: 'A day off cannot contain shifts or breaks.' });
+  if (status === 'working' && !slots.some((slot) => slot.slot_type === 'shift')) return this.createError({ path: 'slots', message: 'Add at least one working shift.' });
+  const minutes = (time: string) => { const [hours, mins] = time.split(':').map(Number); return hours * 60 + mins; };
+  if (slots.some((slot) => minutes(slot.start_time) >= minutes(slot.end_time))) return this.createError({ path: 'slots', message: 'Each slot must start before it ends.' });
+  const sorted = [...slots].sort((left, right) => left.start_time.localeCompare(right.start_time));
+  if (sorted.some((slot, index) => index > 0 && slot.start_time < sorted[index - 1].end_time)) return this.createError({ path: 'slots', message: 'Shifts and breaks cannot overlap.' });
+  if (slots.some((slot) => slot.slot_type === 'break' && !slots.some((shift) => shift.slot_type === 'shift' && shift.start_time <= slot.start_time && shift.end_time >= slot.end_time))) return this.createError({ path: 'slots', message: 'Each break must fit inside a working shift.' });
+  return true;
+});
+
+export const TherapistSchedulesSchema = yup.array().of(TherapistDailyScheduleSchema).required().test('unique-schedule-dates', 'Only one schedule can be added for each date.', (schedules) => {
+  if (!schedules) return true;
+  const dates = schedules.map((schedule) => schedule.schedule_date);
+  return new Set(dates).size === dates.length;
+});
+const SpaTherapistSchema = yup.object({
+  full_name: yup.string().trim().required('Name is required'),
+  phone: yup.string().trim().defined(),
+  email: yup
+    .string()
+    .trim()
+    .test('email', 'Enter a valid email address', (value) => !value || yup.string().email().isValidSync(value))
+    .defined(),
+  gender: yup.string().defined(),
+  specialty: yup.string().trim().defined(),
+  avatar_url: yup.string().nullable().defined(),
+  availability: yup.mixed<'on' | 'off' | 'break'>().oneOf(['on', 'off', 'break']).required('Availability is required'),
+  shift_from: yup.string().defined(),
+  shift_to: yup.string().defined(),
+  schedules: TherapistSchedulesSchema.default([]),
+});
+export { spaBookingSchema, spaPackageSchema, Registerschema, Loginschema, SpaServicesSchema, SpaTherapistSchema };
+
+

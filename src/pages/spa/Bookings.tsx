@@ -2,9 +2,9 @@ import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 
 import UseSpaBookings from '@/hooks/spa/UseSpaBookings';
-import SpaBookingTable from '@/features/spa/components/SpaBookingTable';
-import SpaBookingCard from '@/features/spa/components/SpaBookingCard';
-import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
+import SpaBookingTable from '@/features/spa/components/bookings/SpaBookingTable';
+import SpaBookingCard from '@/features/spa/components/bookings/SpaBookingCard';
+import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
 // import BookingWindow from '@/features/spa/modals/BookingWindow';
 
 export default function SpaBookingsPage() {

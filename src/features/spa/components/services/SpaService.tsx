@@ -2,7 +2,7 @@ import { Scissors } from 'lucide-react';
 import { SpaStatusPill } from '../SpaStatusPill';
 import type { ISpaServices } from '@/interfaces/ISpa';
 import { useService } from '@/stores/spa/Services.store';
-import ServiceActions from '../ServiceActions';
+import ServiceActions from './ServiceActions';
 
 const SpaService = ({ service, locked, lockMessage }: { service: ISpaServices; locked: boolean; lockMessage: string }) => {
   const { setSelectedService, setOpenUpdateService, setOpenDeleteModal } = useService();

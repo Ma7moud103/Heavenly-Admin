@@ -34,12 +34,12 @@ const data = {
       ],
     },
     {
-      title: 'Rooms Management',
+      title: 'Rooms',
       url: '/rooms',
       icon: <Building2 className="w-5 h-5" />,
       items: [
         {
-          title: 'Rooms',
+          title: 'Rooms Overview',
           url: '/rooms',
         },
         {
@@ -49,7 +49,7 @@ const data = {
       ],
     },
     {
-      title: 'Bookings & Reservations',
+      title: 'Room Bookings',
       url: '#',
       icon: <DoorOpen className="w-5 h-5" />,
       items: [

@@ -1,7 +1,7 @@
 import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
 import { SpaHeader } from '@/features/spa/components/SpaHeader';
 import UseSpaServices from '@/hooks/spa/UseSpaServices';
-import { SpaPackagesSkeleton } from '@/features/spa/components/SpaPackagesSkeleton';
+import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
 import SpaService from '@/features/spa/components/services/SpaService';
 import { Button } from '@/components/ui/button';
 import ServiceModels from '@/features/spa/components/services/Models';
@@ -11,7 +11,11 @@ import UseSpaBookingLocks from '@/hooks/spa/UseSpaBookingLocks';
 export default function SpaServicesPage() {
   const { data: spaServices, isLoading, isError } = UseSpaServices();
   const bookingLocks = UseSpaBookingLocks();
-  const lockMessage = bookingLocks.isLoading ? 'Checking booking history…' : bookingLocks.isError ? 'Booking history is unavailable; editing and deleting are disabled.' : 'This service has booking history and is protected.';
+  const lockMessage = bookingLocks.isLoading
+    ? 'Checking booking history…'
+    : bookingLocks.isError
+      ? 'Booking history is unavailable; editing and deleting are disabled.'
+      : 'This service has booking history and is protected.';
   const { setOpenAddService } = useService();
   return (
     <SpaHeader
@@ -42,7 +46,14 @@ export default function SpaServicesPage() {
             ) : isError ? (
               <div className="flex items-center justify-center py-10 text-sm font-medium text-(--color-text-sub)">Error loading services.</div>
             ) : spaServices && spaServices.length > 0 ? (
-              spaServices.map((service) => <SpaService key={service.id} service={service} locked={bookingLocks.isLoading || bookingLocks.isError || Boolean(bookingLocks.data?.serviceIds.has(service.id))} lockMessage={lockMessage} />)
+              spaServices.map((service) => (
+                <SpaService
+                  key={service.id}
+                  service={service}
+                  locked={bookingLocks.isLoading || bookingLocks.isError || Boolean(bookingLocks.data?.serviceIds.has(service.id))}
+                  lockMessage={lockMessage}
+                />
+              ))
             ) : (
               <div className="flex items-center justify-center py-10 text-sm font-medium text-(--color-text-sub)">No services found.</div>
             )}
@@ -53,7 +64,14 @@ export default function SpaServicesPage() {
             ) : isError ? (
               <div className="py-8 text-center text-sm font-medium text-(--color-text-sub)">Error loading services.</div>
             ) : spaServices && spaServices.length > 0 ? (
-              spaServices.map((service) => <SpaService key={service.id} service={service} locked={bookingLocks.isLoading || bookingLocks.isError || Boolean(bookingLocks.data?.serviceIds.has(service.id))} lockMessage={lockMessage} />)
+              spaServices.map((service) => (
+                <SpaService
+                  key={service.id}
+                  service={service}
+                  locked={bookingLocks.isLoading || bookingLocks.isError || Boolean(bookingLocks.data?.serviceIds.has(service.id))}
+                  lockMessage={lockMessage}
+                />
+              ))
             ) : (
               <div className="py-8 text-center text-sm font-medium text-(--color-text-sub)">No services found.</div>
             )}
