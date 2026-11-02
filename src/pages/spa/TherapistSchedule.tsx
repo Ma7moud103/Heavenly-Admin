@@ -17,6 +17,7 @@ export default function TherapistSchedulePage() {
 
   const therapistQuery = therapistsData ?? [];
   const therapist = therapistQuery.find((item) => item.id === therapistId);
+
   const [month, setMonth] = useState(() => {
     const today = getTodayInCairo();
     return new Date(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 1, 1);

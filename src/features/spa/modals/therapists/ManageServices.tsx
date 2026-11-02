@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
@@ -87,14 +87,14 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
   };
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl">
+      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl min-w-[85%] sm:min-w-auto">
         <SheetHeader>
-          <SheetTitle>{mode === 'edit' ? 'Edit therapist' : 'Add therapist'}</SheetTitle>
+          <SheetTitle>{mode === 'edit' ? 'Edit therapist' : 'Add new therapist'}</SheetTitle>
           <SheetDescription>Manage contact details and optional daily schedules.</SheetDescription>
         </SheetHeader>
         <FormProvider {...form}>
           <form className="flex flex-col gap-5 px-4 pb-6" onSubmit={handleSubmit(submit)}>
-            <section className="space-y-4 rounded-2xl border border-[var(--color-border)] p-4">
+            <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
               <h3 className="font-semibold">Therapist information</h3>
               <div className="grid gap-1.5">
                 <Label htmlFor="therapist-name">Full name</Label>
@@ -172,7 +172,7 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
                 </div>
               </fieldset>
             </section>
-            {mode === 'create' && <CreateTherapistSchedules key={open ? "open" : "closed"} />}
+            {mode === 'create' && <CreateTherapistSchedules key={open ? 'open' : 'closed'} />}
             <SheetFooter className="border-t border-(--color-border) sm:flex-row sm:justify-end">
               <Button type="button" variant="ghost" disabled={mutation.isPending} onClick={() => onOpenChange(false)}>
                 Cancel

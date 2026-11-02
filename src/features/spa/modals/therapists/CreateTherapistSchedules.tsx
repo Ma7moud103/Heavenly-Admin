@@ -79,7 +79,7 @@ export default function CreateTherapistSchedules() {
     <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
       <div>
         <h3 className="font-semibold">
-          Initial schedules <span className="font-normal text-muted-foreground">(optional)</span>
+          Add schedules <span className="font-normal text-muted-foreground">(optional)</span>
         </h3>
         <p className="mt-1 text-xs text-muted-foreground">Add dates now or configure schedules later.</p>
       </div>
@@ -103,7 +103,7 @@ export default function CreateTherapistSchedules() {
           ))}
         </ul>
       )}
-      <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-4 sm:grid-cols-[1fr]">
         <div className="grid gap-1.5">
           <div className="flex max-w-sm items-center justify-between">
             <Label>Schedule dates</Label>
