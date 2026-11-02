@@ -2,7 +2,7 @@ import { Field, FieldError } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import SelectBox from '@/components/shared/SelectBox';
 import UseBookingOptions from '@/hooks/spa/bookings/UseBookingOptions';
-import type { ICreatePackage, SelectOption } from '@/interfaces/ISpa';
+import type { ICreatePackage } from '@/interfaces/ISpa';
 import { X } from 'lucide-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -14,10 +14,6 @@ const PackageSelecttions = () => {
   } = useFormContext<ICreatePackage>();
   const { categoryOptions, serviceOptions } = UseBookingOptions();
   const selectedServices = useWatch({ control, name: 'services' }) ?? [];
-  const activeStateOptions: SelectOption[] = [
-    { label: 'Yes', value: 'true' },
-    { label: 'No', value: 'false' },
-  ];
 
   return (
     <>
@@ -77,14 +73,6 @@ const PackageSelecttions = () => {
         </div>
         {errors.services?.message && <FieldError>{errors.services.message}</FieldError>}
       </Field>
-      <SelectBox<ICreatePackage>
-        control={control}
-        label="Active"
-        name="is_active"
-        options={activeStateOptions}
-        placeholder="Select status"
-        onChangeExtra={(value) => setValue('is_active', value === 'true', { shouldDirty: true, shouldTouch: true, shouldValidate: true })}
-      />
     </>
   );
 };

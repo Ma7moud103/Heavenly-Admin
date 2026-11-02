@@ -103,6 +103,7 @@ function BookingsTableSectionComponent({ bookings, bookingStatuses, guests, room
         rooms={rooms}
         guests={guests}
         statuses={bookingStatuses}
+      bookings={bookings}
       />
 
       <DeleteBookingSheet open={isDeleteBookingOpen} onOpenChange={handleDeleteBookingOpenChange} booking={selectedBooking} />

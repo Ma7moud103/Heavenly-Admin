@@ -21,14 +21,13 @@ const routeTitles: Record<string, string> = {
   '/spa/packages': 'Spa Packages',
   '/spa/therapists': 'Spa Therapists',
   '/spa/therapists/schedule': 'Therapist Schedule',
-  '/spa/guests': 'Spa Guests',
   '/spa/bookings': 'Spa Bookings',
   '/floor-plan': 'Floor Plans',
 };
 
 export default function MainLayout() {
   const location = useLocation();
-  const currentTitle = routeTitles[location.pathname] || (location.pathname.includes('/schedule') && location.pathname.startsWith('/spa/therapists/') ? 'Therapist Schedule' : 'Not Found');
+  const currentTitle = routeTitles[location.pathname] || (location.pathname.includes('/schedule') && location.pathname.startsWith('/spa/therapists/') ? 'Therapist Schedule' : location.pathname.startsWith('/booking-history/') ? 'Booking Details' : 'Not Found');
 
   return (
     <SidebarProvider>

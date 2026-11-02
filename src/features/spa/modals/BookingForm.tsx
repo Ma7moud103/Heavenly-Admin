@@ -1,10 +1,8 @@
 import { useFormContext, type SubmitHandler } from 'react-hook-form';
-
-import { DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { SheetClose, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-
-import { type IBookingData } from '@/interfaces/ISpa';
-
+import type { IBookingData } from '@/interfaces/ISpa';
 import { toast } from 'react-toastify';
 import BookingCustomerSection from './BFFeilds/BookingCustomerSection';
 import BookingTreatmentSection from './BFFeilds/BookingTreatmentSection';
@@ -12,65 +10,81 @@ import BookingScheduleSection from './BFFeilds/BookingScheduleSection';
 import BookingPriceSection from './BFFeilds/BookingPriceSection';
 import BookingNotesSection from './BFFeilds/BookingNotesSection';
 import UseCreateSpaBooking from '@/hooks/spa/bookings/UseCreateSpaBooking';
+import { UseUpdateSpaBooking } from '@/hooks/spa/bookings/UseSpaBookingActions';
 import UseBookingSelecttions from '@/hooks/spa/bookings/UseBookingSelecttions';
-import type { ReactNode } from 'react';
-import BookingFooter from './BFFeilds/BookingFooter';
 
 interface IProps {
   header: string;
   description: string;
-  headerIcon: ReactNode;
+  bookingId?: string;
+  onDone: () => void;
 }
-const BookingForm = ({ header, description, headerIcon }: IProps) => {
-  const { reset, handleSubmit } = useFormContext<IBookingData>();
 
+const BookingForm = ({ header, description, bookingId, onDone }: IProps) => {
+  const { handleSubmit } = useFormContext<IBookingData>();
   const { derivedTotalPrice } = UseBookingSelecttions();
+  const { mutateAsync: createBooking, isPending: isCreating } = UseCreateSpaBooking();
+  const { mutateAsync: updateBooking, isPending: isUpdating } = UseUpdateSpaBooking();
+  const isPending = isCreating || isUpdating;
 
-  const { mutateAsync, isPending } = UseCreateSpaBooking();
-
-  const onSubmit: SubmitHandler<IBookingData> = (data) => {
-    const submitData: IBookingData = {
-      ...data,
-      total_price: derivedTotalPrice,
-    };
-
-    mutateAsync(submitData, {
-      onSuccess: (data) => {
-        console.log(data);
-        reset();
-        toast.success('new booking created successfully');
-      },
-      onError: (err) => {
-        console.log(err.message);
-        toast.error('something went wrong');
-      },
-    });
+  const onSubmit: SubmitHandler<IBookingData> = async (data) => {
+    try {
+      const submitData: IBookingData = { ...data, total_price: derivedTotalPrice };
+      if (bookingId) await updateBooking({ id: bookingId, booking: submitData });
+      else await createBooking(submitData);
+      toast.success(bookingId ? 'Booking updated successfully.' : 'Booking created successfully.');
+      onDone();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to save booking.');
+    }
   };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <DrawerHeader className="  px-4 py-5 pr-12 sm:px-6">
-        <div className="flex items-center gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-text-gold)] text-white">{headerIcon}</span>
-          <div className="min-w-0">
-            <DrawerTitle className="text-xl text-[var(--color-text)] sm:text-2xl">{header}</DrawerTitle>
-            <DrawerDescription className="mt-1 text-sm leading-6 text-[var(--color-text-sub)]">{description}</DrawerDescription>
-          </div>
-        </div>
-      </DrawerHeader>
+    <>
+      <SheetHeader>
+        <SheetTitle>{header}</SheetTitle>
+        <SheetDescription>{description}</SheetDescription>
+      </SheetHeader>
+      <form className="flex flex-col gap-5 px-4 pb-6" onSubmit={handleSubmit(onSubmit)}>
+        <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
+          <h3 className="font-semibold">Guest and therapist</h3>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2">
+            <BookingCustomerSection />
+          </FieldGroup>
+        </section>
 
-      <div className="min-h-0 overflow-y-auto flex-1  px-4 py-4 sm:px-6">
-        <FieldGroup className="grid gap-4 md:grid-cols-2">
-          <BookingCustomerSection />
-          <BookingTreatmentSection />
-          <BookingScheduleSection />
+        <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
+          <h3 className="font-semibold">Treatment</h3>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2">
+            <BookingTreatmentSection />
+          </FieldGroup>
+        </section>
 
-          <BookingPriceSection />
-          <BookingNotesSection />
-        </FieldGroup>
-      </div>
+        <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
+          <h3 className="font-semibold">Appointment schedule</h3>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2">
+            <BookingScheduleSection bookingId={bookingId} />
+          </FieldGroup>
+        </section>
 
-      <BookingFooter title=" Save Booking" isLoading={isPending} />
-    </form>
+        <section className="space-y-4 rounded-2xl border border-(--color-border) p-4">
+          <h3 className="font-semibold">Price and notes</h3>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2">
+            <BookingPriceSection />
+            <BookingNotesSection />
+          </FieldGroup>
+        </section>
+
+        <SheetFooter className="border-t border-(--color-border) sm:flex-row sm:justify-end">
+          <SheetClose asChild>
+            <Button type="button" variant="ghost" disabled={isPending}>Cancel</Button>
+          </SheetClose>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? 'Saving...' : bookingId ? 'Save changes' : 'Create booking'}
+          </Button>
+        </SheetFooter>
+      </form>
+    </>
   );
 };
 

@@ -10,9 +10,10 @@ interface IProps {
   rooms: IRoom[];
   guests: IGuest[];
   statuses: IBookingStatus[];
+  bookings: IRoomBooking[];
   onOpenChange: (open: boolean) => void;
 }
 
-export function EditBookingSheet({ open, booking, rooms, guests, statuses, onOpenChange }: IProps) {
-  return <BookingForm mode="edit" open={open} booking={booking} rooms={rooms} guests={guests} statuses={statuses} onOpenChange={onOpenChange} />;
+export function EditBookingSheet({ open, booking, rooms, guests, statuses, bookings, onOpenChange }: IProps) {
+  return <BookingForm mode="edit" open={open} booking={booking} rooms={rooms} guests={guests} statuses={statuses} bookings={bookings} onOpenChange={onOpenChange} />;
 }

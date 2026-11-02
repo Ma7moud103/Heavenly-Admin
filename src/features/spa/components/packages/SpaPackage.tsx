@@ -1,5 +1,8 @@
 import { Gift, LockKeyhole, PencilLine, Trash2 } from 'lucide-react';
 import { SpaStatusPill } from '../SpaStatusPill';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useUpdateSpaPackageStatus } from '@/hooks/spa/packages/useUpdateSpaPackageStatus';
+import { toast } from 'react-toastify';
 import type { ISpaPackages } from '@/interfaces/ISpa';
 
 interface SpaPackageProps {
@@ -52,6 +55,21 @@ const PackageActions = ({ item, locked, lockMessage, onEdit, onDelete }: IPackag
 
 const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaPackageProps) => {
   const services = packageItem.services ?? [];
+  const updateStatus = useUpdateSpaPackageStatus();
+  const handleStatusChange = async (checked: boolean | 'indeterminate') => {
+    if (checked === 'indeterminate') return;
+    try {
+      await updateStatus.mutateAsync({ id: packageItem.id, isActive: checked });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not update package status.');
+    }
+  };
+  const statusControl = (
+    <label className="inline-flex items-center gap-2 text-sm font-medium">
+      <Checkbox checked={packageItem.is_active} onCheckedChange={handleStatusChange} disabled={updateStatus.isPending} aria-label={packageItem.is_active ? `Deactivate ${packageItem.name}` : `Activate ${packageItem.name}`} />
+      <span className={packageItem.is_active ? 'text-emerald-700' : 'text-[var(--color-text-sub)]'}>{packageItem.is_active ? 'Active' : 'Inactive'}</span>
+    </label>
+  );
   return (
     <>
       <div className="hidden grid-cols-[1.15fr_1.4fr_0.85fr_1.35fr_0.7fr_0.7fr_auto] items-center gap-4 px-5 py-4 sm:grid">
@@ -71,7 +89,7 @@ const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaP
           )}
         </div>
         <p className="font-semibold text-[var(--color-text-gold)]">{packageItem.price}</p>
-        <SpaStatusPill label={packageItem.is_Active ? 'Active' : 'Inactive'} />
+        {statusControl}
         <PackageActions item={packageItem} locked={locked} lockMessage={lockMessage} onEdit={onEdit} onDelete={onDelete} />
       </div>
       <article className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-raised)] p-4 sm:hidden">
@@ -96,7 +114,7 @@ const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaP
           <div>
             <dt className="text-xs text-[var(--color-text-sub)]">Status</dt>
             <dd className="mt-1">
-              <SpaStatusPill label={packageItem.is_Active ? 'Active' : 'Inactive'} />
+              {statusControl}
             </dd>
           </div>
           <div>

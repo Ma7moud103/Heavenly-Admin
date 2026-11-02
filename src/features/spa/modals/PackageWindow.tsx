@@ -25,7 +25,7 @@ const PackageWindow = ({ open, onOpenChange, mode, packageItem }: IProps) => {
       name: packageItem.name,
       description: packageItem.description,
       price: packageItem.price,
-      is_active: packageItem.is_Active,
+      is_active: packageItem.is_active,
       category_id: packageItem.category_id?.id ?? '',
       services: packageItem.services?.map((service) => service.id) ?? [],
     } : emptyValues);

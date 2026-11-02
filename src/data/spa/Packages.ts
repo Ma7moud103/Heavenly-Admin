@@ -4,7 +4,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { ensurePackageHasNoBookings } from '@/data/spa/BookingGuards';
 
 export async function getSpaPackages(): Promise<{ data: ISpaPackages[]; error: PostgrestError | null }> {
-  const { data, error } = await supabase.from('spa_packages').select('*,category_id(*),spa_package_services(service_id(*))');
+  const { data, error } = await supabase.from('spa_packages').select('*,category_id(*),spa_package_services(service_id(*,category_id(*)))');
   if (error) throw new Error(error.message);
   const packageRows = (data ?? []) as Array<ISpaPackages & { spa_package_services?: Array<{ service_id: ISpaServices | null }> }>;
   const packages = packageRows.map((item) => ({

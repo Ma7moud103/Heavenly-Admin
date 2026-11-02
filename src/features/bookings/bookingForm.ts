@@ -63,8 +63,7 @@ export function getDefaultBookingStatusId(statuses: IBookingStatus[]) {
   return (
     statuses
       .find((status) => {
-        const name = (status.label || status.name || '').toLowerCase();
-        return name === 'pending' || name === 'reserved' || name === 'confirmed';
+        return status.name.toLowerCase() === 'pending';
       })
       ?.id?.toString() ||
     statuses[0]?.id?.toString() ||
@@ -81,13 +80,42 @@ export function getDefaultRoomId(rooms: IRoom[]) {
 }
 
 export function buildCreateBookingFormState(rooms: IRoom[], guests: IGuest[], statuses: IBookingStatus[]): BookingFormState {
+  const checkIn = new Date();
+  const checkOut = new Date();
+  checkOut.setDate(checkOut.getDate() + 1);
+  const toDateInput = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   return {
     room_id: getDefaultRoomId(rooms),
     guest_id: getDefaultGuestId(guests),
     status_id: getDefaultBookingStatusId(statuses),
-    check_in: '',
-    check_out: '',
+    check_in: toDateInput(checkIn),
+    check_out: toDateInput(checkOut),
   };
+}
+
+export function getAvailableRooms(rooms: IRoom[], bookings: IRoomBooking[], checkIn: string, checkOut: string, excludeBookingId?: string) {
+  if (!checkIn || !checkOut || calculateBookingNights(checkIn, checkOut) <= 0) return rooms;
+  return rooms.filter((room) => !bookings.some((booking) => {
+    if (booking.id === excludeBookingId || booking.room_id !== room.id) return false;
+    const status = booking.status?.name.toLowerCase();
+    if (status === 'cancelled' || status === 'checked-out') return false;
+    return booking.check_in < checkOut && checkIn < booking.check_out;
+  }));
+}
+
+export function getNextBookingStatuses(statuses: IBookingStatus[], currentStatus: string) {
+  const nextByStatus: Record<string, string[]> = {
+    pending: ['pending', 'confirmed', 'cancelled'],
+    confirmed: ['confirmed', 'checked-in', 'cancelled'],
+    'checked-in': ['checked-in', 'checked-out', 'cancelled'],
+    'checked-out': [],
+    cancelled: [],
+  };
+  const allowed = nextByStatus[currentStatus.toLowerCase()] ?? [];
+  return allowed.flatMap((name) => {
+    const status = statuses.find((item) => item.name.toLowerCase() === name);
+    return status ? [status] : [];
+  });
 }
 
 export function validateBookingForm(form: BookingFormState, rooms: IRoom[], guests: IGuest[], statuses: IBookingStatus[]) {

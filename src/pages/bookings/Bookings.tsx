@@ -30,7 +30,7 @@ function Bookings() {
   return (
     <div className="flex flex-col gap-6">
       <BookingsHeader>
-        <CreateBookingAction rooms={rooms} guests={guests} statuses={bookingStatuses} />
+        <CreateBookingAction rooms={rooms} guests={guests} statuses={bookingStatuses} bookings={bookings} />
       </BookingsHeader>
 
       <BookingsStatsGrid />

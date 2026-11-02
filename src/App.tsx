@@ -15,11 +15,12 @@ import {
   Spa,
   SpaBookings,
   SpaCategories,
-  SpaGuests,
   SpaPackages,
   SpaServices,
   SpaTherapists,
   TherapistSchedule,
+  BookingDetails,
+  GuestBookingHistory,
 } from './pages/lazy-pages';
 import { Suspense } from 'react';
 import { LoadingPage } from './pages/LoadingPage';
@@ -70,10 +71,12 @@ function App() {
               <Route path="spa/packages" element={<SpaPackages />} />
               <Route path="spa/therapists" element={<SpaTherapists />} />
               <Route path="spa/therapists/:therapistId/schedule" element={<TherapistSchedule />} />
-              <Route path="spa/guests" element={<SpaGuests />} />
+              <Route path="spa/guests" element={<Navigate to="/guests" replace />} />
               <Route path="spa/bookings" element={<SpaBookings />} />
 
               <Route path="guests" element={<Guests />} />
+              <Route path="guests/:guestId/bookings/:kind" element={<GuestBookingHistory />} />
+              <Route path="booking-history/:kind/:bookingId" element={<BookingDetails />} />
               <Route path="bookings" element={<Bookings />} />
               <Route path="checkin" element={<Checkin />} />
               <Route path="reservations" element={<Reservations />} />

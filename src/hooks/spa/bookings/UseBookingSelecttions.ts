@@ -6,6 +6,7 @@ import { UseSpaPackages } from '../packages/UseSpaPackages';
 
 interface IReturnedValues {
   derivedTotalPrice: number;
+  derivedDuration: number;
   handleServiceChange: (serviceId: string) => void;
   handlePackageChange: (packageId: string) => void;
 }
@@ -21,19 +22,22 @@ const UseBookingSelecttions = (): IReturnedValues => {
   const selectedPackage = useMemo(() => packages.find((spaPackage) => spaPackage.id === selectedPackageId), [selectedPackageId, packages]);
 
   const derivedTotalPrice = selectedService?.price ?? selectedPackage?.price ?? 0;
+  const derivedDuration = selectedService?.duration ?? selectedPackage?.services?.reduce((total, service) => total + service.duration, 0) ?? 0;
 
   const handleServiceChange = (serviceId: string) => {
+    setValue('therapist_id', '', { shouldDirty: true, shouldTouch: true, shouldValidate: true });
     if (!serviceId) return;
 
     setValue('package_id', null, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
   };
 
   const handlePackageChange = (packageId: string) => {
+    setValue('therapist_id', '', { shouldDirty: true, shouldTouch: true, shouldValidate: true });
     if (!packageId) return;
 
     setValue('service_id', null, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
   };
-  return { derivedTotalPrice, handleServiceChange, handlePackageChange };
+  return { derivedTotalPrice, derivedDuration, handleServiceChange, handlePackageChange };
 };
 
 export default UseBookingSelecttions;

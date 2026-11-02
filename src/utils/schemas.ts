@@ -30,6 +30,10 @@ const spaBookingSchema: yup.ObjectSchema<IBookingData> = yup
     const hasPackage = !!value.package_id;
 
     return hasService || hasPackage;
+  })
+  .test('time-range', 'End time must be later than start time', function (value) {
+    if (!value?.start_time || !value.end_time) return true;
+    return value.end_time > value.start_time || this.createError({ path: 'end_time', message: 'End time must be later than start time' });
   });
 
 const spaPackageSchema: yup.ObjectSchema<ICreatePackage> = yup.object({

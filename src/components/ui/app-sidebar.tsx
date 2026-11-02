@@ -4,7 +4,7 @@ import { NavMain } from '@/components/ui/nav-main';
 import { NavUser } from '@/components/ui/nav-user';
 import { TeamSwitcher } from '@/components/ui/team-switcher';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, Building2, DoorOpen, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Settings, Building2, DoorOpen, Sparkles, Users } from 'lucide-react';
 
 const data = {
   // user: {
@@ -68,6 +68,12 @@ const data = {
       ],
     },
     {
+      title: 'Guests',
+      url: '/guests',
+      icon: <Users className="w-5 h-5" />,
+      items: [{ title: 'Guest Directory', url: '/guests' }],
+    },
+    {
       title: 'Spa & Relaxation',
       url: '#',
       icon: <Sparkles className="w-5 h-5" />,
@@ -91,10 +97,6 @@ const data = {
         {
           title: 'Therapists',
           url: '/spa/therapists',
-        },
-        {
-          title: 'Guests',
-          url: '/spa/guests',
         },
         {
           title: 'Bookings',

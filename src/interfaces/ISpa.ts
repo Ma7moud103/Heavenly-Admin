@@ -18,7 +18,7 @@ export interface ISpaPackages {
   name: string;
   description: string;
   price: number;
-  is_Active: boolean;
+  is_active: boolean;
   createdAt: string;
   updatedAt: string;
   services?: ISpaServices[];
@@ -137,7 +137,7 @@ export interface ISpaBookings {
   start_time: string;
   end_time: string;
   total_price: number;
-  status: 'pending' | 'confirmed' | 'checked_in' | 'completed' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
   notes: string;
   created_at: string;
 }
@@ -145,9 +145,9 @@ export interface ISpaBookings {
 export enum EStatus {
   Pending = 'pending',
   Confirmed = 'confirmed',
-  CheckedIn = 'checked_in',
   Completed = 'completed',
   Cancelled = 'cancelled',
+  NoShow = 'no_show',
 }
 
 export enum ECustomerType {

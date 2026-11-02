@@ -2,7 +2,7 @@ import { useEffect, useMemo, useReducer, type FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { BookingFormFields } from '@/features/bookings/components/actions/BookingFormFields';
-import { buildCreateBookingFormState, buildCreateBookingPayload, validateBookingForm, type BookingFormState } from '@/features/bookings/bookingForm';
+import { buildCreateBookingFormState, buildCreateBookingPayload, getAvailableRooms, getNextBookingStatuses, validateBookingForm, type BookingFormState } from '@/features/bookings/bookingForm';
 import { bookingFormReducer, initialBookingFormReducerState } from '@/features/bookings/bookingFormReducer';
 import UseCreateBooking from '@/hooks/rooms&bookings/UseCreateBooking';
 import type { IBookingStatus } from '@/interfaces/IBooking';
@@ -18,14 +18,18 @@ interface IProps {
   rooms: IRoom[];
   guests: IGuest[];
   statuses: IBookingStatus[];
+  bookings: IRoomBooking[];
   onOpenChange: (open: boolean) => void;
 }
 
-export function BookingForm({ mode, open, booking, rooms, guests, statuses, onOpenChange }: IProps) {
+export function BookingForm({ mode, open, booking, rooms, guests, statuses, bookings, onOpenChange }: IProps) {
   const createBookingMutation = UseCreateBooking();
   const updateBookingMutation = UseUpdateBooking();
   const [state, dispatch] = useReducer(bookingFormReducer, initialBookingFormReducerState);
   const { form, errors } = state;
+  const availableRooms = getAvailableRooms(rooms, bookings, form.check_in, form.check_out, mode === 'edit' ? booking?.id : undefined);
+  const currentStatus = mode === 'edit' ? booking?.status?.name ?? '' : 'pending';
+  const selectableStatuses = mode === 'create' ? statuses.filter((status) => status.name.toLowerCase() === 'pending') : getNextBookingStatuses(statuses, currentStatus);
 
   useEffect(() => {
     if (!open) return;
@@ -35,11 +39,13 @@ export function BookingForm({ mode, open, booking, rooms, guests, statuses, onOp
       return;
     }
 
+    const initialForm = buildCreateBookingFormState(rooms, guests, statuses);
+    const initialAvailableRooms = getAvailableRooms(rooms, bookings, initialForm.check_in, initialForm.check_out);
     dispatch({
       type: 'initialize',
-      form: buildCreateBookingFormState(rooms, guests, statuses),
+      form: { ...initialForm, room_id: initialAvailableRooms[0]?.id ?? '' },
     });
-  }, [booking, guests, mode, open, rooms, statuses]);
+  }, [booking, bookings, guests, mode, open, rooms, statuses]);
 
   useEffect(() => {
     if (!open) {
@@ -49,9 +55,15 @@ export function BookingForm({ mode, open, booking, rooms, guests, statuses, onOp
 
   const activeMutation = mode === 'edit' ? updateBookingMutation : createBookingMutation;
 
+  useEffect(() => {
+    if (form.room_id && !availableRooms.some((room) => room.id === form.room_id)) {
+      dispatch({ type: 'setField', field: 'room_id', value: '' });
+    }
+  }, [availableRooms, form.room_id]);
+
   const hasRequiredOptions = useMemo(
-    () => rooms.length > 0 && guests.length > 0 && statuses.length > 0,
-    [guests.length, rooms.length, statuses.length],
+    () => availableRooms.length > 0 && guests.length > 0 && selectableStatuses.length > 0,
+    [availableRooms.length, guests.length, selectableStatuses.length],
   );
 
   const handleChange = <K extends keyof BookingFormState>(field: K, value: BookingFormState[K]) => {
@@ -80,7 +92,7 @@ export function BookingForm({ mode, open, booking, rooms, guests, statuses, onOp
       return;
     }
 
-    const nextErrors = validateBookingForm(form, rooms, guests, statuses);
+    const nextErrors = validateBookingForm(form, availableRooms, guests, selectableStatuses);
     if (Object.keys(nextErrors).length > 0) {
       dispatch({ type: 'setErrors', errors: nextErrors });
       return;
@@ -126,11 +138,11 @@ export function BookingForm({ mode, open, booking, rooms, guests, statuses, onOp
         </SheetHeader>
 
         <form className="flex h-full flex-col" onSubmit={handleSubmit}>
-          <BookingFormFields form={form} errors={errors} rooms={rooms} guests={guests} statuses={statuses} onChange={handleChange} />
+          <BookingFormFields form={form} errors={errors} rooms={availableRooms} guests={guests} statuses={selectableStatuses} onChange={handleChange} />
 
           {!hasRequiredOptions ? (
             <p className="px-4 text-sm text-[--color-text-sub]">
-              Rooms, guests, and booking statuses must be available before you can save a booking.
+              {availableRooms.length ? 'Guests and booking statuses must be available before you can save.' : 'No rooms are available for these dates. Choose another stay range.'}
             </p>
           ) : null}
 
