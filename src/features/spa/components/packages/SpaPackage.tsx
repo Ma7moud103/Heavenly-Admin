@@ -1,9 +1,7 @@
-import { Gift, LockKeyhole, PencilLine, Trash2 } from 'lucide-react';
+import { Gift } from 'lucide-react';
 import { SpaStatusPill } from '../SpaStatusPill';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useUpdateSpaPackageStatus } from '@/hooks/spa/packages/useUpdateSpaPackageStatus';
-import { toast } from 'react-toastify';
 import type { ISpaPackages } from '@/interfaces/ISpa';
+import PackageActions from './PackageActions';
 
 interface SpaPackageProps {
   packageItem: ISpaPackages;
@@ -13,63 +11,12 @@ interface SpaPackageProps {
   onDelete: (item: ISpaPackages) => void;
 }
 
-interface IPackageActionsProps {
-  item: ISpaPackages;
-  locked: boolean;
-  lockMessage: string;
-  onEdit: (item: ISpaPackages) => void;
-  onDelete: (item: ISpaPackages) => void;
-}
 
-const PackageActions = ({ item, locked, lockMessage, onEdit, onDelete }: IPackageActionsProps) => (
-  <div className="flex items-center justify-end gap-1">
-    {locked ? (
-      <span title={lockMessage} className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
-        <LockKeyhole className="size-4" />
-        Protected
-      </span>
-    ) : (
-      <>
-        <button
-          type="button"
-          onClick={() => onEdit(item)}
-          title="Edit package"
-          aria-label={`Edit ${item.name}`}
-          className="rounded-lg p-2 text-[var(--color-text-sub)] transition-colors hover:bg-amber-50 hover:text-amber-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <PencilLine className="size-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => onDelete(item)}
-          title="Delete package"
-          aria-label={`Delete ${item.name}`}
-          className="rounded-lg p-2 text-[var(--color-error)] transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Trash2 className="size-4" />
-        </button>
-      </>
-    )}
-  </div>
-);
+
 
 const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaPackageProps) => {
   const services = packageItem.services ?? [];
-  const updateStatus = useUpdateSpaPackageStatus();
-  const handleStatusChange = async (checked: boolean | 'indeterminate') => {
-    if (checked === 'indeterminate') return;
-    try {
-      await updateStatus.mutateAsync({ id: packageItem.id, isActive: checked });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not update package status.');
-    }
-  };
-  const statusControl = (
-    <label className="inline-flex items-center gap-2 text-sm font-medium">
-      <Checkbox checked={packageItem.is_active} onCheckedChange={handleStatusChange} disabled={updateStatus.isPending} aria-label={packageItem.is_active ? `Deactivate ${packageItem.name}` : `Activate ${packageItem.name}`} />
-      <span className={packageItem.is_active ? 'text-emerald-700' : 'text-[var(--color-text-sub)]'}>{packageItem.is_active ? 'Active' : 'Inactive'}</span>
-    </label>
-  );
+  const status = <SpaStatusPill label={packageItem.is_active ? 'Active' : 'Inactive'} />;
   return (
     <>
       <div className="hidden grid-cols-[1.15fr_1.4fr_0.85fr_1.35fr_0.7fr_0.7fr_auto] items-center gap-4 px-5 py-4 sm:grid">
@@ -89,7 +36,7 @@ const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaP
           )}
         </div>
         <p className="font-semibold text-[var(--color-text-gold)]">{packageItem.price}</p>
-        {statusControl}
+        {status}
         <PackageActions item={packageItem} locked={locked} lockMessage={lockMessage} onEdit={onEdit} onDelete={onDelete} />
       </div>
       <article className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-raised)] p-4 sm:hidden">
@@ -114,7 +61,7 @@ const SpaPackage = ({ packageItem, locked, lockMessage, onEdit, onDelete }: SpaP
           <div>
             <dt className="text-xs text-[var(--color-text-sub)]">Status</dt>
             <dd className="mt-1">
-              {statusControl}
+              {status}
             </dd>
           </div>
           <div>

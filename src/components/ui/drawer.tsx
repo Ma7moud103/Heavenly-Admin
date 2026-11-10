@@ -38,6 +38,7 @@ function DrawerContent({
   className,
   children,
   showCloseButton = true,
+  onInteractOutside,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
   showCloseButton?: boolean;
@@ -52,6 +53,10 @@ function DrawerContent({
           className,
         )}
         {...props}
+        onInteractOutside={(event) => {
+          onInteractOutside?.(event);
+          if (event.target instanceof Element && event.target.closest('[data-slot="select-content"]')) event.preventDefault();
+        }}
       >
         {children}
         {showCloseButton ? (

@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import UseCreatePackage from '@/hooks/spa/packages/UseCreatePackage';
 import { toast } from 'react-toastify';
+import { Controller } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface IProps {
   mode: 'create' | 'edit';
@@ -25,6 +27,7 @@ const packageInputs: IPacageInputs<ICreatePackage>[] = [
 
 const PackageForm = ({ mode, packageId, onSaved, headerIcon }: IProps) => {
   const {
+    control,
     reset,
     handleSubmit,
     formState: { isSubmitting },
@@ -63,6 +66,16 @@ const PackageForm = ({ mode, packageId, onSaved, headerIcon }: IProps) => {
             <PackageInputs key={input.name} {...input} />
           ))}
           <PackageSelecttions />
+          <Controller
+            name="is_active"
+            control={control}
+            render={({ field }) => (
+              <label className="flex items-center gap-3 rounded-lg border border-[var(--color-border)] p-3 text-sm font-medium">
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} aria-label="Package is active" />
+                <span>Active package</span>
+              </label>
+            )}
+          />
         </FieldGroup>
       </div>
       <BookingFooter title={mode === 'edit' ? 'Save Changes' : 'Create Package'} isLoading={isPending || isSubmitting} />

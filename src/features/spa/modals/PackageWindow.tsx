@@ -33,13 +33,7 @@ const PackageWindow = ({ open, onOpenChange, mode, packageItem }: IProps) => {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent
-        className="sm:max-w-md min-h-0 overflow-y-auto rounded-none"
-        onInteractOutside={(event) => {
-          const target = event.target;
-          if (target instanceof Element && target.closest('[data-slot="select-content"]')) event.preventDefault();
-        }}
-      >
+      <DrawerContent className="sm:max-w-md min-h-0 overflow-y-auto rounded-none">
         <FormProvider {...methods}>
           <PackageForm
             mode={mode}
