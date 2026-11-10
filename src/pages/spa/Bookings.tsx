@@ -1,5 +1,5 @@
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
+import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
 
 import UseSpaBookings from '@/hooks/spa/bookings/UseSpaBookings';
 import SpaBookingTable from '@/features/spa/components/bookings/SpaBookingTable';

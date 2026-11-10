@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DeleteItem } from '@/components/shared/Delete';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
+import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
 import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
 import SpaPackage from '@/features/spa/components/packages/SpaPackage';
 import PackageWindow from '@/features/spa/modals/PackageWindow';

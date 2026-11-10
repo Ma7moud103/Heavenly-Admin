@@ -6,9 +6,13 @@ import { useTherapistFilterContext } from '@/stores/spa/SpaTherapistsContext';
 import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
 
 function TherapistFilters() {
-  const { search, specialty, availability, setSearch, setSpecialty, setAvailability } = useTherapistFilterContext();
+  const { search, serviceId, availability, setSearch, setServiceId, setAvailability } = useTherapistFilterContext();
   const { data: therapists } = UseSpaTherapists();
-  const specialties = [...new Set((therapists ?? []).map((item) => item.specialty).filter((item): item is string => Boolean(item)))].sort();
+  const services = [...new Map((therapists ?? []).flatMap((therapist) => therapist.services.map((service) => [service.id, service.name] as const))).entries()]
+    .sort(([, left], [, right]) => left.localeCompare(right));
+
+    // console.log('therapists', therapists);
+
   return (
     <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_0.75fr_0.75fr]">
       <div className="relative">
@@ -21,15 +25,15 @@ function TherapistFilters() {
           className="pl-9"
         />
       </div>
-      <Select value={specialty} onValueChange={setSpecialty}>
-        <SelectTrigger className="w-full" aria-label="Filter by specialty">
+      <Select value={serviceId} onValueChange={setServiceId}>
+        <SelectTrigger className="w-full" aria-label="Filter by service">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All specialties</SelectItem>
-          {specialties.map((item) => (
-            <SelectItem key={item} value={item}>
-              {item}
+          <SelectItem value="all">All services</SelectItem>
+          {services.map(([id, name]) => (
+            <SelectItem key={id} value={id}>
+              {name}
             </SelectItem>
           ))}
         </SelectContent>

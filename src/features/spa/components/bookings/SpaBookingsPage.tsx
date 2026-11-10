@@ -1,12 +1,12 @@
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
+import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
 import UseSpaBookings from '@/hooks/spa/bookings/UseSpaBookings';
 import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
-import BookingWindow from '@/features/spa/modals/BookingWindow';
+import BookingWindow from '@/features/spa/modals/bookings/BookingWindow';
 import { SpaBookingActions } from '@/features/spa/components/bookings/SpaBookingActions';
 import { CalendarPlus, CalendarDays } from 'lucide-react';
 import { EStatus, type IBookingData, type ISpaBookings } from '@/interfaces/ISpa';
-import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
+import { SpaStatusPill } from '@/features/spa/components/shared/SpaStatusPill';
 import { timeNormalization } from '@/utils/dates';
 import { Link } from 'react-router-dom';
 

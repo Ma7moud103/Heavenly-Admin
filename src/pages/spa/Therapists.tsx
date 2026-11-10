@@ -1,5 +1,5 @@
-﻿import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
+﻿import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
 
 import { AddTherapistButton } from '@/features/spa/components/therapists/AddTherapistButton';
 import TherapistFilters from '@/features/spa/components/therapists/TherapistFilters';

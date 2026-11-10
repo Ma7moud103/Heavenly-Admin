@@ -3,6 +3,7 @@ import UseSpaCustomers from '../customers/UseSpaCusteomers';
 import { UseSpaPackages } from '../packages/UseSpaPackages';
 import UseSpaServices from '../services/UseSpaServices';
 import UseSpaTherapists from '../therapists/UseSpaTherapists';
+import UseSpaTherapistsByService from '../therapists/UseSpaTherapistsByService';
 import { useMemo } from 'react';
 import UseSpaCategories from '../categories/UseSpaCategories';
 
@@ -17,6 +18,7 @@ const UseBookingOptions = (selectedServiceId?: string | null, selectedPackageId?
   const { data: services = [] } = UseSpaServices();
   const { data: packages = [] } = UseSpaPackages();
   const { data: therapists = [] } = UseSpaTherapists();
+  const { data: therapistsForService = [] } = UseSpaTherapistsByService(selectedServiceId ?? '');
   const { data: customers = [] } = UseSpaCustomers();
   const { data: categories = [] } = UseSpaCategories();
   const categoryOptions = useMemo<SelectOption[]>(() => categories.map((category) => ({ value: category.id, label: category.name })), [categories]);
@@ -29,17 +31,22 @@ const UseBookingOptions = (selectedServiceId?: string | null, selectedPackageId?
     [customers],
   );
   const therapistOptions = useMemo<SelectOption[]>(() => {
-    const selectedService = services.find((service) => service.id === selectedServiceId);
+    if (selectedServiceId) {
+      return therapistsForService.map((therapist) => ({ value: therapist.id, label: therapist.full_name }));
+    }
+
+    if (!selectedPackageId) {
+      return therapists.map((therapist) => ({ value: therapist.id, label: therapist.full_name }));
+    }
+
     const selectedPackage = packages.find((spaPackage) => spaPackage.id === selectedPackageId);
-    const targetServices = selectedService ? [selectedService] : selectedPackage?.services ?? [];
-    if (!targetServices.length) return [];
-    const targetCategories = new Set(targetServices.map((service) => service.category_id?.name?.trim().toLowerCase()).filter(Boolean));
-    const targetNames = new Set(targetServices.map((service) => service.name.trim().toLowerCase()));
-    return therapists.filter((therapist) => {
-      const specialty = therapist.specialty?.trim().toLowerCase();
-      return Boolean(specialty && ([...targetCategories, ...targetNames].some((value) => specialty.includes(value!))));
-    }).map((therapist) => ({ value: therapist.id, label: therapist.full_name }));
-  }, [selectedServiceId, selectedPackageId, services, packages, therapists]);
+    const packageServiceIds = new Set(selectedPackage?.services?.map((service) => service.id) ?? []);
+    if (!packageServiceIds.size) return [];
+
+    return therapists
+      .filter((therapist) => therapist.services.some((service) => packageServiceIds.has(service.id)))
+      .map((therapist) => ({ value: therapist.id, label: therapist.full_name }));
+  }, [selectedServiceId, selectedPackageId, therapistsForService, therapists, packages]);
 
   return { serviceOptions, packageOptions, customerOptions, therapistOptions, categoryOptions };
 };

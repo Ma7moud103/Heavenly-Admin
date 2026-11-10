@@ -21,9 +21,9 @@ function TherapistStats() {
   const stats = useMemo(
     () => ({
       total: therapists.length,
-      on: therapists.filter((item) => item.availability === 'on').length,
-      break: therapists.filter((item) => item.availability === 'break').length,
-      off: therapists.filter((item) => item.availability === 'off').length,
+      on: therapists.filter((item) => item.current_availability === 'on').length,
+      break: therapists.filter((item) => item.current_availability === 'break').length,
+      off: therapists.filter((item) => item.current_availability === 'off').length,
     }),
     [therapists],
   );

@@ -3,15 +3,16 @@ import { DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/dr
 import { FieldGroup } from '@/components/ui/field';
 import type { ICreatePackage, IPacageInputs } from '@/interfaces/ISpa';
 import type { ReactNode } from 'react';
-import BookingFooter from './BFFeilds/BookingFooter';
-import PackageInputs from './PFFeilds/PackageInputs';
-import PackageSelecttions from './PFFeilds/PackageSelecttions';
+
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import UseCreatePackage from '@/hooks/spa/packages/UseCreatePackage';
 import { toast } from 'react-toastify';
 import { Controller } from 'react-hook-form';
 import { Checkbox } from '@/components/ui/checkbox';
+import PackageInputs from './PackageInputs';
+import PackageSelecttions from './PackageSelecttions';
+import BookingFooter from '../bookings/BookingFooter';
 
 interface IProps {
   mode: 'create' | 'edit';

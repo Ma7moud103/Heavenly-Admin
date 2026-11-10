@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import CategoryItem from '@/features/spa/components/categories/CategoryItem';
 import CategoryModals from '@/features/spa/components/categories/Modals';
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
+import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
 import UseCategoriesWithCounts from '@/hooks/spa/categories/UseCategoriesWithCounts';
 import { useCategory } from '@/stores/spa/Categories.store';
 import { memo } from 'react';

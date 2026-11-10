@@ -4,14 +4,15 @@ import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
 import type { IBookingData } from '@/interfaces/ISpa';
 import { toast } from 'react-toastify';
-import BookingCustomerSection from './BFFeilds/BookingCustomerSection';
-import BookingTreatmentSection from './BFFeilds/BookingTreatmentSection';
-import BookingScheduleSection from './BFFeilds/BookingScheduleSection';
-import BookingPriceSection from './BFFeilds/BookingPriceSection';
-import BookingNotesSection from './BFFeilds/BookingNotesSection';
+
 import UseCreateSpaBooking from '@/hooks/spa/bookings/UseCreateSpaBooking';
 import { UseUpdateSpaBooking } from '@/hooks/spa/bookings/UseSpaBookingActions';
 import UseBookingSelecttions from '@/hooks/spa/bookings/UseBookingSelecttions';
+import BookingCustomerSection from './BookingCustomerSection';
+import BookingTreatmentSection from './BookingTreatmentSection';
+import BookingScheduleSection from './BookingScheduleSection';
+import BookingNotesSection from './BookingNotesSection';
+import BookingPriceSection from './BookingPriceSection';
 
 interface IProps {
   header: string;

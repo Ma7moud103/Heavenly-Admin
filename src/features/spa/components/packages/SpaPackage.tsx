@@ -1,5 +1,5 @@
 import { Gift } from 'lucide-react';
-import { SpaStatusPill } from '../SpaStatusPill';
+import { SpaStatusPill } from '../shared/SpaStatusPill';
 import type { ISpaPackages } from '@/interfaces/ISpa';
 import PackageActions from './PackageActions';
 

@@ -1,6 +1,8 @@
 import { useTherapistActionsContext, useTherapistUiContext } from '@/stores/spa/SpaTherapistsContext';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import TherapistServiceBadges from '@/features/spa/components/therapists/TherapistServiceBadges';
+
 const TherapistDetails = () => {
   const { selected, detailsOpen, setDetailsOpen } = useTherapistUiContext();
   const { openEdit, openSchedule } = useTherapistActionsContext();
@@ -10,7 +12,7 @@ const TherapistDetails = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{selected?.full_name}</DialogTitle>
-          <DialogDescription>{selected?.specialty || 'Therapist profile'}</DialogDescription>
+          <DialogDescription>Therapist profile</DialogDescription>
         </DialogHeader>
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -27,13 +29,11 @@ const TherapistDetails = () => {
           </div>
           <div>
             <dt className="text-muted-foreground">Availability</dt>
-            <dd>{selected?.availability || '—'}</dd>
+            <dd>{selected?.current_availability || '—'}</dd>
           </div>
-          <div>
-            <dt className="text-muted-foreground">Legacy shift hours</dt>
-            <dd>
-              {selected?.shift_from || '—'} – {selected?.shift_to || '—'}
-            </dd>
+          <div className="col-span-2">
+            <dt className="mb-2 text-muted-foreground">Services</dt>
+            <TherapistServiceBadges services={selected?.services ?? []} limit={selected?.services.length ?? 0} />
           </div>
         </dl>
         <DialogFooter>

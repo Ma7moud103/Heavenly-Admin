@@ -1,5 +1,5 @@
 import { DeleteItem } from '@/components/shared/Delete';
-import { ManageCat } from '../../modals/C&ECategory/ManageCat';
+import { ManageCat } from '../../modals/categories/ManageCat';
 import { useDeleteCat } from '@/hooks/spa/categories/useHandleDeleteCat';
 import { useCategory } from '@/stores/spa/Categories.store';
 import { toast } from 'react-toastify';

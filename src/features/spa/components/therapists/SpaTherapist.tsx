@@ -1,9 +1,11 @@
 import { CalendarDays, Clock3, UserRound } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { ISpaTherapists, TherapistDailySchedule } from '@/interfaces/ISpa';
 import { timeNormalization } from '@/utils/dates';
-import { SpaStatusPill } from '../SpaStatusPill';
+import { SpaStatusPill } from '../shared/SpaStatusPill';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import TherapistActions from './TherapistActions';
+import TherapistServiceBadges from './TherapistServiceBadges';
 
 const availabilityLabel = { on: 'On duty', off: 'Off duty', break: 'On break' } as const;
 
@@ -36,7 +38,7 @@ const SpaTherapist = ({ therapist, todaySchedule, deleteLocked, onView, onEdit, 
         ? 'Day off'
         : 'Not configured';
 
-  const status = therapist.availability ? availabilityLabel[therapist.availability] : 'Not set';
+  const status = therapist.current_availability ? availabilityLabel[therapist.current_availability] : 'Not set';
   return (
     <>
       <div className="hidden min-w-280 grid-cols-[1.35fr_1fr_1fr_0.65fr_0.8fr_1.2fr_auto] items-center gap-4 px-5 py-4 xl:grid">
@@ -46,13 +48,11 @@ const SpaTherapist = ({ therapist, todaySchedule, deleteLocked, onView, onEdit, 
             <AvatarFallback>{initials(therapist.full_name)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <p className="truncate font-semibold">{therapist.full_name}</p>
+            <button type="button" onClick={onView} className="truncate text-left font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{therapist.full_name}</button>
             <p className="truncate text-xs text-(--color-text-sub)">{therapist.email || therapist.phone || 'Contact not provided'}</p>
           </div>
         </div>
-        <span className="truncate text-sm" title={therapist.specialty ?? ''}>
-          {therapist.specialty || 'No specialty'}
-        </span>
+<TherapistServiceBadges services={therapist.services} limit={2} />
         <a className="truncate text-sm hover:text-(--color-text-gold)" href={therapist.phone ? 'tel:' + therapist.phone : undefined}>
           {therapist.phone || 'not provided'}
         </a>
@@ -60,9 +60,9 @@ const SpaTherapist = ({ therapist, todaySchedule, deleteLocked, onView, onEdit, 
         <SpaStatusPill label={status} />
         <span className="flex min-w-0 items-center gap-1.5 text-sm text-(--color-text-sub)">
           <Clock3 className="size-3.5 shrink-0" />
-          <span className="truncate" title={hours}>
+          <Link to={"/spa/therapists/" + therapist.id + "/schedule"} className="truncate underline-offset-2 hover:underline" title="View full schedule">
             {hours}
-          </span>
+          </Link>
         </span>
         <div className="justify-self-end">
           <TherapistActions onView={onView} onEdit={onEdit} onSchedule={onSchedule} onDelete={onDelete} deleteLocked={deleteLocked} scheduleHref={"/spa/therapists/" + therapist.id + "/schedule"} />
@@ -76,8 +76,8 @@ const SpaTherapist = ({ therapist, todaySchedule, deleteLocked, onView, onEdit, 
               <AvatarFallback>{initials(therapist.full_name)}</AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <h3 className="truncate font-semibold">{therapist.full_name}</h3>
-              <p className="truncate text-xs text-(--color-text-sub)">{therapist.specialty || 'No specialty'}</p>
+              <button type="button" onClick={onView} className="truncate text-left font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{therapist.full_name}</button>
+              <TherapistServiceBadges services={therapist.services} limit={2} />
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ const SpaTherapist = ({ therapist, todaySchedule, deleteLocked, onView, onEdit, 
             <dt className="text-xs text-(--color-text-sub)">Current shift</dt>
             <dd className="mt-1 flex items-center gap-1.5">
               <CalendarDays className="size-3.5 shrink-0" />
-              <span className="truncate">{hours}</span>
+              <Link to={"/spa/therapists/" + therapist.id + "/schedule"} className="truncate underline-offset-2 hover:underline">{hours}</Link>
             </dd>
           </div>
         </dl>

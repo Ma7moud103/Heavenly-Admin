@@ -16,7 +16,7 @@ export default function TherapistTable() {
 
   const { data: bookings, isLoading: isLoadingBookings, isError: isBookingsError } = UseSpaTherapistBooking();
 
-  const { search, specialty, availability } = useTherapistFilterContext();
+  const { search, serviceId, availability } = useTherapistFilterContext();
 
   const { openView, openEdit, openSchedule, openDelete } = useTherapistActionsContext();
   const filtered = useMemo(() => {
@@ -27,17 +27,17 @@ export default function TherapistTable() {
           item.full_name.toLowerCase().includes(term) ||
           (item.phone ?? '').includes(search.trim()) ||
           (item.email ?? '').toLowerCase().includes(term)) &&
-        (specialty === 'all' || item.specialty === specialty) &&
-        (availability === 'all' || item.availability === availability),
+        (serviceId === 'all' || item.services.some((service) => service.id === serviceId)) &&
+        (availability === 'all' || item.current_availability === availability),
     );
-  }, [therapists, search, specialty, availability]);
+  }, [therapists, search, serviceId, availability]);
 
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-bg-raised)">
         <div className="hidden min-w-280 grid-cols-[1.35fr_1fr_1fr_0.65fr_0.8fr_1.2fr_auto] gap-4 border-b border-(--color-border) bg-(--color-bg-subtle) px-5 py-3 text-xs font-semibold uppercase tracking-wider text-(--color-text-sub) xl:grid">
           <span>Therapist</span>
-          <span>Specialty</span>
+          <span>Services</span>
           <span>Phone</span>
           <span>Gender</span>
           <span>Status</span>

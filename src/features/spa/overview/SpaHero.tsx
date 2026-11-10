@@ -1,6 +1,6 @@
 import { CalendarDays, WandSparkles } from 'lucide-react';
 import { useState } from 'react';
-import BookingWindow from '../modals/BookingWindow';
+import BookingWindow from '../modals/bookings/BookingWindow';
 import PackageWindow from '../modals/PackageWindow';
 import type { IBookingData } from '@/interfaces/ISpa';
 

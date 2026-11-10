@@ -1,17 +1,26 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DeleteItem } from '@/components/shared/Delete';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useDeleteTherapistSchedule, useSaveTherapistSchedule, useTherapistSchedules } from '@/hooks/spa/therapists/UseTherapistSchedules';
-import type { DailyScheduleStatus, DailyTimeSlotType, ISpaTherapists, TherapistScheduleSlotInput } from '@/interfaces/ISpa';
+import {
+  useDeleteTherapistSchedule,
+  useSaveTherapistSchedule,
+  useTherapistSchedules,
+} from '@/hooks/spa/therapists/UseTherapistSchedules';
+import type {
+  DailyScheduleStatus,
+  DailyTimeSlotType,
+  ISpaTherapists,
+  TherapistScheduleSlotInput,
+} from '@/interfaces/ISpa';
 import { getTodayInCairo } from '@/utils/dates';
+import TherapistTimeSelect from '@/features/spa/components/therapists/TherapistTimeSelect';
 
 interface Props {
   open: boolean;
@@ -33,22 +42,33 @@ const toMinutes = (value: string) => {
 
 function validateSlots(status: DailyScheduleStatus, slots: TherapistScheduleSlotInput[]) {
   if (status === 'off' && slots.length) return 'A day off cannot contain shifts or breaks.';
-  if (status === 'working' && !slots.some((slot) => slot.slot_type === 'shift')) return 'Add at least one working shift.';
-  if (slots.some((slot) => !slot.start_time || !slot.end_time || toMinutes(slot.start_time) >= toMinutes(slot.end_time)))
+  if (status === 'working' && !slots.some((slot) => slot.slot_type === 'shift'))
+    return 'Add at least one working shift.';
+  if (
+    slots.some((slot) => !slot.start_time || !slot.end_time || toMinutes(slot.start_time) >= toMinutes(slot.end_time))
+  )
     return 'Each slot must start before it ends.';
   const sorted = [...slots].sort((a, b) => a.start_time.localeCompare(b.start_time));
-  if (sorted.some((slot, index) => index > 0 && slot.start_time < sorted[index - 1].end_time)) return 'Shifts and breaks cannot overlap.';
+  if (sorted.some((slot, index) => index > 0 && slot.start_time < sorted[index - 1].end_time))
+    return 'Shifts and breaks cannot overlap.';
   if (
     slots.some(
       (slot) =>
         slot.slot_type === 'break' &&
-        !slots.some((shift) => shift.slot_type === 'shift' && shift.start_time <= slot.start_time && shift.end_time >= slot.end_time),
+        !slots.some(
+          (shift) =>
+            shift.slot_type === 'shift' && shift.start_time <= slot.start_time && shift.end_time >= slot.end_time,
+        ),
     )
   )
     return 'Each break must fit inside a working shift.';
   return null;
 }
 const today = getTodayInCairo();
+const DEFAULT_SCHEDULE_SLOTS: TherapistScheduleSlotInput[] = [
+  { slot_type: 'shift', start_time: '09:00', end_time: '17:00' },
+  { slot_type: 'break', start_time: '13:00', end_time: '14:00' },
+];
 export default function TherapistScheduleManager({ open, onOpenChange, therapist }: Props) {
   const [month, setMonth] = useState(() => new Date(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 1, 1));
   const [selectedDate, setSelectedDate] = useState(today);
@@ -56,7 +76,11 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
   const [confirmDelete, setConfirmDelete] = useState(false);
   const from = dateKey(new Date(month.getFullYear(), month.getMonth(), 1));
   const to = dateKey(new Date(month.getFullYear(), month.getMonth() + 1, 0));
-  const { data: schedulesQuery, isLoading: isSchedulesLoading, isError: isSchedulesError } = useTherapistSchedules(therapist.id, from, to);
+  const {
+    data: schedulesQuery,
+    isLoading: isSchedulesLoading,
+    isError: isSchedulesError,
+  } = useTherapistSchedules(therapist.id, from, to);
   const schedulesData = schedulesQuery ?? [];
   const toggleScheduleDate = (date: string) => {
     if (selectedDates.includes(date)) {
@@ -69,7 +93,9 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
     setSelectedDates([...selectedDates, date].sort());
   };
   const activeSchedule = schedulesData.find((schedule) => schedule.schedule_date === selectedDate);
-  const form = useForm<ScheduleForm>({ defaultValues: { status: 'working', notes: '', slots: [] } });
+  const form = useForm<ScheduleForm>({
+    defaultValues: { status: 'working', notes: '', slots: DEFAULT_SCHEDULE_SLOTS.map((slot) => ({ ...slot })) },
+  });
   const { control, register, reset, setValue, handleSubmit } = form;
   const slotArray = useFieldArray({ control, name: 'slots' });
   const status = useWatch({ control, name: 'status' });
@@ -88,11 +114,13 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
     reset({
       status: activeSchedule?.status ?? 'working',
       notes: activeSchedule?.notes ?? '',
-      slots: (activeSchedule?.slots ?? []).map(({ start_time, end_time, slot_type }) => ({
-        start_time: start_time.slice(0, 5),
-        end_time: end_time.slice(0, 5),
-        slot_type,
-      })),
+      slots: activeSchedule
+        ? activeSchedule.slots.map(({ start_time, end_time, slot_type }) => ({
+            start_time: start_time.slice(0, 5),
+            end_time: end_time.slice(0, 5),
+            slot_type,
+          }))
+        : DEFAULT_SCHEDULE_SLOTS.map((slot) => ({ ...slot })),
     });
   }, [activeSchedule, selectedDate, reset]);
 
@@ -103,9 +131,16 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
     }
     try {
       for (const scheduleDate of selectedDates) {
-        await save.mutateAsync({ schedule_date: scheduleDate, status: data.status, notes: data.notes, slots: data.slots });
+        await save.mutateAsync({
+          schedule_date: scheduleDate,
+          status: data.status,
+          notes: data.notes,
+          slots: data.slots,
+        });
       }
-      toast.success(selectedDates.length === 1 ? 'Daily schedule saved' : `Schedule saved for ${selectedDates.length} dates`);
+      toast.success(
+        selectedDates.length === 1 ? 'Daily schedule saved' : `Schedule saved for ${selectedDates.length} dates`,
+      );
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not save schedule');
     } finally {
@@ -132,7 +167,8 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
           <DialogHeader className="px-5 pt-5 pr-12">
             <DialogTitle>Schedule: {therapist.full_name}</DialogTitle>
             <DialogDescription>
-              Select one or more dates, then configure shared working hours, breaks, and notes. Unconfigured dates are not days off.
+              Select one or more dates, then configure shared working hours, breaks, and notes. Unconfigured dates are
+              not days off.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 px-4 pb-5 lg:grid-cols-[0.9fr_1.1fr]">
@@ -186,7 +222,11 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                         <span
                           className={
                             'absolute bottom-1 left-1/2 size-1.5 -translate-x-1/2 rounded-full ' +
-                            (selectedDates.includes(key) ? 'bg-white' : schedule.status === 'working' ? 'bg-emerald-600' : 'bg-slate-400')
+                            (selectedDates.includes(key)
+                              ? 'bg-white'
+                              : schedule.status === 'working'
+                                ? 'bg-emerald-600'
+                                : 'bg-slate-400')
                           }
                         />
                       )}
@@ -194,7 +234,9 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                   );
                 })}
               </div>
-              <p className="mt-4 text-xs text-muted-foreground">Green: working· Gray: day off· No marker: not configured</p>
+              <p className="mt-4 text-xs text-muted-foreground">
+                Green: working· Gray: day off· No marker: not configured
+              </p>
               <p className="mt-2 text-xs text-muted-foreground">
                 {selectedDates.length} date(s) selected. Saving applies these shift details to every selected date.
               </p>
@@ -203,7 +245,9 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Selected date</p>
                 <h3 className="mt-1 text-lg font-semibold">
-                  {new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(new Date(selectedDate + 'T12:00:00'))}
+                  {new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(
+                    new Date(selectedDate + 'T12:00:00'),
+                  )}
                 </h3>
               </div>
               {isSchedulesLoading ? (
@@ -246,7 +290,9 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                             <Label className="text-xs">Type</Label>
                             <Select
                               value={slotValues[index]?.slot_type}
-                              onValueChange={(value) => setValue(`slots.${index}.slot_type`, value as DailyTimeSlotType)}
+                              onValueChange={(value) =>
+                                setValue(`slots.${index}.slot_type`, value as DailyTimeSlotType)
+                              }
                             >
                               <SelectTrigger>
                                 <SelectValue />
@@ -259,24 +305,33 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                           </div>
                           <div className="grid gap-1">
                             <Label className="text-xs">Start</Label>
-                            <Input type="time" {...register(`slots.${index}.start_time`)} />
+                            <Controller control={control} name={`slots.${index}.start_time`} render={({ field }) => <TherapistTimeSelect label={`Slot ${index + 1} start time`} value={field.value} onValueChange={field.onChange} />} />
                           </div>
                           <div className="grid gap-1">
                             <Label className="text-xs">End</Label>
-                            <Input type="time" {...register(`slots.${index}.end_time`)} />
+                            <Controller control={control} name={`slots.${index}.end_time`} render={({ field }) => <TherapistTimeSelect label={`Slot ${index + 1} end time`} value={field.value} onValueChange={field.onChange} />} />
                           </div>
-                          <Button type="button" variant="ghost" size="icon" aria-label="Remove time slot" onClick={() => slotArray.remove(index)}>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Remove time slot"
+                            onClick={() => slotArray.remove(index)}
+                          >
                             <Trash2 className="size-4" />
                           </Button>
                         </div>
                       ))}
+                      <p className="text-xs text-muted-foreground">Example: shift 09:00–17:00 with a 13:00–14:00 break. Breaks must fit inside a shift, and time slots cannot overlap.</p>
                       <div className="flex flex-wrap gap-2">
                         {(['shift', 'break'] as const).map((type) => (
                           <Button
                             key={type}
                             type="button"
                             variant="outline"
-                            onClick={() => slotArray.append({ slot_type: type, start_time: '09:00', end_time: '10:00' })}
+                            onClick={() =>
+                              slotArray.append({ slot_type: type, start_time: '09:00', end_time: '10:00' })
+                            }
                           >
                             <Plus />
                             Add {type}
@@ -287,7 +342,11 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                   )}
                   <div className="grid gap-1.5">
                     <Label htmlFor="therapist-schedule-notes">Notes</Label>
-                    <Textarea id="therapist-schedule-notes" placeholder="Optional notes for this date" {...register('notes')} />
+                    <Textarea
+                      id="therapist-schedule-notes"
+                      placeholder="Optional notes for this date"
+                      {...register('notes')}
+                    />
                   </div>
                   {validation && (
                     <p role="alert" className="text-sm text-destructive">
@@ -296,11 +355,20 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                   )}
                   <div className="flex flex-wrap justify-between gap-2 border-t border-(--color-border) pt-4">
                     {activeSchedule && (
-                      <Button type="button" variant="destructive" onClick={() => setConfirmDelete(true)} disabled={remove.isPending}>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => setConfirmDelete(true)}
+                        disabled={remove.isPending}
+                      >
                         Delete day
                       </Button>
                     )}
-                    <Button type="submit" className="ml-auto" disabled={save.isPending || Boolean(validation) || selectedDates.length === 0}>
+                    <Button
+                      type="submit"
+                      className="ml-auto"
+                      disabled={save.isPending || Boolean(validation) || selectedDates.length === 0}
+                    >
                       {save.isPending ? 'Saving' : 'Save schedule'}
                     </Button>
                   </div>

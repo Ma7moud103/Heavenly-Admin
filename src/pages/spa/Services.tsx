@@ -1,6 +1,6 @@
 import { Scissors } from 'lucide-react';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
+import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
 import UseSpaServices from '@/hooks/spa/services/UseSpaServices';
 import { SpaPackagesSkeleton } from '@/features/spa/components/packages/SpaPackagesSkeleton';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import ServiceModels from '@/features/spa/components/services/Models';
 import { useService } from '@/stores/spa/Services.store';
 import UseSpaBookingLocks from '@/hooks/spa/bookings/UseSpaBookingLocks';
 import { DataTable, type Column } from '@/components/shared/DataTable';
-import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
+import { SpaStatusPill } from '@/features/spa/components/shared/SpaStatusPill';
 import ServiceActions from '@/features/spa/components/services/ServiceActions';
 import type { ISpaServices } from '@/interfaces/ISpa';
 

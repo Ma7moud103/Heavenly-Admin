@@ -1,7 +1,7 @@
-import { timeNormalization } from '@/utils/dates';
-import { SpaSectionCard } from '../components/SpaSectionCard';
 import { Activity, Gem } from 'lucide-react';
-import { SpaStatusPill } from '../components/SpaStatusPill';
+import { SpaSectionCard } from '../components/shared/SpaSectionCard';
+import { SpaStatusPill } from '../components/shared/SpaStatusPill';
+import TherapistServiceBadges from '../components/therapists/TherapistServiceBadges';
 import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
 
 const SpaTherapistsOverview = () => {
@@ -19,15 +19,13 @@ const SpaTherapistsOverview = () => {
               <div className="flex size-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,_rgba(212,175,55,0.18),_rgba(255,255,255,0.9))]">
                 <Gem className="size-5 text-[var(--color-text-gold)]" />
               </div>
-              <SpaStatusPill label={therapist.availability ?? 'Not set'} />
+              <SpaStatusPill label={therapist.current_availability ?? 'Not set'} />
             </div>
             <h3 className="mt-4 text-lg font-semibold text-[var(--color-text)]">{therapist.full_name}</h3>
-            <p className="mt-1 text-sm text-[var(--color-text-sub)]">{therapist.specialty || 'No specialty'}</p>
+            <TherapistServiceBadges services={therapist.services} className="mt-2" />
             <div className="mt-4 flex items-center gap-2 text-sm text-[var(--color-text-sub)]">
               <Activity className="size-4 text-[var(--color-text-gold)]" />
-              {therapist.shift_from && therapist.shift_to
-                ? timeNormalization(therapist.shift_from) + ' - ' + timeNormalization(therapist.shift_to)
-                : 'Managed by daily schedules'}
+              Managed by daily schedules
             </div>
           </div>
         ))}

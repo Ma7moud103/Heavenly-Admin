@@ -1,4 +1,4 @@
-import { SpaSectionCard } from '../components/SpaSectionCard';
+import { SpaSectionCard } from '../components/shared/SpaSectionCard';
 const bookingSteps: string[] = ['Choose customer type', 'Select service or package', 'Assign therapist', 'Pick a dynamic time slot'];
 
 const SpaBookingGuide = () => {

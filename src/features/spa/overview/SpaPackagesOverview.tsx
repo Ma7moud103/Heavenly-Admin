@@ -1,6 +1,6 @@
 import { UseSpaPackages } from '@/hooks/spa/packages/UseSpaPackages';
-import { SpaSectionCard } from '../components/SpaSectionCard';
-import { SpaStatusPill } from '../components/SpaStatusPill';
+import { SpaSectionCard } from '../components/shared/SpaSectionCard';
+import { SpaStatusPill } from '../components/shared/SpaStatusPill';
 
 const SpaPackagesOverview = () => {
   const { data: packages } = UseSpaPackages();

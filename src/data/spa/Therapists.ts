@@ -1,5 +1,14 @@
 import { supabase } from '@/services/supabase';
-import type { ICreateSpaTherapist, ISpaTherapists, TherapistDailySchedule, TherapistDailyScheduleInput } from '@/interfaces/ISpa';
+import type { ICreateSpaTherapist, Therapist, TherapistDailySchedule, TherapistDailyScheduleInput, TherapistService } from '@/interfaces/ISpa';
+
+type TherapistRow = Omit<Therapist, 'services'> & { spa_services: TherapistService[] | null };
+
+const therapistSelect = 'id, full_name, phone, email, gender, avatar_url, current_availability, created_at, updated_at, spa_services!spa_therapist_services(id, name)';
+
+function mapTherapist(row: TherapistRow): Therapist {
+  const { spa_services, ...therapist } = row;
+  return { ...therapist, services: spa_services ?? [] };
+}
 
 export const therapistKeys = {
   all: ['spaTherapists'] as const,
@@ -15,17 +24,28 @@ export const therapistKeys = {
   dailySchedule: (id: string, date: string) => [...therapistKeys.detail(id), 'dailySchedule', date] as const,
 
   daySchedules: (date: string) => [...therapistKeys.all, 'daySchedules', date] as const,
+
+  byService: (serviceId: string) => [...therapistKeys.all, 'service', serviceId] as const,
 };
 
-export async function getTherapists(): Promise<ISpaTherapists[]> {
-  const { data, error } = await supabase.from('spa_therapists').select('*').order('full_name');
+export async function getTherapists(): Promise<Therapist[]> {
+  const { data, error } = await supabase.from('spa_therapists').select(therapistSelect).order('full_name');
   if (error) throw new Error(error.message);
-  return (data ?? []) as ISpaTherapists[];
+  return ((data ?? []) as unknown as TherapistRow[]).map(mapTherapist);
 }
-export async function getTherapistById(id: string): Promise<ISpaTherapists> {
-  const { data, error } = await supabase.from('spa_therapists').select('*').eq('id', id).single();
+export async function getTherapistById(id: string): Promise<Therapist> {
+  const { data, error } = await supabase.from('spa_therapists').select(therapistSelect).eq('id', id).single();
   if (error) throw new Error(error.message);
-  return data as ISpaTherapists;
+  return mapTherapist(data as unknown as TherapistRow);
+}
+export async function getTherapistsByService(serviceId: string): Promise<Therapist[]> {
+  const { data, error } = await supabase
+    .from('spa_therapists')
+    .select('id, full_name, phone, email, gender, avatar_url, current_availability, created_at, updated_at, spa_services!spa_therapist_services!inner(id, name)')
+    .eq('spa_services.id', serviceId)
+    .order('full_name');
+  if (error) throw new Error(error.message);
+  return ((data ?? []) as unknown as TherapistRow[]).map(mapTherapist);
 }
 export async function getTherapistSchedules(id: string, from: string, to: string): Promise<TherapistDailySchedule[]> {
   const { data, error } = await supabase
@@ -53,24 +73,25 @@ export async function createTherapistWithSchedules(therapist: ICreateSpaTherapis
   if (error) throw new Error(error.message);
   return data as string;
 }
-export async function updateTherapist(id: string, therapist: ICreateSpaTherapist) {
-  const { data, error } = await supabase
+export async function updateTherapist(id: string, therapist: ICreateSpaTherapist): Promise<void> {
+  const { service_ids, ...profile } = therapist;
+  const { error: profileError } = await supabase
     .from('spa_therapists')
     .update({
-      ...therapist,
-      phone: therapist.phone.trim() || null,
-      email: therapist.email.trim() || null,
-      gender: therapist.gender.trim() || null,
-      specialty: therapist.specialty.trim() || null,
-      shift_from: therapist.shift_from || null,
-      shift_to: therapist.shift_to || null,
+      ...profile,
+      phone: profile.phone.trim() || null,
+      email: profile.email.trim() || null,
+      gender: profile.gender.trim() || null,
       updated_at: new Date().toISOString(),
     })
-    .eq('id', id)
-    .select()
-    .single();
-  if (error) throw new Error(error.message);
-  return data as ISpaTherapists;
+    .eq('id', id);
+  if (profileError) throw new Error(profileError.message);
+
+  const { error: servicesError } = await supabase.rpc('set_spa_therapist_services', {
+    p_therapist_id: id,
+    p_service_ids: service_ids,
+  });
+  if (servicesError) throw new Error(servicesError.message);
 }
 export async function deleteTherapist(id: string): Promise<void> {
   const { data: bookings, error: checkError } = await supabase.from('spa_bookings').select('id').eq('therapist_id', id).limit(1);

@@ -11,7 +11,7 @@ const BookingCustomerSection = () => {
   return (
     <>
       <SelectBox label="Customer" name="customer_id" options={customerOptions} placeholder="Select customer" control={control} />
-      <SelectBox label="Therapist" name="therapist_id" options={therapistOptions} placeholder={serviceId || packageId ? 'Select matching therapist' : 'Choose a service or package first'} control={control} />
+      <SelectBox label="Therapist" name="therapist_id" options={therapistOptions} placeholder={serviceId || packageId ? 'Select matching therapist' : 'Select therapist'} control={control} />
     </>
   );
 };

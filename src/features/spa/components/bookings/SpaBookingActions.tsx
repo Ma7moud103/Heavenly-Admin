@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import BookingWindow from '@/features/spa/modals/BookingWindow';
+import BookingWindow from '@/features/spa/modals/bookings/BookingWindow';
 import { UseDeleteSpaBooking } from '@/hooks/spa/bookings/UseSpaBookingActions';
 import type { IBookingData, ISpaBookings } from '@/interfaces/ISpa';
 import { toast } from 'react-toastify';

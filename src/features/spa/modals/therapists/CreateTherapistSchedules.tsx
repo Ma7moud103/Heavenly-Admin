@@ -10,17 +10,18 @@ import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { DailyScheduleStatus, DailyTimeSlotType, TherapistDailyScheduleInput } from '@/interfaces/ISpa';
 import { getTodayInCairo } from '@/utils/dates';
+import TherapistTimeSelect from '@/features/spa/components/therapists/TherapistTimeSelect';
 
 export interface TherapistFormValues {
   full_name: string;
   phone: string;
   email: string;
   gender: string;
-  specialty: string;
+
   avatar_url: string | null;
-  availability: 'on' | 'off' | 'break';
-  shift_from: string;
-  shift_to: string;
+  service_ids: string[];
+
+
   schedules: TherapistDailyScheduleInput[];
   draft_date: string;
   draft_status: DailyScheduleStatus;
@@ -67,7 +68,10 @@ export default function CreateTherapistSchedules() {
       setValue('draft_date', '');
       setValue('draft_notes', '');
       setValue('draft_status', 'working');
-      slots.replace([{ slot_type: 'shift', start_time: '09:00', end_time: '17:00' }]);
+      slots.replace([
+                      { slot_type: 'shift', start_time: '09:00', end_time: '17:00' },
+                      { slot_type: 'break', start_time: '13:00', end_time: '14:00' },
+                    ]);
     } catch (error) {
       const validationError = error instanceof yup.ValidationError ? error : undefined;
       const issue = validationError?.inner[0] ?? validationError;
@@ -118,7 +122,7 @@ export default function CreateTherapistSchedules() {
               clearErrors('draft_date');
             }}
           />
-          <p className="text-xs text-muted-foreground">Select one or more dates. Each date gets the same shift settings.</p>
+          <p className="text-xs text-muted-foreground">Select one or more dates. Example: 09:00–17:00 shift with a 13:00–14:00 break. Each date gets the same settings.</p>
           {errors.draft_date?.message && (
             <p role="alert" className="text-sm text-destructive">
               {errors.draft_date.message}
@@ -137,7 +141,10 @@ export default function CreateTherapistSchedules() {
                   const next = value as DailyScheduleStatus;
                   setValue('draft_status', next);
                   if (next === 'off') slots.replace([]);
-                  else if (!getValues('draft_slots').length) slots.replace([{ slot_type: 'shift', start_time: '09:00', end_time: '17:00' }]);
+                  else if (!getValues('draft_slots').length) slots.replace([
+                      { slot_type: 'shift', start_time: '09:00', end_time: '17:00' },
+                      { slot_type: 'break', start_time: '13:00', end_time: '14:00' },
+                    ]);
                 }}
               >
                 <SelectTrigger>
@@ -178,11 +185,11 @@ export default function CreateTherapistSchedules() {
               </div>
               <div className="grid gap-1">
                 <Label className="text-xs">Start</Label>
-                <Input type="time" {...register(('draft_slots.' + index + '.start_time') as `draft_slots.${number}.start_time`)} />
+                <Controller control={control} name={`draft_slots.${index}.start_time` as const} render={({ field }) => <TherapistTimeSelect label={`Slot ${index + 1} start time`} value={field.value} onValueChange={field.onChange} />} />
               </div>
               <div className="grid gap-1">
                 <Label className="text-xs">End</Label>
-                <Input type="time" {...register(('draft_slots.' + index + '.end_time') as `draft_slots.${number}.end_time`)} />
+                <Controller control={control} name={`draft_slots.${index}.end_time` as const} render={({ field }) => <TherapistTimeSelect label={`Slot ${index + 1} end time`} value={field.value} onValueChange={field.onChange} />} />
               </div>
               <Button type="button" variant="ghost" size="icon" aria-label="Remove slot" onClick={() => slots.remove(index)}>
                 <Trash2 className="size-4" />

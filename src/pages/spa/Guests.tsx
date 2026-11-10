@@ -1,8 +1,8 @@
 import { UserCircle2 } from 'lucide-react';
-import { SpaCrudButtons } from '@/features/spa/components/SpaCrudButtons';
-import { SpaSectionCard } from '@/features/spa/components/SpaSectionCard';
-import { SpaStatusPill } from '@/features/spa/components/SpaStatusPill';
-import { SpaHeader } from '@/features/spa/components/SpaHeader';
+import { SpaCrudButtons } from '@/features/spa/components/shared/SpaCrudButtons';
+import { SpaSectionCard } from '@/features/spa/components/shared/SpaSectionCard';
+import { SpaStatusPill } from '@/features/spa/components/shared/SpaStatusPill';
+import { SpaHeader } from '@/features/spa/components/shared/SpaHeader';
 import UseSpaCustomers from '@/hooks/spa/customers/UseSpaCusteomers';
 
 export default function SpaGuestsPage() {

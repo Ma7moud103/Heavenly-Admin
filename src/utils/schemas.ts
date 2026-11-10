@@ -150,11 +150,10 @@ const SpaTherapistSchema = yup.object({
     .test('email', 'Enter a valid email address', (value) => !value || yup.string().email().isValidSync(value))
     .defined(),
   gender: yup.string().defined(),
-  specialty: yup.string().trim().defined(),
+  service_ids: yup.array().of(yup.string().uuid().required()).min(1, 'Pick at least one service').required(),
   avatar_url: yup.string().nullable().defined(),
-  availability: yup.mixed<'on' | 'off' | 'break'>().oneOf(['on', 'off', 'break']).required('Availability is required'),
-  shift_from: yup.string().defined(),
-  shift_to: yup.string().defined(),
+
+
   schedules: TherapistSchedulesSchema.default([]),
 });
 export { spaBookingSchema, spaPackageSchema, Registerschema, Loginschema, SpaServicesSchema, SpaTherapistSchema };

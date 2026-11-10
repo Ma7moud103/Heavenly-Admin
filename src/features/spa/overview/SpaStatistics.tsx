@@ -1,5 +1,5 @@
 import UseSpaTherapists from '@/hooks/spa/therapists/UseSpaTherapists';
-import SpaStatCard from '../components/SpaStatCard';
+import SpaStatCard from '../components/shared/SpaStatCard';
 import { CircleDollarSign, Clock3, Leaf, Users2 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';

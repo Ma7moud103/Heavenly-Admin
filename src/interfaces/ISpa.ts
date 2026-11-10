@@ -55,6 +55,11 @@ export type TherapistAvailability = 'on' | 'break' | 'off';
 export type DailyScheduleStatus = 'working' | 'off';
 export type DailyTimeSlotType = 'shift' | 'break';
 
+export interface TherapistService {
+  id: string;
+  name: string;
+}
+
 export interface TherapistDailyTimeSlot {
   id: string;
   daily_schedule_id: string;
@@ -80,30 +85,28 @@ export interface TherapistDailySchedule extends Omit<TherapistDailyScheduleInput
   updated_at: string;
   slots: TherapistDailyTimeSlot[];
 }
-export interface ISpaTherapists {
+export interface Therapist {
   id: string;
   full_name: string;
   phone: string | null;
   email: string | null;
   gender: string | null;
-  specialty: string | null;
   avatar_url: string | null;
-  shift_from: string | null;
-  shift_to: string | null;
-  availability: TherapistAvailability | null;
+  current_availability: TherapistAvailability | null;
   created_at: string;
   updated_at: string;
+  services: TherapistService[];
 }
+
+export type ISpaTherapists = Therapist;
+
 export interface ICreateSpaTherapist {
   full_name: string;
   phone: string;
   email: string;
   gender: string;
-  specialty: string;
   avatar_url: string | null;
-  availability: TherapistAvailability;
-  shift_from: string;
-  shift_to: string;
+  service_ids: string[];
 }
 export interface IGuest {
   avatar_url: string;

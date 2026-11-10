@@ -6,10 +6,10 @@ import type { ISpaTherapists } from '@/interfaces/ISpa';
 
 interface IFilterContextValue {
   search: string;
-  specialty: string;
+  serviceId: string;
   availability: string;
   setSearch: Dispatch<SetStateAction<string>>;
-  setSpecialty: Dispatch<SetStateAction<string>>;
+  setServiceId: Dispatch<SetStateAction<string>>;
   setAvailability: Dispatch<SetStateAction<string>>;
 }
 interface IUiContextValue {
@@ -42,8 +42,9 @@ export function SpaTherapistsProvider({ children }: { children: ReactNode }) {
   const { data: bookings, isLoading: bookingsLoading, isError: bookingsError } = UseSpaTherapistBooking();
   const { isPending: deletePending, mutateAsync: mutateDelete } = useDeleteSpaTherapist();
 
+
   const [search, setSearch] = useState('');
-  const [specialty, setSpecialty] = useState('all');
+  const [serviceId, setServiceId] = useState('all');
   const [availability, setAvailability] = useState('all');
   const [selected, setSelected] = useState<ISpaTherapists>();
   const [formOpen, setFormOpen] = useState(false);
@@ -52,8 +53,8 @@ export function SpaTherapistsProvider({ children }: { children: ReactNode }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const filterValue = useMemo<IFilterContextValue>(
-    () => ({ search, specialty, availability, setSearch, setSpecialty, setAvailability }),
-    [search, specialty, availability],
+    () => ({ search, serviceId, availability, setSearch, setServiceId, setAvailability }),
+    [search, serviceId, availability],
   );
   const openCreate = useCallback(() => {
     setSelected(undefined);

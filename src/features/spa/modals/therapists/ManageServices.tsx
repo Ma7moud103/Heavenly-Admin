@@ -7,11 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { FieldError } from '@/components/ui/field';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ISpaTherapists } from '@/interfaces/ISpa';
 import { useCreateOrEditSpaTherapist } from '@/hooks/spa/therapists/useCreateOrEditSpaTherapist';
 import { SpaTherapistSchema } from '@/utils/schemas';
 import CreateTherapistSchedules, { type TherapistFormValues } from './CreateTherapistSchedules';
+import TherapistServicesSelect from './TherapistServicesSelect';
+import { Checkbox } from '@/components/ui/checkbox';
+
+const GENDER_OPTIONS = [
+  { value: 'female', label: 'Female' },
+  { value: 'male', label: 'Male' },
+] as const;
 
 interface Props {
   mode: 'create' | 'edit';
@@ -19,48 +25,54 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   therapist?: ISpaTherapists;
 }
-const defaults: TherapistFormValues = {
+const defaultValues: TherapistFormValues = {
   full_name: '',
   phone: '',
   email: '',
   gender: '',
-  specialty: '',
+
   avatar_url: null,
-  availability: 'off',
-  shift_from: '',
-  shift_to: '',
+  service_ids: [],
+
   schedules: [],
   draft_date: '',
   draft_status: 'working',
   draft_notes: '',
-  draft_slots: [{ slot_type: 'shift', start_time: '09:00', end_time: '17:00' }],
+  draft_slots: [
+    { slot_type: 'shift', start_time: '09:00', end_time: '17:00' },
+    { slot_type: 'break', start_time: '13:00', end_time: '14:00' },
+  ],
 };
 
 export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) {
-  const form = useForm<TherapistFormValues>({ defaultValues: defaults, resolver: yupResolver(SpaTherapistSchema) as never, mode: 'onChange' });
+  const form = useForm<TherapistFormValues>({
+    defaultValues: defaultValues,
+    resolver: yupResolver(SpaTherapistSchema) as never,
+    mode: 'onChange',
+  });
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isValid },
   } = form;
+  const gender = form.watch('gender');
+
   const mutation = useCreateOrEditSpaTherapist(mode, therapist?.id);
   useEffect(() => {
     reset(
       mode === 'edit' && therapist
         ? {
-            ...defaults,
+            ...defaultValues,
             full_name: therapist.full_name,
             phone: therapist.phone ?? '',
             email: therapist.email ?? '',
             gender: therapist.gender ?? '',
-            specialty: therapist.specialty ?? '',
+
             avatar_url: therapist.avatar_url,
-            availability: therapist.availability ?? 'off',
-            shift_from: therapist.shift_from?.slice(0, 5) ?? '',
-            shift_to: therapist.shift_to?.slice(0, 5) ?? '',
+            service_ids: therapist.services.map((service) => service.id),
           }
-        : defaults,
+        : defaultValues,
     );
   }, [mode, therapist, open, reset]);
 
@@ -89,7 +101,7 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl min-w-[85%] sm:min-w-auto">
         <SheetHeader>
-          <SheetTitle>{mode === 'edit' ? 'Edit therapist' : 'Add new therapist'}</SheetTitle>
+          <SheetTitle>{mode === 'edit' ? 'Edit The therapist' : 'Add new therapist'}</SheetTitle>
           <SheetDescription>Manage contact details and optional daily schedules.</SheetDescription>
         </SheetHeader>
         <FormProvider {...form}>
@@ -98,7 +110,12 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
               <h3 className="font-semibold">Therapist information</h3>
               <div className="grid gap-1.5">
                 <Label htmlFor="therapist-name">Full name</Label>
-                <Input id="therapist-name" placeholder="Therapist name" {...register('full_name')} aria-invalid={Boolean(errors.full_name)} />
+                <Input
+                  id="therapist-name"
+                  placeholder="Therapist name"
+                  {...register('full_name')}
+                  aria-invalid={Boolean(errors.full_name)}
+                />
                 {errors.full_name?.message && <FieldError>{errors.full_name.message}</FieldError>}
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -116,61 +133,40 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-1.5">
                   <Label>Gender</Label>
-                  <Select
-                    value={form.watch('gender') || 'unspecified'}
-                    onValueChange={(value) => form.setValue('gender', value === 'unspecified' ? '' : value, { shouldValidate: true })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Not specified" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unspecified">Not specified</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="male">Male</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="therapist-specialty">Specialty</Label>
-                  <Input id="therapist-specialty" placeholder="e.g. Massage therapy" {...register('specialty')} />
-                  {errors.specialty?.message && <FieldError>{errors.specialty.message}</FieldError>}
+                  <div role="group" aria-labelledby="therapist-gender-label" className="flex items-center gap-6 py-1.5">
+                    {GENDER_OPTIONS.map(({ value, label }) => (
+                      <div key={value} className="flex items-center gap-2">
+                        <Checkbox
+                          id={`therapist-gender-${value}`}
+                          checked={gender === value}
+                          onCheckedChange={(checked) => () => {
+                            form.setValue('gender', checked === true ? value : '', {
+                              shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                        />
+                        <Label htmlFor={`therapist-gender-${value}`} className="font-normal">
+                          {label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-1.5">
-                  <Label>Current availability</Label>
-                  <Select
-                    value={form.watch('availability')}
-                    onValueChange={(value) => form.setValue('availability', value as TherapistFormValues['availability'], { shouldValidate: true })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="on">On duty</SelectItem>
-                      <SelectItem value="break">On break</SelectItem>
-                      <SelectItem value="off">Off duty</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FieldError>{errors.availability?.message}</FieldError>
-                </div>
-                <div className="grid gap-1.5">
                   <Label htmlFor="therapist-avatar">Avatar URL</Label>
-                  <Input id="therapist-avatar" placeholder="Optional image URL" value={therapist?.avatar_url ?? ''} readOnly />
+                  <Input
+                    id="therapist-avatar"
+                    placeholder="Optional image URL"
+                    value={therapist?.avatar_url ?? ''}
+                    readOnly
+                  />
                   <p className="text-xs text-muted-foreground">Storage upload is not configured in this project.</p>
                 </div>
               </div>
-              <fieldset className="grid gap-4 rounded-xl border border-(--color-border) p-4 sm:grid-cols-2">
-                <legend className="px-1 text-sm font-semibold">Legacy shift hours</legend>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="shift-from">Starts at</Label>
-                  <Input id="shift-from" type="time" {...register('shift_from')} />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="shift-to">Ends at</Label>
-                  <Input id="shift-to" type="time" {...register('shift_to')} />
-                </div>
-              </fieldset>
+              <TherapistServicesSelect existingServices={therapist?.services} />
             </section>
             {mode === 'create' && <CreateTherapistSchedules key={open ? 'open' : 'closed'} />}
             <SheetFooter className="border-t border-(--color-border) sm:flex-row sm:justify-end">

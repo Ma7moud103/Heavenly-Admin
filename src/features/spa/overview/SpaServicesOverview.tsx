@@ -1,5 +1,5 @@
-import { SpaSectionCard } from '../components/SpaSectionCard';
-import { SpaStatusPill } from '../components/SpaStatusPill';
+import { SpaSectionCard } from '../components/shared/SpaSectionCard';
+import { SpaStatusPill } from '../components/shared/SpaStatusPill';
 
 import UseCategoriesWithCounts from '@/hooks/spa/categories/UseCategoriesWithCounts';
 
