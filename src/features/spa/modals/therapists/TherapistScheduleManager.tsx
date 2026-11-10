@@ -301,7 +301,7 @@ export default function TherapistScheduleManager({ open, onOpenChange, therapist
                       </Button>
                     )}
                     <Button type="submit" className="ml-auto" disabled={save.isPending || Boolean(validation) || selectedDates.length === 0}>
-                      {save.isPending ? 'Savingط·آ·ط¢آ£ط·آ¢ط¢آ¢ط·آ£ط¢آ¢ط£آ¢أ¢â€ڑآ¬ط¹â€کط·آ¢ط¢آ¬ط·آ·ط¢آ¢ط·آ¢ط¢آ¦' : 'Save schedule'}
+                      {save.isPending ? 'Saving' : 'Save schedule'}
                     </Button>
                   </div>
                 </form>

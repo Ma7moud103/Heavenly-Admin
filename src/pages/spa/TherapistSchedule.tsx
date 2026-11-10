@@ -41,6 +41,8 @@ export default function TherapistSchedulePage() {
       ? `${timeNormalization(therapist.shift_from)} – ${timeNormalization(therapist.shift_to)}`
       : 'No default shift set';
 
+      console.log(false)
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-6">
       <Button asChild variant="ghost" className="-ml-3">

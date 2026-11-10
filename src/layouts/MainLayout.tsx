@@ -1,5 +1,6 @@
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { CloseSidebarOnRouteChange } from '@/components/ui/CloseSidebarOnRouteChange';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { LoadingPage } from '@/pages/LoadingPage';
@@ -27,10 +28,18 @@ const routeTitles: Record<string, string> = {
 
 export default function MainLayout() {
   const location = useLocation();
-  const currentTitle = routeTitles[location.pathname] || (location.pathname.includes('/schedule') && location.pathname.startsWith('/spa/therapists/') ? 'Therapist Schedule' : location.pathname.startsWith('/booking-history/') ? 'Booking Details' : 'Not Found');
+  const currentTitle =
+    routeTitles[location.pathname] ||
+    (location.pathname.includes('/schedule') && location.pathname.startsWith('/spa/therapists/')
+      ? 'Therapist Schedule'
+      : location.pathname.startsWith('/booking-history/')
+        ? 'Booking Details'
+        : 'Not Found');
 
   return (
     <SidebarProvider>
+      <CloseSidebarOnRouteChange />
+
       <AppSidebar />
 
       <SidebarInset>

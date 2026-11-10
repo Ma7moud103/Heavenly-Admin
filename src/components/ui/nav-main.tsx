@@ -1,8 +1,4 @@
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -12,14 +8,14 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { ChevronRightIcon } from "lucide-react"
-import { NavLink } from "react-router-dom";
+} from '@/components/ui/sidebar';
+import { ChevronRightIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
 
-interface IProps {
+interface NavMainItem {
   title: string;
-  url: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   isActive?: boolean;
   items?: {
     title: string;
@@ -27,23 +23,13 @@ interface IProps {
   }[];
 }
 
-
-export function NavMain({
-  items,
-}: {
-  items: IProps[];
-}) {
+export function NavMain({ items }: { items: NavMainItem[] }) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={item.isActive}
-            className="group/collapsible"
-          >
+          <Collapsible key={item.title} asChild defaultOpen={item.isActive} className="group/collapsible">
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
@@ -56,9 +42,12 @@ export function NavMain({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                      
-                        <NavLink to={subItem.url} end={subItem.url === "/"}>
+                      <SidebarMenuSubButton
+                        // isActive
+                        className="[&.active]:bg-sidebar-accent [&.active]:font-semibold [&.active]:text-sidebar-accent-foreground"
+                        asChild
+                      >
+                        <NavLink to={subItem.url} end={subItem.url === '/'}>
                           <span>{subItem.title}</span>
                         </NavLink>
                       </SidebarMenuSubButton>
