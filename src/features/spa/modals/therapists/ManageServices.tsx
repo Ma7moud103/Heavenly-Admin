@@ -1,5 +1,5 @@
 ﻿import { useEffect } from 'react';
-import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
+import { Controller, FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -7,17 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { FieldError } from '@/components/ui/field';
-import type { ISpaTherapists } from '@/interfaces/ISpa';
+import { Egender, type ISpaTherapists } from '@/interfaces/ISpa';
 import { useCreateOrEditSpaTherapist } from '@/hooks/spa/therapists/useCreateOrEditSpaTherapist';
 import { SpaTherapistSchema } from '@/utils/schemas';
 import CreateTherapistSchedules, { type TherapistFormValues } from './CreateTherapistSchedules';
 import TherapistServicesSelect from './TherapistServicesSelect';
-import { Checkbox } from '@/components/ui/checkbox';
-
-const GENDER_OPTIONS = [
-  { value: 'female', label: 'Female' },
-  { value: 'male', label: 'Male' },
-] as const;
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -25,17 +20,17 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   therapist?: ISpaTherapists;
 }
+
 const defaultValues: TherapistFormValues = {
   full_name: '',
   phone: '',
   email: '',
-  gender: '',
+  gender: Egender.male,
 
   avatar_url: null,
   service_ids: [],
 
   schedules: [],
-  draft_date: '',
   draft_status: 'working',
   draft_notes: '',
   draft_slots: [
@@ -54,31 +49,33 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = form;
-  const gender = form.watch('gender');
 
   const mutation = useCreateOrEditSpaTherapist(mode, therapist?.id);
   useEffect(() => {
-    reset(
-      mode === 'edit' && therapist
-        ? {
-            ...defaultValues,
-            full_name: therapist.full_name,
-            phone: therapist.phone ?? '',
-            email: therapist.email ?? '',
-            gender: therapist.gender ?? '',
+    if (!open) return;
 
-            avatar_url: therapist.avatar_url,
-            service_ids: therapist.services.map((service) => service.id),
-          }
-        : defaultValues,
-    );
-  }, [mode, therapist, open, reset]);
+    if (mode === 'edit' && therapist) {
+      reset({
+        ...defaultValues,
+        full_name: therapist.full_name,
+        phone: therapist.phone ?? '',
+        email: therapist.email ?? '',
+        gender: therapist.gender ?? Egender.male,
+        avatar_url: therapist.avatar_url,
+        service_ids: therapist.services.map((service) => service.id),
+      });
+
+      return;
+    }
+
+    reset(defaultValues);
+  }, [open, mode, therapist, reset]);
 
   const submit: SubmitHandler<TherapistFormValues> = async ({
     schedules,
-    draft_date: _date,
+    // draft_date: _date,
     draft_status: _status,
     draft_notes: _notes,
     draft_slots: _slots,
@@ -93,8 +90,6 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
       onOpenChange(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not save therapist');
-    } finally {
-      onOpenChange(false);
     }
   };
   return (
@@ -132,14 +127,14 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-1.5">
-                  <Label>Gender</Label>
+                  {/* <Label>Gender</Label>
                   <div role="group" aria-labelledby="therapist-gender-label" className="flex items-center gap-6 py-1.5">
                     {GENDER_OPTIONS.map(({ value, label }) => (
                       <div key={value} className="flex items-center gap-2">
                         <Checkbox
                           id={`therapist-gender-${value}`}
                           checked={gender === value}
-                          onCheckedChange={(checked) => () => {
+                          onCheckedChange={(checked) => {
                             form.setValue('gender', checked === true ? value : '', {
                               shouldValidate: true,
                               shouldDirty: true,
@@ -151,7 +146,38 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
                         </Label>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
+                  <Label>Gender</Label>
+
+                  <Controller
+                    control={form.control}
+                    name="gender"
+                    render={({ field }) => (
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="flex items-center gap-6"
+                      >
+                        <div className="flex items-center gap-2">
+                          <RadioGroupItem value="male" id="gender-male" />
+                          <Label htmlFor="gender-male" className="cursor-pointer font-normal">
+                            Male
+                          </Label>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <RadioGroupItem value="female" id="gender-female" />
+                          <Label htmlFor="gender-female" className="cursor-pointer font-normal">
+                            Female
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
+
+                  {form.formState.errors.gender && (
+                    <p className="text-sm text-destructive">{form.formState.errors.gender.message}</p>
+                  )}
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -173,7 +199,7 @@ export function ManageTherapist({ mode, open, onOpenChange, therapist }: Props) 
               <Button type="button" variant="ghost" disabled={mutation.isPending} onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={!isValid || mutation.isPending}>
+              <Button type="submit" disabled={mutation.isPending}>
                 {mutation.isPending ? 'Saving...' : mode === 'edit' ? 'Save changes' : 'Create therapist'}
               </Button>
             </SheetFooter>

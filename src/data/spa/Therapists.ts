@@ -1,9 +1,16 @@
 import { supabase } from '@/services/supabase';
-import type { ICreateSpaTherapist, Therapist, TherapistDailySchedule, TherapistDailyScheduleInput, TherapistService } from '@/interfaces/ISpa';
+import type {
+  ICreateSpaTherapist,
+  Therapist,
+  TherapistDailySchedule,
+  TherapistDailyScheduleInput,
+  TherapistService,
+} from '@/interfaces/ISpa';
 
 type TherapistRow = Omit<Therapist, 'services'> & { spa_services: TherapistService[] | null };
 
-const therapistSelect = 'id, full_name, phone, email, gender, avatar_url, current_availability, created_at, updated_at, spa_services!spa_therapist_services(id, name)';
+const therapistSelect =
+  'id, full_name, phone, email, gender, avatar_url, current_availability, created_at, updated_at, spa_services!spa_therapist_services(id, name)';
 
 function mapTherapist(row: TherapistRow): Therapist {
   const { spa_services, ...therapist } = row;
@@ -41,7 +48,9 @@ export async function getTherapistById(id: string): Promise<Therapist> {
 export async function getTherapistsByService(serviceId: string): Promise<Therapist[]> {
   const { data, error } = await supabase
     .from('spa_therapists')
-    .select('id, full_name, phone, email, gender, avatar_url, current_availability, created_at, updated_at, spa_services!spa_therapist_services!inner(id, name)')
+    .select(
+      'id, full_name, phone, email, gender, avatar_url, current_availability, created_at, updated_at, spa_services!spa_therapist_services!inner(id, name)',
+    )
     .eq('spa_services.id', serviceId)
     .order('full_name');
   if (error) throw new Error(error.message);
@@ -68,8 +77,14 @@ export async function getTherapistDailySchedule(id: string, date: string): Promi
   if (error) throw new Error(error.message);
   return data as TherapistDailySchedule | null;
 }
-export async function createTherapistWithSchedules(therapist: ICreateSpaTherapist, schedules: TherapistDailyScheduleInput[]) {
-  const { data, error } = await supabase.rpc('create_spa_therapist_with_schedules', { p_therapist: therapist, p_schedules: schedules });
+export async function createTherapistWithSchedules(
+  therapist: ICreateSpaTherapist,
+  schedules: TherapistDailyScheduleInput[],
+) {
+  const { data, error } = await supabase.rpc('create_spa_therapist_with_schedules', {
+    p_therapist: therapist,
+    p_schedules: schedules,
+  });
   if (error) throw new Error(error.message);
   return data as string;
 }
@@ -94,7 +109,11 @@ export async function updateTherapist(id: string, therapist: ICreateSpaTherapist
   if (servicesError) throw new Error(servicesError.message);
 }
 export async function deleteTherapist(id: string): Promise<void> {
-  const { data: bookings, error: checkError } = await supabase.from('spa_bookings').select('id').eq('therapist_id', id).limit(1);
+  const { data: bookings, error: checkError } = await supabase
+    .from('spa_bookings')
+    .select('id')
+    .eq('therapist_id', id)
+    .limit(1);
   if (checkError) throw new Error('Could not verify therapist bookings: ' + checkError.message);
   if (bookings?.length) throw new Error('This therapist has booking history and cannot be deleted.');
   const { error } = await supabase.from('spa_therapists').delete().eq('id', id);

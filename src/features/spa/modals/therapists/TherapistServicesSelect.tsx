@@ -63,7 +63,7 @@ export default function TherapistServicesSelect({ existingServices = [] }: Props
     const currentIds = getValues('service_ids') ?? [];
     const nextIds = checked ? [...new Set([...currentIds, serviceId])] : currentIds.filter((id) => id !== serviceId);
     setValue('service_ids', nextIds, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
-    await trigger('service_ids');
+    // await trigger('service_ids');
   };
 
   return (

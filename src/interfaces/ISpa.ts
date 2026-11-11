@@ -1,6 +1,10 @@
 import type { ElementType } from 'react';
 import type { FieldPath, FieldValues } from 'react-hook-form';
 
+export enum Egender {
+  male = 'male',
+  female = 'female',
+}
 export interface ISpaCategories {
   id: string;
   name: string;
@@ -90,7 +94,7 @@ export interface Therapist {
   full_name: string;
   phone: string | null;
   email: string | null;
-  gender: string | null;
+  gender: Egender;
   avatar_url: string | null;
   current_availability: TherapistAvailability | null;
   created_at: string;
@@ -104,7 +108,7 @@ export interface ICreateSpaTherapist {
   full_name: string;
   phone: string;
   email: string;
-  gender: string;
+  gender: Egender;
   avatar_url: string | null;
   service_ids: string[];
 }
